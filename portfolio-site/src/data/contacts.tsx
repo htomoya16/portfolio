@@ -24,5 +24,5 @@ export const contactIcons: Record<ContactIcon, ReactNode> = {
 export const contacts: Contact[] = [
   { label: "GitHub", href: "https://github.com/htomoya16", icon: "github" },
   { label: "Qiita", href: "https://qiita.com/htomoya16", icon: "qiita" },
-  { label: "Protopedia", href: "https://protopedia.net/settings/prototypes" },
+  { label: "Protopedia", href: "https://protopedia.net/prototyper/htomoya16" },
 ];
