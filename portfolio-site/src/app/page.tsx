@@ -2,8 +2,8 @@ import Image from "next/image";
 import { ProjectCard } from "../components/ProjectCard";
 import { SkillCard } from "../components/SkillCard";
 import { contacts, contactIcons } from "../data/contacts";
+import { certifications } from "../data/certifications";
 import { projects } from "../data/projects";
-import { research } from "../data/research";
 import { skillGroups } from "../data/skills";
 
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
             { label: "About", href: "#about" },
             { label: "Skills", href: "#skills" },
             { label: "Projects", href: "#projects" },
-            { label: "Research", href: "#research" },
+            { label: "Certifications", href: "#certifications" },
             { label: "Contact", href: "#contact" },
           ].map((item) => (
             <a
@@ -129,34 +129,28 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="research" className="scroll-mt-32 grid gap-6">
+        <section id="certifications" className="scroll-mt-32 grid gap-6">
           <header className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">04 Research</p>
-              <h2 className="text-2xl font-semibold text-slate-900">Talks & Papers</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
+                04 Certifications
+              </p>
+              <h2 className="text-2xl font-semibold text-slate-900">Qualifications</h2>
             </div>
           </header>
-          <div className="grid gap-4">
-            {research.map((item) => (
+          <div className="grid gap-4 md:grid-cols-2">
+            {certifications.map((item) => (
               <article
                 key={`${item.title}-${item.year}`}
-                className="rounded-3xl border border-slate-200/80 bg-white/85 p-5 shadow-sm backdrop-blur"
+                className="p-5 rounded-3xl border border-slate-200/80 bg-white/85 shadow-sm backdrop-blur"
               >
                 <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
                   <span className="font-semibold text-blue-700">{item.year}</span>
                   <span>•</span>
-                  <span>{item.venue}</span>
+                  <span>{item.issuer}</span>
                 </div>
                 <h3 className="mt-1 text-lg font-semibold text-slate-900">{item.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{item.summary}</p>
-                {item.link && (
-                  <a
-                    href={item.link}
-                    className="mt-3 inline-flex text-sm font-semibold text-blue-600 underline-offset-4 hover:underline"
-                  >
-                    Read more
-                  </a>
-                )}
+                {item.note && <p className="mt-2 text-sm leading-6 text-slate-600">{item.note}</p>}
               </article>
             ))}
           </div>

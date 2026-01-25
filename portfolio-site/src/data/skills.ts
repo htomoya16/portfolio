@@ -10,19 +10,19 @@ export const skillGroups: SkillGroup[] = [
     title: "Backend Development",
     summary:
       "サービスの裏側を組み立てる開発に力を入れています。API、データベース、環境構築を中心に個人開発で継続的に実践。",
-    items: ["Go", "Echo", "Docker", "MySQL", "PostgreSQL", "Atlas", "Heroku"],
+    items: ["Go(Echo)", "Docker", "MySQL", "PostgreSQL", "Atlas", "Heroku"],
     image: "/backend.png",
   },
   {
-    title: "Hardware & Embedded Prototyping",
+    title: "HARDWARE",
     summary:
-      "マイコンでのプロトタイピング経験。複数センサを用途に応じて扱い、サーボ・小型スピーカ・LED も制御。Raspberry Pi 12台同期のシステムにも取り組み。",
+      "マイコンでのプロトタイピング経験。複数センサを用途に応じて扱い、サーボモータ・小型スピーカ・LED も制御。Raspberry Pi 12台同期のシステムにも取り組み。",
     items: [
-      "Potentiometer",
-      "Pressure",
-      "TOF",
+      "ポテンショメータ",
+      "圧力センサ",
+      "ToFセンサ",
       "Accelerometer",
-      "Servo control",
+      "サーボモータ",
       "Small speaker control",
       "16×16 LED matrix",
       "Raspberry Pi",

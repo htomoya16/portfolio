@@ -7,7 +7,7 @@ type Props = {
 
 export function SkillCard({ skill }: Props) {
   return (
-    <article className="rounded-2xl border border-slate-200/90 bg-white/90 p-5 shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-md">
+    <article className="rounded-2xl border border-slate-200/90 bg-white/90 p-5 shadow-sm backdrop-blur">
       <div className="relative mb-3 overflow-hidden rounded-xl bg-slate-100">
         <div className="relative h-44 w-full sm:h-48">
           <Image
