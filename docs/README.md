@@ -1,6 +1,17 @@
 # Portfolio Docs
 
-最終更新: 2025-12-10
+最終更新: 2026-04-17
+
+## Plans
+
+- [Portfolio Refresh Plan](./plans/portfolio-refresh.md)
+  - 就活向けの刷新方針、採用技術、情報設計、受け入れ条件を定義する現行プラン。
+
+## 今後のドキュメント方針
+
+- `docs/README.md` は入口として維持する
+- 実装前の計画や再設計方針は `docs/plans/` に置く
+- 機能要件や詳細仕様は今後 `docs/requirements/` 配下に分離していく
 
 ## プロフィール
 - 名前: 堀田智哉
