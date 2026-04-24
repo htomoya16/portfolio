@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gunzip -c /home/hasiyuto/.claude/projects/-home-hasiyuto-workbench-Portfolio/5a641738-7b65-41d1-9239-7de24167b2b7/tool-results/webfetch-1777028702762-c8q0e9.bin)",
+      "Bash(mkdir -p /tmp/portfolio_design)",
+      "Bash(tar -xzf /home/hasiyuto/.claude/projects/-home-hasiyuto-workbench-Portfolio/5a641738-7b65-41d1-9239-7de24167b2b7/tool-results/webfetch-1777028702762-c8q0e9.bin -C /tmp/portfolio_design)",
+      "Read(//tmp/**)",
+      "Bash(cp /tmp/portfolio_design/portfolio/project/assets/controller.png /home/hasiyuto/workbench/Portfolio/public/assets/)",
+      "Bash(cp /tmp/portfolio_design/portfolio/project/assets/alien.png /home/hasiyuto/workbench/Portfolio/public/assets/)",
+      "Bash(cp /tmp/portfolio_design/portfolio/project/assets/heart.png /home/hasiyuto/workbench/Portfolio/public/assets/)",
+      "Bash(cp /tmp/portfolio_design/portfolio/project/assets/trophy.png /home/hasiyuto/workbench/Portfolio/public/assets/)",
+      "Bash(cp /tmp/portfolio_design/portfolio/project/assets/gem.png /home/hasiyuto/workbench/Portfolio/public/assets/)",
+      "Bash(pnpm build *)",
+      "Bash(pnpm dev *)",
+      "Bash(curl -s http://localhost:3000)"
+    ]
+  }
+}
