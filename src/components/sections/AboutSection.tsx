@@ -1,85 +1,119 @@
-import type { ReactNode } from 'react'
-import { DiagSlash, PixStar, PixDiamond, PixPlus, PixelDotBlock } from '@/components/ui/Decor'
-import { TIMELINE, type TimelineEntry } from '@/content/site/timeline'
+// Server component
+import { Atmo } from '@/components/ui/Decor'
 
-const TLIcons: Record<TimelineEntry['iconKey'], ReactNode> = {
-  cap: (
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2547E6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-    </svg>
-  ),
-  code: (
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2547E6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="16 18 22 12 16 6"/>
-      <polyline points="8 6 2 12 8 18"/>
-    </svg>
-  ),
-  trophy: (
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2547E6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 9H4.5a2.5 2.5 0 010-5H6M18 9h1.5a2.5 2.5 0 000-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0012 0V2z"/>
-    </svg>
-  ),
-}
+const aboutCards = [
+  {
+    date: '2022.04',
+    title: '情報工学部 入学 / プログラミング学習開始',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <rect x="1" y="4" width="20" height="14" rx="1" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M7 9L5 11L7 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M15 9L17 11L15 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M13 8L10 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    date: '2023.04',
+    title: '個人開発 / OSS コントリビュート開始',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="9" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M11 7V11L14 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    date: '2023.09',
+    title: 'ハッカソン参加 / 優秀賞受賞',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path d="M11 2L13.5 8H20L14.5 12L16.5 18L11 14L5.5 18L7.5 12L2 8H8.5L11 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    date: '2024.04',
+    title: 'Webエンジニアインターン 参画中',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <rect x="2" y="6" width="18" height="13" rx="1" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M7 6V5C7 3.89 7.89 3 9 3H13C14.11 3 15 3.89 15 5V6" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="2" y1="11" x2="20" y2="11" stroke="currentColor" strokeWidth="1.5" />
+      </svg>
+    ),
+  },
+]
 
-function TimelineItem({ entry }: { entry: TimelineEntry }) {
+export default function AboutSection() {
   return (
-    <div className="timeline-item">
-      <div className="brackets">
-        <span className="cb tl" /><span className="cb tr" />
-        <span className="cb bl" /><span className="cb br" />
-      </div>
-      <div className="timeline-icon">{TLIcons[entry.iconKey]}</div>
-      <div className="timeline-date mono">{entry.date}</div>
-      <div className="timeline-text">{entry.text}</div>
-      <div className="timeline-plus">+</div>
-    </div>
-  )
-}
+    <section className="about" id="about">
+      <Atmo variant="a" tone="cool" />
 
-export function AboutSection() {
-  return (
-    <section className="section about" id="about">
-      <DiagSlash length={80} thickness={1.5} color="#2547E6" style={{ top: '8%', right: '8%' }} />
-      <DiagSlash length={60} thickness={1.5} color="#D7FF00" style={{ bottom: '14%', left: '6%' }} />
-      <div style={{ position: 'absolute', top: '12%', right: '14%', zIndex: 1 }}>
-        <PixStar size={18} color="#D7FF00" />
-      </div>
-      <div style={{ position: 'absolute', bottom: '20%', left: '8%', zIndex: 1, animation: 'float 5s ease-in-out infinite' }}>
-        <PixDiamond size={14} color="#F72585" />
-      </div>
-      <div style={{ position: 'absolute', top: '30%', right: '6%', zIndex: 1, animation: 'float 4s ease-in-out infinite 1s' }}>
-        <PixPlus size={12} color="#2547E6" />
-      </div>
-      <div style={{ position: 'absolute', bottom: '8%', right: '40%', zIndex: 1 }}>
-        <PixelDotBlock cols={6} rows={3} gap={7} color="#2547E6" />
+      <div className="section-head">
+        <span className="section-num">// 01</span>
+        <h2 className="section-title">
+          ABOUT
+          <span className="accent blink" />
+        </h2>
       </div>
 
-      <div className="about-left">
-        <div className="section-num mono">01</div>
-        <h2 className="section-title">ABOUT</h2>
-        <span className="about-accent-dash" />
+      <div className="about-grid">
+        {/* left — bio text */}
         <div>
           <p className="about-tagline">
-            課題を技術で解決し、<br />
-            より良い体験をつくるエンジニアです。
+            コードで、<br />
+            アイデアをカタチにして、<br />
+            ユーザーの体験をアップデートする。
           </p>
           <div className="about-body">
-            大学では情報工学を専攻し、Web開発を中心に学習。<br />
-            ユーザー視点を大切にしながら、設計から実装、改善まで<br />
-            一貫して取り組んでいます。<br />
-            新しい技術のキャッチアップと、ものづくりが好きです。
+            <p>
+              情報工学部に在籍する学生エンジニアです。
+              HTML/CSS から始まり、JavaScript、React、Next.js へと
+              フロントエンド中心にスタックを習得してきました。
+            </p>
+            <p>
+              現在はWebエンジニアとしてインターンに参加し、
+              実プロダクトの開発に携わっています。
+              ハッカソンへの参加、技術勉強会への登壇経験もあります。
+            </p>
+            <p>
+              ゲームのように「クリアすべき課題」に向き合い、
+              ユーザー体験を一段階アップデートすることが
+              私のエンジニアリングの目標です。
+            </p>
           </div>
         </div>
-      </div>
 
-      <div className="timeline">
-        {TIMELINE.map(entry => (
-          <TimelineItem key={entry.date} entry={entry} />
-        ))}
-      </div>
+        {/* center divider */}
+        <div className="about-divider" aria-hidden="true">
+          <div className="ab-div-sq top" />
+          <div className="ab-div-lime" />
+          <div className="ab-div-sq bot" />
+        </div>
 
-      <div className="about-bottom-dots" />
+        {/* right — stat cards */}
+        <div className="about-stats">
+          {aboutCards.map((card, i) => (
+            <div key={i} className="about-card">
+              <span className="ab-cb tl" />
+              <span className="ab-cb tr" />
+              <span className="ab-cb bl" />
+              <span className="ab-cb br" />
+              <div className="about-card-icon">{card.icon}</div>
+              <div className="about-card-body">
+                <span className="about-card-date">{card.date}</span>
+                <span className="about-card-title">{card.title}</span>
+              </div>
+              <div className="about-card-plus" aria-hidden="true">
+                <span />
+                <span />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   )
 }

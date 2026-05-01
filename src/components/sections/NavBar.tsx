@@ -1,15 +1,23 @@
-const NAV_LINKS = ['ABOUT', 'SKILLS', 'PROJECTS', 'EXPERIENCE', 'CONTACT'] as const
+// Server component
 
-export function NavBar() {
+const navLinks = [
+  { href: '#about', label: 'ABOUT' },
+  { href: '#skills', label: 'SKILLS' },
+  { href: '#projects', label: 'PROJECTS' },
+  { href: '#experience', label: 'EXPERIENCE' },
+  { href: '#contact', label: 'CONTACT' },
+]
+
+export default function NavBar() {
   return (
     <nav className="nav">
-      <a href="#top" className="logo">
-        Y<span>///</span>
+      <a href="#" className="logo">
+        htomoya16
       </a>
       <ul>
-        {NAV_LINKS.map(l => (
-          <li key={l}>
-            <a href={`#${l.toLowerCase()}`}>{l}</a>
+        {navLinks.map((link) => (
+          <li key={link.href}>
+            <a href={link.href}>{link.label}</a>
           </li>
         ))}
       </ul>

@@ -12,7 +12,17 @@
       "Bash(cp /tmp/portfolio_design/portfolio/project/assets/gem.png /home/hasiyuto/workbench/Portfolio/public/assets/)",
       "Bash(pnpm build *)",
       "Bash(pnpm dev *)",
-      "Bash(curl -s http://localhost:3000)"
+      "Bash(curl -s http://localhost:3000)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(curl -s \"https://api.anthropic.com/v1/design/h/OBolj99-N4gwPoERevFqIA\")",
+      "Bash(curl -s --compressed \"https://api.anthropic.com/v1/design/h/OBolj99-N4gwPoERevFqIA\")",
+      "Bash(curl -s -H \"Accept-Encoding: identity\" \"https://api.anthropic.com/v1/design/h/OBolj99-N4gwPoERevFqIA\")",
+      "Bash(curl -s -L \"https://api.anthropic.com/v1/design/h/OBolj99-N4gwPoERevFqIA?open_file=Portfolio.html\" -o /tmp/design_file.bin)",
+      "Bash(mkdir -p /tmp/design_extract)",
+      "Bash(tar -xzf /tmp/design_file.tar.gz -C /tmp/design_extract)",
+      "Bash(mkdir -p /home/hasiyuto/workbench/Portfolio/public/assets/decor)",
+      "Bash(cp /tmp/design_extract/portfolio/project/assets/decor/* /home/hasiyuto/workbench/Portfolio/public/assets/decor/)",
+      "Bash(cp /tmp/design_extract/portfolio/project/assets/decor_diagonal_line.svg /home/hasiyuto/workbench/Portfolio/public/assets/)"
     ]
   }
 }

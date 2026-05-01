@@ -1,66 +1,158 @@
-import { DiagSlash, PixStar, PixDiamond, PixPlus, PixelDotBlock } from '@/components/ui/Decor'
+// Server component
+import { Atmo } from '@/components/ui/Decor'
 
-export function ContactSection() {
+const contactStats = [
+  { label: 'RESPONSE', pct: 95, display: '95%' },
+  { label: 'COMMITS', pct: 80, display: '1,200+' },
+  { label: 'PROJECTS', pct: 60, display: '8 WORKS' },
+]
+
+const contactCards = [
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path d="M11 2C6.03 2 2 6.03 2 11C2 14.9 4.43 18.22 7.86 19.5C7.81 19.14 7.76 18.56 7.87 18.14L8.82 14.09C8.82 14.09 8.56 13.58 8.56 12.82C8.56 11.62 9.28 10.72 10.17 10.72C10.93 10.72 11.29 11.29 11.29 11.98C11.29 12.74 10.8 13.89 10.54 14.95C10.32 15.83 10.98 16.55 11.85 16.55C13.44 16.55 14.65 14.78 14.65 12.22C14.65 9.95 13.03 8.38 10.73 8.38C8.07 8.38 6.5 10.37 6.5 12.43C6.5 13.2 6.79 14.04 7.15 14.48C7.22 14.57 7.23 14.64 7.2 14.73L6.89 15.98C6.85 16.13 6.76 16.17 6.6 16.1C5.47 15.58 4.75 13.86 4.75 12.38C4.75 9.44 6.87 6.74 11 6.74C14.34 6.74 16.93 9.11 16.93 12.17C16.93 15.36 14.86 17.91 11.97 17.91C11.07 17.91 10.22 17.44 9.94 16.9L9.28 19.38C9.04 20.27 8.4 21.39 7.98 22C8.97 22.3 10.02 22.46 11.1 22.46C16.07 22.46 20.1 18.43 20.1 11.46C20.1 6.03 16.07 2 11 2Z" fill="currentColor" />
+      </svg>
+    ),
+    label: 'PINTEREST',
+    handle: '@htomoya16',
+    href: '#',
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M11 0C4.925 0 0 4.925 0 11C0 15.87 3.147 19.988 7.523 21.436C8.073 21.535 8.275 21.203 8.275 20.918C8.275 20.664 8.263 19.788 8.263 18.857C5.5 19.35 4.785 18.128 4.565 17.49C4.44 17.165 3.905 16.15 3.437 15.895C3.052 15.695 2.502 15.202 3.424 15.19C4.29 15.177 4.907 15.962 5.115 16.3C6.105 17.98 7.688 17.528 8.317 17.248C8.415 16.533 8.7 16.068 9.01 15.802C6.545 15.535 3.97 14.575 3.97 10.378C3.97 9.183 4.44 8.195 5.143 7.425C5.033 7.158 4.61 6.033 5.253 4.528C5.253 4.528 6.182 4.248 8.275 5.665C9.155 5.422 10.09 5.3 11.025 5.3C11.96 5.3 12.895 5.422 13.775 5.665C15.868 4.235 16.797 4.528 16.797 4.528C17.44 6.033 17.017 7.158 16.907 7.425C17.61 8.195 18.08 9.17 18.08 10.378C18.08 14.588 15.493 15.535 13.028 15.802C13.42 16.135 13.755 16.775 13.755 17.77C13.755 19.19 13.743 20.335 13.743 20.918C13.743 21.203 13.945 21.548 14.495 21.436C18.847 19.988 22 15.857 22 11C22 4.925 17.075 0 11 0Z"
+          fill="currentColor"
+        />
+      </svg>
+    ),
+    label: 'GITHUB',
+    handle: '@htomoya16',
+    href: 'https://github.com/htomoya16',
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path d="M20 4H2C1.45 4 1 4.45 1 5V17C1 17.55 1.45 18 2 18H20C20.55 18 21 17.55 21 17V5C21 4.45 20.55 4 20 4Z" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M1 5L11 12L21 5" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      </svg>
+    ),
+    label: 'MAIL',
+    handle: 'h.tomotomo.family@gmail.com',
+    href: 'mailto:h.tomotomo.family@gmail.com',
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path d="M16 2H6C4.895 2 4 2.895 4 4V20L8 17L11 20L14 17L18 20V4C18 2.895 17.105 2 16 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        <line x1="8" y1="8" x2="14" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="8" y1="11" x2="12" y2="11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+    ),
+    label: 'QIITA',
+    handle: '@htomoya16',
+    href: '#',
+  },
+]
+
+const ctTickerItems = [
+  { label: 'OPEN TO WORK', highlight: false },
+  { label: 'AVAILABLE', highlight: true },
+  { label: 'FREELANCE OK', highlight: false },
+  { label: 'INTERN OK', highlight: false },
+  { label: 'REMOTE OK', highlight: true },
+  { label: 'OPEN TO WORK', highlight: false },
+  { label: 'AVAILABLE', highlight: true },
+  { label: 'FREELANCE OK', highlight: false },
+  { label: 'INTERN OK', highlight: false },
+  { label: 'REMOTE OK', highlight: true },
+]
+
+export default function ContactSection() {
   return (
     <section className="contact" id="contact">
-      <DiagSlash length={80} thickness={1.5} color="#2547E6" style={{ top: '14%', right: '10%' }} />
-      <DiagSlash length={60} thickness={1.5} color="#D7FF00" style={{ bottom: '20%', left: '8%' }} />
-      <div style={{ position: 'absolute', top: '20%', right: '14%', zIndex: 1, animation: 'float 4s ease-in-out infinite' }}>
-        <PixStar size={18} color="#D7FF00" />
-      </div>
-      <div style={{ position: 'absolute', top: '60%', left: '4%', zIndex: 1, animation: 'float 5s ease-in-out infinite 0.8s' }}>
-        <PixDiamond size={14} color="#F72585" />
-      </div>
-      <div style={{ position: 'absolute', bottom: '18%', right: '16%', zIndex: 1, animation: 'float 4.5s ease-in-out infinite 1.2s' }}>
-        <PixPlus size={14} color="#2547E6" />
-      </div>
-      <div style={{ position: 'absolute', top: '26%', left: '6%', zIndex: 1 }}>
-        <PixelDotBlock cols={5} rows={3} gap={7} />
-      </div>
+      <Atmo variant="e" tone="warm" />
+
+      {/* triangle accents */}
+      <div className="ct-tri-tl" aria-hidden="true" />
+      <div className="ct-tri-br" aria-hidden="true" />
 
       <div className="contact-grid">
-        <div>
-          <div className="section-num mono">05</div>
-          <h2 className="section-title">CONTACT <span className="accent" /></h2>
-          <p className="contact-lead">ご覧いただきありがとうございます！</p>
-          <p className="contact-body">ご興味をお持ちいただけたら、お気軽にご連絡ください。</p>
+        {/* left */}
+        <div className="contact-left">
+          <div className="contact-status" aria-label="Status: available">
+            <span className="dot" />
+            AVAILABLE
+          </div>
+
+          <div className="section-head">
+            <span className="section-num">// 05</span>
+            <h2 className="section-title">
+              CONTACT
+              <span className="accent blink" />
+            </h2>
+          </div>
+
+          <p className="contact-lead">
+            お仕事・インターン・勉強会など、<br />
+            お気軽にご連絡ください。
+          </p>
+          <p className="contact-body">
+            現在はアルバイト・インターンでのご依頼、<br />
+            勉強会への登壇依頼などを受け付けています。<br />
+            まずはお気軽にどうぞ。
+          </p>
+
+          {/* stats */}
+          <div className="ct-stats">
+            {contactStats.map((stat) => (
+              <div key={stat.label} className="ct-stat-row">
+                <span className="ct-stat-label mono">{stat.label}</span>
+                <span className="ct-stat-bar">
+                  <span style={{ width: `${stat.pct}%` }} />
+                </span>
+                <span className="ct-stat-num mono">{stat.display}</span>
+              </div>
+            ))}
+          </div>
+
+          <span className="ct-prompt mono">
+            &gt; SEND MESSAGE
+            <span className="caret-blink" aria-hidden="true" />
+          </span>
         </div>
-        <div className="contact-buttons">
-          <a className="contact-btn" href="mailto:hello@example.com">
-            <div className="corners">
-              <span className="cc tl" /><span className="cc tr" />
-              <span className="cc bl" /><span className="cc br" />
-            </div>
-            <div className="contact-btn-left">
-              <div className="contact-btn-icon">
-                <svg width="28" height="22" viewBox="0 0 28 22" fill="none" stroke="currentColor" strokeWidth="1.6">
-                  <rect x="1" y="1" width="26" height="20" rx="1"/>
-                  <path d="M1 3l13 9 13-9"/>
-                </svg>
+
+        {/* right */}
+        <div className="contact-cards">
+          {contactCards.map((card) => (
+            <a key={card.label} href={card.href} className="ct-card">
+              <span className="ct-cb tl" />
+              <span className="ct-cb tr" />
+              <span className="ct-cb bl" />
+              <span className="ct-cb br" />
+              <div className="ct-card-dot" aria-hidden="true" />
+              <div className="ct-card-icon">{card.icon}</div>
+              <div>
+                <div className="ct-card-label mono">{card.label}</div>
+                <div className="ct-card-handle">{card.handle}</div>
               </div>
-              <div className="contact-btn-label">EMAIL</div>
-            </div>
-            <svg width="40" height="10" viewBox="0 0 40 10" fill="none">
-              <path d="M0 5H36M36 5L32 1M36 5L32 9" stroke="#0A0E1A" strokeWidth="1.4"/>
-            </svg>
-          </a>
-          <a className="contact-btn" href="https://github.com/" target="_blank" rel="noopener noreferrer">
-            <div className="corners">
-              <span className="cc tl" /><span className="cc tr" />
-              <span className="cc bl" /><span className="cc br" />
-            </div>
-            <div className="contact-btn-left">
-              <div className="contact-btn-icon">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 .3C5.4.3 0 5.7 0 12.3c0 5.3 3.4 9.7 8.2 11.3.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.4-1.3-5.4-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2.9-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.4 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.8-1.6 8.2-6 8.2-11.3C24 5.7 18.6.3 12 .3z"/>
-                </svg>
-              </div>
-              <div className="contact-btn-label">GITHUB</div>
-            </div>
-            <svg width="40" height="10" viewBox="0 0 40 10" fill="none">
-              <path d="M0 5H36M36 5L32 1M36 5L32 9" stroke="#0A0E1A" strokeWidth="1.4"/>
-            </svg>
-          </a>
+              <span className="ct-card-arrow mono" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* ticker */}
+      <div className="ct-ticker" aria-hidden="true">
+        <div className="ct-ticker-inner">
+          {ctTickerItems.map((item, i) => (
+            <span key={i} className={`ct-tick-item${item.highlight ? ' hl' : ''}`}>
+              {item.label}
+            </span>
+          ))}
         </div>
       </div>
     </section>

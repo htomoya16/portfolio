@@ -1,103 +1,165 @@
 'use client'
 
-import { DiagTicks, DiagSlash, PixStar, PixPlus, PixDiamond, PixelDotBlock } from '@/components/ui/Decor'
+import SideRails from './SideRails'
 
-export function HeroSection() {
+const tickerItems = [
+  { label: 'WEB ENGINEER', accent: false },
+  { label: '// FRONTEND', accent: true },
+  { label: 'REACT + NEXT.JS', accent: false },
+  { label: '// TYPESCRIPT', accent: true },
+  { label: 'UI / UX', accent: false },
+  { label: '// PIXEL ART', accent: true },
+  { label: 'OPEN TO WORK', accent: false },
+  { label: '// LEVEL UP', accent: true },
+  { label: 'WEB ENGINEER', accent: false },
+  { label: '// FRONTEND', accent: true },
+  { label: 'REACT + NEXT.JS', accent: false },
+  { label: '// TYPESCRIPT', accent: true },
+  { label: 'UI / UX', accent: false },
+  { label: '// PIXEL ART', accent: true },
+  { label: 'OPEN TO WORK', accent: false },
+  { label: '// LEVEL UP', accent: true },
+]
+
+export default function HeroSection() {
+  const handleScrollToAbout = () => {
+    const el = document.getElementById('about')
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const handleScrollToContact = () => {
+    const el = document.getElementById('contact')
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
-    <section className="hero" id="top">
-      <div className="hero-right-bg" />
+    <section className="hero" id="hero">
+      <SideRails />
 
-      {/* diagonal tick decor */}
-      <div style={{ position: 'absolute', top: '22%', left: '46%', zIndex: 1, opacity: 0.9 }}>
-        <DiagTicks width={70} height={24} count={4} color="#D7FF00" />
-      </div>
-      <div style={{ position: 'absolute', top: '70%', left: '52%', zIndex: 1, opacity: 0.85, transform: 'scaleX(-1)' }}>
-        <DiagTicks width={80} height={28} count={5} color="#2547E6" />
-      </div>
-      <DiagSlash length={90} thickness={1.5} color="#2547E6" style={{ top: '12%', right: '6%' }} />
-      <DiagSlash length={70} thickness={1.5} color="#D7FF00" style={{ bottom: '20%', left: '40%' }} />
+      {/* right background panel */}
+      <div className="hero-right-bg" aria-hidden="true" />
 
-      {/* floating pixel decorations */}
-      <div style={{ position: 'absolute', top: '18%', right: '22%', zIndex: 2, animation: 'float 4s ease-in-out infinite' }}>
-        <PixStar size={18} color="#D7FF00" />
-      </div>
-      <div style={{ position: 'absolute', top: '36%', right: '7%', zIndex: 2, animation: 'float 5s ease-in-out infinite 0.8s' }}>
-        <PixPlus size={14} color="#2547E6" />
-      </div>
-      <div style={{ position: 'absolute', bottom: '28%', right: '12%', zIndex: 2, animation: 'float 6s ease-in-out infinite 1.2s' }}>
-        <PixStar size={14} color="#2547E6" />
-      </div>
-      <div style={{ position: 'absolute', top: '58%', left: '50%', zIndex: 2, animation: 'float 4.5s ease-in-out infinite 0.5s' }}>
-        <PixDiamond size={12} color="#F72585" />
-      </div>
-      <div style={{ position: 'absolute', bottom: '18%', left: '48%', zIndex: 2, animation: 'float 5.5s ease-in-out infinite 1.5s' }}>
-        <PixPlus size={10} color="#D7FF00" />
+      {/* decorative corner brackets around hero-visual area */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: '12%',
+          right: '3%',
+          width: '54%',
+          height: '76%',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }}
+      >
+        <div className="corner-bracket tl" style={{ top: 0, left: 0 }} />
+        <div className="corner-bracket tr" style={{ top: 0, right: 0 }} />
+        <div className="corner-bracket bl" style={{ bottom: 0, left: 0 }} />
+        <div className="corner-bracket br" style={{ bottom: 0, right: 0 }} />
       </div>
 
-      {/* corner bracket & pixel frames */}
-      <div className="corner-bracket tr" style={{ top: 90, right: 110, width: 28, height: 28 }} />
-      <div className="pixel-frame" style={{ top: 90, right: 140, width: 60, height: 70 }} />
-      <div className="pixel-frame" style={{ top: 180, right: 80, width: 40, height: 50 }} />
-      <div className="pixel-frame" style={{ bottom: 150, right: 200, width: 50, height: 40 }} />
-      <div className="pixel-frame" style={{ bottom: 220, left: '46%', width: 36, height: 50 }} />
+      {/* dot grid decoration */}
+      <div
+        className="dot-grid"
+        aria-hidden="true"
+        style={{ width: 80, height: 64, top: '18%', left: '46%', opacity: 0.4, zIndex: 1 }}
+      />
 
-      {/* dot grids */}
-      <div className="dot-grid" style={{ top: 210, left: '48%', width: 60, height: 40, opacity: 0.5, zIndex: 1 }} />
-      <div className="dot-grid" style={{ bottom: 90, right: 60, width: 90, height: 50, opacity: 0.55, zIndex: 1 }} />
-      <div className="dot-grid" style={{ top: 120, right: 300, width: 60, height: 30, opacity: 0.5, zIndex: 1 }} />
-
-      {/* accent squares */}
-      <div style={{ position: 'absolute', top: '30%', right: '18%', width: 10, height: 10, background: '#D7FF00', zIndex: 2 }} />
-      <div style={{ position: 'absolute', top: '55%', left: '48%', width: 8, height: 8, background: '#D7FF00', zIndex: 2 }} />
-      <div style={{ position: 'absolute', bottom: '25%', right: '36%', width: 8, height: 8, background: '#2547E6', zIndex: 2 }} />
-      <div className="corner-bracket br" style={{ bottom: 60, right: 60, width: 40, height: 40 }} />
+      {/* pixel frame accent */}
+      <div
+        className="pixel-frame"
+        aria-hidden="true"
+        style={{ width: 56, height: 56, bottom: '22%', right: '8%', zIndex: 1 }}
+      />
 
       {/* hero content */}
       <div className="hero-content">
-        <div className="hero-eyebrow mono">WEB ENGINEER</div>
+        <p className="hero-eyebrow">PLAYER SELECT</p>
         <h1 className="hero-title">
-          <span className="line">CODE.</span>
-          <span className="line">CREATE.</span>
           <span className="line">
-            <span className="blue">LEVEL UP.</span>
-            <span className="caret" />
+            <span className="blue">CRAFT</span>
+          </span>
+          <span className="line">
+            CODE &amp;
+          </span>
+          <span className="line">
+            DESIGN
+            <span className="caret" aria-hidden="true" />
           </span>
         </h1>
         <p className="hero-sub">
           コードで、アイデアをカタチにして、<br />
-          ユーザーの体験をアップデートする。
+          ユーザーの体験をアップデートする。<br />
+          Web Engineer / UI Developer
         </p>
-        <button
-          className="btn-primary"
-          onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-        >
-          VIEW MY WORK
-          <svg width="48" height="10" viewBox="0 0 48 10" fill="none">
-            <path d="M1 5H46M46 5L42 1M46 5L42 9" stroke="currentColor" strokeWidth="1.3" />
+        <button className="btn-primary" onClick={handleScrollToContact} type="button">
+          START GAME
+          <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+            <path d="M13 1L19 7L13 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <line x1="1" y1="7" x2="18" y2="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </button>
       </div>
 
       {/* hero visual */}
       <div className="hero-visual">
-        <div className="hero-label-100 mono">— 100</div>
         <div className="controller-scene">
+          {/* HP bar */}
+          <div className="hero-hp" aria-label="HP bar">
+            <span className="hp-label">HP</span>
+            <div className="hp-bar">
+              <div className="hp-fill" />
+            </div>
+            <span className="hp-num">83</span>
+          </div>
+
+          {/* label */}
+          <span className="hero-label-100" aria-hidden="true">100%</span>
+
+          {/* main controller */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/controller.png" className="px-controller" alt="pixel controller" />
+          <img
+            src="/assets/controller.png"
+            alt="pixel controller"
+            className="px-controller"
+          />
+
+          {/* floating sprites */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/alien.png"      className="px-sprite s-invader" alt="" />
+          <img src="/assets/alien.png" alt="" className="px-sprite s-invader" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/heart.png"      className="px-sprite s-heart" alt="" />
+          <img src="/assets/heart.png" alt="" className="px-sprite s-heart" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/trophy.png"     className="px-sprite s-coin" alt="" />
+          <img src="/assets/trophy.png" alt="" className="px-sprite s-coin" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/gem.png"        className="px-sprite s-gem" alt="" />
+          <img src="/assets/gem.png" alt="" className="px-sprite s-gem" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/sword.png"      className="px-sprite s-sword" alt="" />
+          <img src="/assets/sword.png" alt="" className="px-sprite s-sword" />
         </div>
-        <div className="hero-play">
-          PLAY
-          <span className="tri" />
+      </div>
+
+      {/* play button (scroll to about) */}
+      <button
+        className="hero-play-center"
+        onClick={handleScrollToAbout}
+        type="button"
+        aria-label="Scroll to about section"
+      >
+        <div className="play-circle">
+          <div className="tri" aria-hidden="true" />
+        </div>
+        <span className="play-label">PRESS START</span>
+      </button>
+
+      {/* ticker */}
+      <div className="hero-ticker" aria-hidden="true">
+        <div className="hero-ticker-inner">
+          {tickerItems.map((item, i) => (
+            <span key={i} className={`item${item.accent ? ' accent' : ''}`}>
+              <span className="bullet">■</span>
+              {item.label}
+            </span>
+          ))}
         </div>
       </div>
     </section>

@@ -1,15 +1,17 @@
-export function SideRails() {
+// Server component — side rails inside the hero section
+
+export default function SideRails() {
   return (
     <>
-      <div className="side-rail left">
-        <div className="label">SCROLL</div>
+      <div className="side-rail left" aria-hidden="true">
+        <span className="label">SCROLL</span>
         <div className="line" />
         <div className="diamond" />
-        <div className="square-lime" />
       </div>
-      <div className="side-rail right">
-        <div style={{ width: 8, height: 8, background: '#2547E6', marginBottom: 12 }} />
+      <div className="side-rail right" aria-hidden="true">
+        <div className="square-lime" />
         <div className="line" />
+        <div className="diamond" />
       </div>
     </>
   )
