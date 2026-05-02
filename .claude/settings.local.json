@@ -22,7 +22,19 @@
       "Bash(tar -xzf /tmp/design_file.tar.gz -C /tmp/design_extract)",
       "Bash(mkdir -p /home/hasiyuto/workbench/Portfolio/public/assets/decor)",
       "Bash(cp /tmp/design_extract/portfolio/project/assets/decor/* /home/hasiyuto/workbench/Portfolio/public/assets/decor/)",
-      "Bash(cp /tmp/design_extract/portfolio/project/assets/decor_diagonal_line.svg /home/hasiyuto/workbench/Portfolio/public/assets/)"
+      "Bash(cp /tmp/design_extract/portfolio/project/assets/decor_diagonal_line.svg /home/hasiyuto/workbench/Portfolio/public/assets/)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(pnpm --version)",
+      "Bash(node node_modules/next/dist/bin/next dev)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(npx --no-install tsc --noEmit)",
+      "mcp__Desktop_Commander__start_process"
     ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
   }
 }
