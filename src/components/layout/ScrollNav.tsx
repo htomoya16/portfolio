@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import gsap from 'gsap'
+import { useEffect, useRef, useState } from 'react'
 
 const SECTIONS = [
   { id: 'hero',       label: 'HERO' },
@@ -13,6 +14,17 @@ const SECTIONS = [
 
 export default function ScrollNav() {
   const [active, setActive] = useState('hero')
+  const dotsRef = useRef<Record<string, HTMLSpanElement | null>>({})
+
+  useEffect(() => {
+    const el = dotsRef.current[active]
+    if (!el) return
+    gsap.fromTo(
+      el,
+      { scale: 1 },
+      { scale: 1.7, duration: 0.18, ease: 'power2.out', yoyo: true, repeat: 1 }
+    )
+  }, [active])
 
   useEffect(() => {
     const update = () => {
@@ -52,7 +64,13 @@ export default function ScrollNav() {
           type="button"
         >
           <span className="scroll-nav-label">{label}</span>
-          <span className="scroll-nav-dot" aria-hidden="true" />
+          <span
+            className="scroll-nav-dot"
+            aria-hidden="true"
+            ref={(el) => {
+              dotsRef.current[id] = el
+            }}
+          />
         </button>
       ))}
     </nav>

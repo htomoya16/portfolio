@@ -5,7 +5,7 @@ export default function NavBar() {
   return (
     <nav className="nav">
       <a href="#" className="logo">
-        htomoya16
+        <ScrambleText text="htomoya16" chars="lowercase" revealRate={48} settleDuration={320} />
       </a>
       <ul>
         {navLinks.map((link) => (

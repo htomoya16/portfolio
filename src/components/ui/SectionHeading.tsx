@@ -20,7 +20,15 @@ export default function SectionHeading({ number, title, blink = false, className
         settleDuration={360}
       />
       <h2 className="section-title">
-        {title}
+        <ScrambleText
+          as="span"
+          text={title}
+          chars="uppercase"
+          from="left"
+          delay={120}
+          revealRate={28}
+          settleDuration={520}
+        />
         <span className={`accent${blink ? ' blink' : ''}`} />
       </h2>
     </div>

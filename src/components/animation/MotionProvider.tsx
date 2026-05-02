@@ -65,14 +65,14 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
 
         gsap.fromTo(
           heading,
-          { autoAlpha: 0, y: 34, rotateX: -12 },
+          { autoAlpha: 0, y: 48, rotateX: -28, transformPerspective: 800 },
           {
             autoAlpha: 1,
             y: 0,
             rotateX: 0,
-            duration: 0.72,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: section, start: 'top 72%', once: true },
+            duration: 0.95,
+            ease: 'power4.out',
+            scrollTrigger: { trigger: section, start: 'top 75%', once: true },
           }
         )
 
@@ -92,17 +92,118 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
 
       gsap.fromTo(
         '.project-card',
-        { autoAlpha: 0, y: 50, rotate: -1.5 },
+        { autoAlpha: 0, y: 60, clipPath: 'inset(100% 0 0 0)' },
         {
           autoAlpha: 1,
           y: 0,
-          rotate: 0,
-          duration: 0.7,
-          ease: 'back.out(1.4)',
-          stagger: 0.12,
-          scrollTrigger: { trigger: '.projects-grid', start: 'top 72%', once: true },
+          clipPath: 'inset(0% 0 0 0)',
+          duration: 0.85,
+          ease: 'power3.out',
+          stagger: 0.14,
+          scrollTrigger: { trigger: '.projects-grid', start: 'top 75%', once: true },
         }
       )
+
+      gsap.fromTo(
+        '.sk-tile',
+        { autoAlpha: 0, y: 24, clipPath: 'inset(100% 0 0 0)' },
+        {
+          autoAlpha: 1,
+          y: 0,
+          clipPath: 'inset(0% 0 0 0)',
+          duration: 0.55,
+          ease: 'power2.out',
+          stagger: 0.04,
+          scrollTrigger: { trigger: '.skills', start: 'top 72%', once: true },
+        }
+      )
+
+      // ===== Atmo background parallax =====
+      gsap.utils.toArray<HTMLElement>('section').forEach((section) => {
+        const blobs = section.querySelectorAll('.atmo-blob')
+        const quads = section.querySelectorAll('.atmo-quad')
+        const pluses = section.querySelectorAll<HTMLElement>('.atmo-px')
+        const slashes = section.querySelectorAll('.atmo-slash')
+        const halfs = section.querySelectorAll('.atmo-half')
+
+        if (blobs.length) {
+          gsap.to(blobs, {
+            yPercent: -22,
+            scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 1.2 },
+          })
+        }
+        if (quads.length) {
+          gsap.to(quads, {
+            rotate: '+=24',
+            yPercent: 14,
+            scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 1.5 },
+          })
+        }
+        if (pluses.length) {
+          gsap.to(pluses, {
+            yPercent: -34,
+            rotate: '+=60',
+            stagger: { amount: 0.4 },
+            scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 1 },
+          })
+        }
+        if (slashes.length) {
+          gsap.to(slashes, {
+            x: '+=44',
+            rotate: '+=18',
+            scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 2 },
+          })
+        }
+        if (halfs.length) {
+          gsap.to(halfs, {
+            rotate: '+=36',
+            scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 2.4 },
+          })
+        }
+      })
+
+      // Idle float for atmo squares (pixel-dot vibe)
+      gsap.utils.toArray<HTMLElement>('.atmo-sq').forEach((el, i) => {
+        gsap.to(el, {
+          y: gsap.utils.random(-14, 14),
+          x: gsap.utils.random(-10, 10),
+          duration: gsap.utils.random(3, 5),
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: i * 0.18,
+        })
+      })
+
+      // Global drifting grid — subtle background motion
+      gsap.utils.toArray<HTMLElement>('.atmo-grid').forEach((grid) => {
+        gsap.to(grid, {
+          backgroundPosition: '+=180px +=180px',
+          ease: 'none',
+          scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 1 },
+        })
+      })
+
+      // Hero pixel sprites scroll parallax
+      const sprites = gsap.utils.toArray<HTMLElement>('.px-sprite')
+      sprites.forEach((sprite, i) => {
+        gsap.to(sprite, {
+          y: (i % 2 === 0 ? -1 : 1) * 60,
+          rotate: (i % 2 === 0 ? -1 : 1) * 8,
+          scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.2 },
+        })
+      })
+
+      gsap.to('.px-controller', {
+        y: -40,
+        rotate: -1,
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.4 },
+      })
+
+      gsap.to('.hero-right-bg', {
+        backgroundPosition: '+=80px +=80px',
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 },
+      })
     },
     { scope: rootRef }
   )

@@ -96,7 +96,14 @@ export default function SkillsSection() {
               {cat.tiles.map((tile) => (
                 <div key={tile.name} className="sk-tile">
                   <TileIcon tile={tile} />
-                  <span className="sk-tile-name">{tile.name}</span>
+                  <ScrambleText
+                    as="span"
+                    className="sk-tile-name"
+                    text={tile.name}
+                    chars="uppercase"
+                    revealRate={48}
+                    settleDuration={280}
+                  />
                 </div>
               ))}
             </div>
