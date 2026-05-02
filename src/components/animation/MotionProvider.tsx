@@ -6,6 +6,8 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { type ReactNode, useEffect, useRef } from 'react'
+import CursorFollower from './CursorFollower'
+import ParticleField from './ParticleField'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -204,9 +206,150 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
         backgroundPosition: '+=80px +=80px',
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 },
       })
+
+      // ===== Atmo blob breathing pulse =====
+      gsap.utils.toArray<HTMLElement>('.atmo-blob').forEach((blob, i) => {
+        gsap.to(blob, {
+          scale: 1.18,
+          opacity: '+=0.08',
+          duration: gsap.utils.random(4, 7),
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: i * 0.4,
+        })
+      })
+
+      // ===== Skill count counter-up =====
+      gsap.utils.toArray<HTMLElement>('.sk-cat-count').forEach((el) => {
+        const match = el.textContent?.match(/\d+/)
+        if (!match) return
+        const target = parseInt(match[0], 10)
+        const suffix = el.textContent?.replace(/^\d+\s*/, '') || ''
+        const counter = { val: 0 }
+        gsap.to(counter, {
+          val: target,
+          duration: 1.6,
+          ease: 'power2.out',
+          snap: { val: 1 },
+          onUpdate: () => {
+            el.textContent = `${String(counter.val).padStart(2, '0')} ${suffix}`
+          },
+          scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+        })
+      })
+
+      // ===== Section divider draw-on-scroll =====
+      gsap.utils.toArray<HTMLElement>('.about, .skills, .projects, .experience, .contact').forEach((section) => {
+        gsap.fromTo(
+          section,
+          { '--divider-scale': 0 },
+          {
+            '--divider-scale': 1,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: section, start: 'top 60%', end: 'bottom 90%', scrub: 1 },
+          }
+        )
+      })
+
+      // ===== Hero title 3D drop intro (blocks, not letters - to coexist with ScrambleText) =====
+      gsap.from('.hero-title .line', {
+        autoAlpha: 0,
+        y: -80,
+        rotateX: -75,
+        skewX: 12,
+        transformPerspective: 800,
+        transformOrigin: '50% 100%',
+        duration: 0.95,
+        ease: 'back.out(1.8)',
+        stagger: 0.1,
+        delay: 0.1,
+      })
+
+      // ===== Hero ticker speed boost on scroll =====
+      gsap.to('.hero-ticker-inner', {
+        x: '-=200',
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 },
+      })
     },
     { scope: rootRef }
   )
+
+  // ===== Magnetic button (START GAME) =====
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion) return
+    if (window.matchMedia('(pointer: coarse)').matches) return
+
+    const buttons = root.querySelectorAll<HTMLElement>('.btn-primary, .hero-play-center')
+    const cleaners: Array<() => void> = []
+
+    buttons.forEach((btn) => {
+      const xTo = gsap.quickTo(btn, 'x', { duration: 0.3, ease: 'power3.out' })
+      const yTo = gsap.quickTo(btn, 'y', { duration: 0.3, ease: 'power3.out' })
+
+      const onMove = (e: MouseEvent) => {
+        const rect = btn.getBoundingClientRect()
+        const cx = rect.left + rect.width / 2
+        const cy = rect.top + rect.height / 2
+        xTo((e.clientX - cx) * 0.35)
+        yTo((e.clientY - cy) * 0.35)
+      }
+      const onLeave = () => {
+        xTo(0)
+        yTo(0)
+      }
+      btn.addEventListener('mousemove', onMove)
+      btn.addEventListener('mouseleave', onLeave)
+      cleaners.push(() => {
+        btn.removeEventListener('mousemove', onMove)
+        btn.removeEventListener('mouseleave', onLeave)
+      })
+    })
+
+    return () => cleaners.forEach((fn) => fn())
+  }, [])
+
+  // ===== 3D tilt on project / about / contact cards =====
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion) return
+    if (window.matchMedia('(pointer: coarse)').matches) return
+
+    const cards = root.querySelectorAll<HTMLElement>('.project-card, .ct-card, .about-card')
+    const cleaners: Array<() => void> = []
+
+    cards.forEach((card) => {
+      const rotX = gsap.quickTo(card, 'rotateX', { duration: 0.4, ease: 'power3.out' })
+      const rotY = gsap.quickTo(card, 'rotateY', { duration: 0.4, ease: 'power3.out' })
+      gsap.set(card, { transformPerspective: 900, transformStyle: 'preserve-3d' })
+
+      const onMove = (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect()
+        const px = (e.clientX - rect.left) / rect.width - 0.5
+        const py = (e.clientY - rect.top) / rect.height - 0.5
+        rotY(px * 12)
+        rotX(-py * 10)
+      }
+      const onLeave = () => {
+        rotX(0)
+        rotY(0)
+      }
+
+      card.addEventListener('mousemove', onMove)
+      card.addEventListener('mouseleave', onLeave)
+      cleaners.push(() => {
+        card.removeEventListener('mousemove', onMove)
+        card.removeEventListener('mouseleave', onLeave)
+      })
+    })
+
+    return () => cleaners.forEach((fn) => fn())
+  }, [])
 
   useEffect(() => {
     const root = rootRef.current
@@ -235,5 +378,11 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  return <div ref={rootRef}>{children}</div>
+  return (
+    <div ref={rootRef}>
+      <ParticleField />
+      <CursorFollower />
+      {children}
+    </div>
+  )
 }
