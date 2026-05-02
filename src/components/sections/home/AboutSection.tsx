@@ -1,5 +1,6 @@
 // Server component
 import { Atmo } from '@/components/ui/Decor'
+import SectionHeading from '@/components/ui/SectionHeading'
 
 const aboutCards = [
   {
@@ -51,13 +52,7 @@ export default function AboutSection() {
     <section className="about" id="about">
       <Atmo variant="a" tone="cool" />
 
-      <div className="section-head">
-        <span className="section-num">// 01</span>
-        <h2 className="section-title">
-          ABOUT
-          <span className="accent blink" />
-        </h2>
-      </div>
+      <SectionHeading number="// 01" title="ABOUT" blink />
 
       <div className="about-grid">
         {/* left — bio text */}

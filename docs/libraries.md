@@ -5,11 +5,13 @@
 このドキュメントは、ポートフォリオ刷新で使うライブラリの役割と使い分けをまとめる場所です。
 実装時は「何でも入れる」のではなく、表現したい体験に対して最小限の組み合わせを選びます。
 
-## Install Candidates
+## Installed
 
 ```bash
-pnpm add gsap @gsap/react animejs lenis @chenglou/pretext
+pnpm add gsap @gsap/react animejs lenis
 ```
+
+`@chenglou/pretext` は通常の responsive typography では使わず、文字レイアウト実験が必要になった時点で追加する。
 
 ## Core UI
 
@@ -32,7 +34,7 @@ pnpm add gsap @gsap/react animejs lenis @chenglou/pretext
 
 - Docs: https://gsap.com/docs/v3/GSAP/
 - Package: `gsap`
-- 用途: セクション登場、複数要素の timeline、スクロール連動、複雑な演出
+- 用途: Hero intro、セクション登場、複数要素の timeline、スクロール連動、複雑な演出
 - 方針: 大きめの演出は GSAP に寄せる。`gsap.timeline()` で動きの順序を明示する
 - 注意: React component 内では DOM 操作の cleanup を必ず考える
 
@@ -44,20 +46,12 @@ pnpm add gsap @gsap/react animejs lenis @chenglou/pretext
 - 方針: `useGSAP()` を基本にし、`scope` を指定して selector の影響範囲を閉じる
 - 注意: click handler や delayed callback 内で作る animation は `contextSafe()` を使う
 
-### GSAP ScrambleTextPlugin
-
-- Docs: https://gsap.com/docs/v3/Plugins/ScrambleTextPlugin/
-- Package: `gsap`
-- 用途: Hero の肩書き、section label、terminal 風の短いテキスト演出
-- 方針: 短い英字ラベルや技術キーワードに限定して使う
-- 注意: 長文や本文には使わない。可読性を落とす演出にしない
-
 ### Anime.js
 
 - Docs: https://animejs.com/documentation/
 - Package: `animejs`
-- 用途: 小さな hover / icon / SVG / 数値 / isolated interaction
-- 方針: GSAP timeline が不要な局所的アニメーションに使う
+- 用途: `scrambleText()` によるドット風ラベルの文字演出、小さな hover / icon / SVG / 数値 / isolated interaction
+- 方針: GSAP timeline が不要な局所的アニメーションに使う。短い英字ラベル、section number、project badge、contact prompt などに限定する
 - 注意: GSAP と Anime.js で同じ DOM 要素の同じ property を同時に制御しない
 
 ### Lenis
@@ -80,8 +74,9 @@ pnpm add gsap @gsap/react animejs lenis @chenglou/pretext
 
 - Scroll experience: Lenis
 - Main choreographed animation: GSAP + `@gsap/react`
-- Short text decode effect: GSAP ScrambleTextPlugin
+- Short text decode effect: Anime.js `scrambleText()`
 - Small isolated micro interaction: Anime.js
-- Dynamic text measurement experiment: pretext
+- Dynamic text measurement experiment: pretext（未導入）
 
 複数ライブラリを同じ場所に重ねる場合は、担当する property と lifecycle を明確に分けます。
+GSAP ScrambleTextPlugin は使わず、文字 scramble は Anime.js `scrambleText()` に統一します。

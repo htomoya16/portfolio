@@ -12,9 +12,15 @@
 - [Libraries](./libraries.md)
   - UI / animation / scroll / text layout で使うライブラリの役割と使い分けをまとめる。
 
+## Development
+
+- [Development Setup](./development.md)
+  - Node.js / pnpm / Codex / Browser Use のローカル開発手順をまとめる。
+
 ## 現在の構成
 
 - `docs/README.md`: docs の入口
+- `docs/development.md`: 開発環境と検証コマンド
 - `docs/libraries.md`: 使用ライブラリの採用理由と注意点
 - `docs/plans/`: 実装前の計画や再設計方針
 

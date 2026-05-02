@@ -1,5 +1,7 @@
 // Server component
+import ScrambleText from '@/components/animation/ScrambleText'
 import { Atmo } from '@/components/ui/Decor'
+import SectionHeading from '@/components/ui/SectionHeading'
 import { projects } from '@/content/site/projects'
 import type { Project } from '@/content/site/projects'
 
@@ -90,13 +92,7 @@ export default function ProjectsSection() {
 
       <div className="projects-wrap">
         <div className="projects-head">
-          <div className="section-head" style={{ marginBottom: 0 }}>
-            <span className="section-num">// 03</span>
-            <h2 className="section-title">
-              PROJECTS
-              <span className="accent" />
-            </h2>
-          </div>
+          <SectionHeading number="// 03" title="PROJECTS" className="section-head-compact" />
           <span
             style={{
               fontFamily: "'JetBrains Mono', monospace",
@@ -113,11 +109,11 @@ export default function ProjectsSection() {
           {projects.map((project) => (
             <article key={project.num} className="project-card">
               <div className="project-preview">
-                <span className="project-num-badge mono">{project.num}</span>
+                <ScrambleText as="span" className="project-num-badge mono" text={project.num} chars="numbers" />
                 <ProjectPreview project={project} />
               </div>
               <div className="project-meta">
-                <p className="project-num-sm mono">PROJECT {project.num}</p>
+                <ScrambleText as="p" className="project-num-sm mono" text={`PROJECT ${project.num}`} chars="uppercase" />
                 <h3 className="project-title">{project.title}</h3>
                 <p className="project-desc">{project.desc}</p>
                 <div className="project-tags">

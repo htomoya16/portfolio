@@ -1,5 +1,7 @@
 // Server component
+import ScrambleText from '@/components/animation/ScrambleText'
 import { Atmo } from '@/components/ui/Decor'
+import SectionHeading from '@/components/ui/SectionHeading'
 import { ReactIcon, TailwindIcon, NodeJsIcon, VercelIcon, GitHubIcon } from '@/components/ui/TechIcons'
 import { skillCategories } from '@/content/site/skills'
 import type { SkillTile } from '@/content/site/skills'
@@ -72,13 +74,7 @@ export default function SkillsSection() {
       <Atmo variant="b" tone="cool" />
 
       <div className="skills-wrap">
-        <div className="section-head">
-          <span className="section-num">// 02</span>
-          <h2 className="section-title">
-            SKILLS
-            <span className="accent" />
-          </h2>
-        </div>
+        <SectionHeading number="// 02" title="SKILLS" />
 
         <p className="skills-lead">習得済みのスキルスタックと使用技術。</p>
 
@@ -91,7 +87,7 @@ export default function SkillsSection() {
                   <rect x="0" y="6" width="14" height="2" fill="#fff" />
                 </svg>
               </div>
-              <span className="sk-cat-title">{cat.title}</span>
+              <ScrambleText as="span" className="sk-cat-title" text={cat.title} chars="uppercase" />
               <div className="sk-cat-rule" />
               <span className="sk-cat-count">{cat.count} SKILLS</span>
             </div>

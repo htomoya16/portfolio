@@ -1,25 +1,8 @@
 'use client'
 
-import SideRails from './SideRails'
-
-const tickerItems = [
-  { label: 'WEB ENGINEER', accent: false },
-  { label: '// FRONTEND', accent: true },
-  { label: 'REACT + NEXT.JS', accent: false },
-  { label: '// TYPESCRIPT', accent: true },
-  { label: 'UI / UX', accent: false },
-  { label: '// PIXEL ART', accent: true },
-  { label: 'OPEN TO WORK', accent: false },
-  { label: '// LEVEL UP', accent: true },
-  { label: 'WEB ENGINEER', accent: false },
-  { label: '// FRONTEND', accent: true },
-  { label: 'REACT + NEXT.JS', accent: false },
-  { label: '// TYPESCRIPT', accent: true },
-  { label: 'UI / UX', accent: false },
-  { label: '// PIXEL ART', accent: true },
-  { label: 'OPEN TO WORK', accent: false },
-  { label: '// LEVEL UP', accent: true },
-]
+import ScrambleText from '@/components/animation/ScrambleText'
+import SideRails from '@/components/layout/SideRails'
+import { heroTickerItems } from '@/content/site/hero'
 
 export default function HeroSection() {
   const handleScrollToAbout = () => {
@@ -74,16 +57,16 @@ export default function HeroSection() {
 
       {/* hero content */}
       <div className="hero-content">
-        <p className="hero-eyebrow">PLAYER SELECT</p>
+        <ScrambleText as="p" className="hero-eyebrow" text="PLAYER SELECT" chars="uppercase" revealRate={36} settleDuration={420} />
         <h1 className="hero-title">
           <span className="line">
-            <span className="blue">CRAFT</span>
+            <ScrambleText as="span" className="blue" text="CRAFT" chars="uppercase" delay={160} revealRate={30} settleDuration={520} />
           </span>
           <span className="line">
-            CODE &amp;
+            <ScrambleText as="span" text="CODE &" chars="uppercase" delay={260} revealRate={30} settleDuration={520} />
           </span>
           <span className="line">
-            DESIGN
+            <ScrambleText as="span" text="DESIGN" chars="uppercase" delay={360} revealRate={30} settleDuration={520} />
             <span className="caret" aria-hidden="true" />
           </span>
         </h1>
@@ -93,7 +76,7 @@ export default function HeroSection() {
           Web Engineer / UI Developer
         </p>
         <button className="btn-primary" onClick={handleScrollToContact} type="button">
-          START GAME
+          <ScrambleText text="START GAME" chars="uppercase" revealRate={38} settleDuration={300} />
           <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
             <path d="M13 1L19 7L13 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             <line x1="1" y1="7" x2="18" y2="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -106,15 +89,15 @@ export default function HeroSection() {
         <div className="controller-scene">
           {/* HP bar */}
           <div className="hero-hp" aria-label="HP bar">
-            <span className="hp-label">HP</span>
+            <ScrambleText as="span" className="hp-label" text="HP" chars="uppercase" revealRate={22} settleDuration={220} />
             <div className="hp-bar">
               <div className="hp-fill" />
             </div>
-            <span className="hp-num">83</span>
+            <ScrambleText as="span" className="hp-num" text="83" chars="numbers" revealRate={18} settleDuration={220} />
           </div>
 
           {/* label */}
-          <span className="hero-label-100" aria-hidden="true">100%</span>
+          <ScrambleText as="span" className="hero-label-100" aria-hidden="true" text="100%" chars="numbers" revealRate={24} settleDuration={240} />
 
           {/* main controller */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -148,16 +131,16 @@ export default function HeroSection() {
         <div className="play-circle">
           <div className="tri" aria-hidden="true" />
         </div>
-        <span className="play-label">PRESS START</span>
+        <ScrambleText as="span" className="play-label" text="PRESS START" chars="uppercase" revealRate={34} settleDuration={320} />
       </button>
 
       {/* ticker */}
       <div className="hero-ticker" aria-hidden="true">
         <div className="hero-ticker-inner">
-          {tickerItems.map((item, i) => (
+          {[...heroTickerItems, ...heroTickerItems].map((item, i) => (
             <span key={i} className={`item${item.accent ? ' accent' : ''}`}>
               <span className="bullet">■</span>
-              {item.label}
+              <ScrambleText text={item.label} chars="uppercase" revealRate={42} settleDuration={260} />
             </span>
           ))}
         </div>

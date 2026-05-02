@@ -18,10 +18,14 @@
 ├── src/
 │   ├── app/
 │   ├── components/
+│   │   ├── animation/
+│   │   ├── layout/
 │   │   ├── ui/
 │   │   └── sections/
+│   │       └── home/
 │   ├── content/
 │   │   └── site/
+│   ├── lib/
 ├── public/
 ├── docs/
 │   ├── README.md
@@ -49,7 +53,8 @@ Research や Value / Growth Intent は、独立させる価値が出た場合に
 ## Implementation Rules
 
 - Next.js App Router / TypeScript / Tailwind CSS を前提にする
-- セクションは `src/components/sections/`、再利用 UI は `src/components/ui/` に置く
+- トップページのセクションは `src/components/sections/home/`、layout は `src/components/layout/`、animation は `src/components/animation/` に置く
+- 再利用 UI は `src/components/ui/` に置く
 - skills, timeline, projects, links などは `src/content/` 配下の型付きデータに寄せる
 - Featured Project の詳細を追加する場合は、MDX case study と modal 表示を優先する
 - ページ固有の複雑な CSS を `globals.css` に増やしすぎない
@@ -66,6 +71,7 @@ Research や Value / Growth Intent は、独立させる価値が出た場合に
 
 採用・検討中のライブラリは [docs/libraries.md](./docs/libraries.md) にまとめます。
 新しいライブラリを追加する場合は、目的・使いどころ・既存ライブラリとの重複をそこへ追記してください。
+ドット風フォントや短い mono label の文字演出は Anime.js `scrambleText()` を優先し、GSAP ScrambleTextPlugin は使いません。
 
 ## Quality Bar
 
