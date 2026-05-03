@@ -4,13 +4,11 @@ import gsap from 'gsap'
 import { useEffect, useRef } from 'react'
 
 export default function CursorFollower() {
-  const dotRef = useRef<HTMLDivElement | null>(null)
-  const ringRef = useRef<HTMLDivElement | null>(null)
+  const crosshairRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    const dot = dotRef.current
-    const ring = ringRef.current
-    if (!dot || !ring) return
+    const el = crosshairRef.current
+    if (!el) return
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReducedMotion) return
@@ -18,26 +16,22 @@ export default function CursorFollower() {
     // Disable on touch devices
     if (window.matchMedia('(pointer: coarse)').matches) return
 
-    const dotX = gsap.quickTo(dot, 'x', { duration: 0.08, ease: 'power3.out' })
-    const dotY = gsap.quickTo(dot, 'y', { duration: 0.08, ease: 'power3.out' })
-    const ringX = gsap.quickTo(ring, 'x', { duration: 0.4, ease: 'power3.out' })
-    const ringY = gsap.quickTo(ring, 'y', { duration: 0.4, ease: 'power3.out' })
+    // Hide default system cursor on body
+    document.body.style.cursor = 'none'
+
+    const xTo = gsap.quickTo(el, 'x', { duration: 0.12, ease: 'power3.out' })
+    const yTo = gsap.quickTo(el, 'y', { duration: 0.12, ease: 'power3.out' })
 
     const onMove = (e: MouseEvent) => {
-      dotX(e.clientX)
-      dotY(e.clientY)
-      ringX(e.clientX)
-      ringY(e.clientY)
+      xTo(e.clientX)
+      yTo(e.clientY)
     }
 
     const handleEnterInteractive = () => {
-      gsap.to(ring, { scale: 2.2, borderColor: '#4367FF', duration: 0.25, ease: 'power3.out' })
-      gsap.to(dot, { scale: 0.4, duration: 0.2 })
+      gsap.to(el, { scale: 1.6, duration: 0.2, ease: 'power3.out' })
     }
-
     const handleLeaveInteractive = () => {
-      gsap.to(ring, { scale: 1, borderColor: 'rgba(67,103,255,0.55)', duration: 0.25, ease: 'power3.out' })
-      gsap.to(dot, { scale: 1, duration: 0.2 })
+      gsap.to(el, { scale: 1, duration: 0.2, ease: 'power3.out' })
     }
 
     window.addEventListener('mousemove', onMove)
@@ -45,57 +39,52 @@ export default function CursorFollower() {
     const interactives = document.querySelectorAll<HTMLElement>(
       'a, button, .sk-tile, .project-card, .ct-card, .about-card, .scroll-nav-item'
     )
-    interactives.forEach((el) => {
-      el.addEventListener('pointerenter', handleEnterInteractive)
-      el.addEventListener('pointerleave', handleLeaveInteractive)
+    interactives.forEach((interEl) => {
+      interEl.addEventListener('pointerenter', handleEnterInteractive)
+      interEl.addEventListener('pointerleave', handleLeaveInteractive)
     })
 
     return () => {
+      document.body.style.cursor = ''
       window.removeEventListener('mousemove', onMove)
-      interactives.forEach((el) => {
-        el.removeEventListener('pointerenter', handleEnterInteractive)
-        el.removeEventListener('pointerleave', handleLeaveInteractive)
+      interactives.forEach((interEl) => {
+        interEl.removeEventListener('pointerenter', handleEnterInteractive)
+        interEl.removeEventListener('pointerleave', handleLeaveInteractive)
       })
     }
   }, [])
 
   return (
-    <>
-      <div
-        ref={ringRef}
-        aria-hidden="true"
-        style={{
-          position: 'fixed',
-          left: -16,
-          top: -16,
-          width: 32,
-          height: 32,
-          border: '1.5px solid rgba(67,103,255,0.55)',
-          borderRadius: 0,
-          pointerEvents: 'none',
-          zIndex: 9999,
-          mixBlendMode: 'difference',
-          transform: 'translate3d(0,0,0)',
-          willChange: 'transform',
-        }}
-      />
-      <div
-        ref={dotRef}
-        aria-hidden="true"
-        style={{
-          position: 'fixed',
-          left: -3,
-          top: -3,
-          width: 6,
-          height: 6,
-          background: '#D7FF00',
-          pointerEvents: 'none',
-          zIndex: 9999,
-          transform: 'translate3d(0,0,0)',
-          willChange: 'transform',
-          boxShadow: '0 0 6px #D7FF00, 0 0 14px rgba(215,255,0,0.6)',
-        }}
-      />
-    </>
+    <div
+      ref={crosshairRef}
+      aria-hidden="true"
+      style={{
+        position: 'fixed',
+        left: -20,
+        top: -20,
+        width: 40,
+        height: 40,
+        pointerEvents: 'none',
+        zIndex: 9999,
+        transform: 'translate3d(0,0,0)',
+        willChange: 'transform',
+      }}
+    >
+      {/* Green crosshair — green_crosshair_no_outline.svg inline */}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="40"
+        height="40"
+        viewBox="0 0 1280 1280"
+        style={{ display: 'block' }}
+      >
+        <g fill="#00ff3b">
+          <rect x="630" y="540" width="18" height="45" />
+          <rect x="573" y="594" width="48" height="20" />
+          <rect x="659" y="594" width="48" height="20" />
+          <rect x="630" y="623" width="18" height="45" />
+        </g>
+      </svg>
+    </div>
   )
 }

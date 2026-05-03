@@ -15,6 +15,9 @@ export default function HeroSection() {
     if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
+  // Duplicate 4× for seamless loop with no cutoff
+  const tickerItems = [...heroTickerItems, ...heroTickerItems, ...heroTickerItems, ...heroTickerItems]
+
   return (
     <section className="hero" id="hero">
       <SideRails />
@@ -57,16 +60,49 @@ export default function HeroSection() {
 
       {/* hero content */}
       <div className="hero-content">
-        <ScrambleText as="p" className="hero-eyebrow" text="PLAYER SELECT" chars="uppercase" revealRate={36} settleDuration={420} />
+        <ScrambleText
+          as="p"
+          className="hero-eyebrow"
+          text="PLAYER SELECT"
+          chars="░▒▓█10!%"
+          revealRate={36}
+          settleDuration={420}
+          replayOnHover={false}
+        />
         <h1 className="hero-title">
           <span className="line">
-            <ScrambleText as="span" className="blue" text="CRAFT" chars="uppercase" delay={160} revealRate={30} settleDuration={520} />
+            <ScrambleText
+              as="span"
+              className="blue"
+              text="CRAFT"
+              chars="░▒▓█10!%"
+              delay={160}
+              revealRate={30}
+              settleDuration={520}
+              replayOnHover={false}
+            />
           </span>
           <span className="line">
-            <ScrambleText as="span" text="CODE &" chars="uppercase" delay={260} revealRate={30} settleDuration={520} />
+            <ScrambleText
+              as="span"
+              text="CODE &"
+              chars="░▒▓█10!%"
+              delay={260}
+              revealRate={30}
+              settleDuration={520}
+              replayOnHover={false}
+            />
           </span>
           <span className="line">
-            <ScrambleText as="span" text="DESIGN" chars="uppercase" delay={360} revealRate={30} settleDuration={520} />
+            <ScrambleText
+              as="span"
+              text="DESIGN"
+              chars="░▒▓█10!%"
+              delay={360}
+              revealRate={30}
+              settleDuration={520}
+              replayOnHover={false}
+            />
             <span className="caret" aria-hidden="true" />
           </span>
         </h1>
@@ -75,8 +111,9 @@ export default function HeroSection() {
           ユーザーの体験をアップデートする。<br />
           Web Engineer / UI Developer
         </p>
+        {/* btn-primary: plain text, no scramble */}
         <button className="btn-primary" onClick={handleScrollToContact} type="button">
-          <ScrambleText text="START GAME" chars="uppercase" revealRate={38} settleDuration={300} />
+          START GAME
           <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
             <path d="M13 1L19 7L13 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             <line x1="1" y1="7" x2="18" y2="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -87,17 +124,17 @@ export default function HeroSection() {
       {/* hero visual */}
       <div className="hero-visual">
         <div className="controller-scene">
-          {/* HP bar */}
+          {/* HP bar — hover effects handled by MotionProvider */}
           <div className="hero-hp" aria-label="HP bar">
-            <ScrambleText as="span" className="hp-label" text="HP" chars="uppercase" revealRate={22} settleDuration={220} />
+            <span className="hp-label">HP</span>
             <div className="hp-bar">
               <div className="hp-fill" />
             </div>
-            <ScrambleText as="span" className="hp-num" text="83" chars="numbers" revealRate={18} settleDuration={220} />
+            <span className="hp-num">83</span>
           </div>
 
-          {/* label */}
-          <ScrambleText as="span" className="hero-label-100" aria-hidden="true" text="100%" chars="numbers" revealRate={24} settleDuration={240} />
+          {/* label — plain text, was 100%% bug */}
+          <span className="hero-label-100" aria-hidden="true">100%</span>
 
           {/* main controller */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -121,7 +158,7 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* play button (scroll to about) */}
+      {/* play button — plain label */}
       <button
         className="hero-play-center"
         onClick={handleScrollToAbout}
@@ -131,16 +168,16 @@ export default function HeroSection() {
         <div className="play-circle">
           <div className="tri" aria-hidden="true" />
         </div>
-        <ScrambleText as="span" className="play-label" text="PRESS START" chars="uppercase" revealRate={34} settleDuration={320} />
+        <span className="play-label">PRESS START</span>
       </button>
 
-      {/* ticker */}
+      {/* ticker — 4× duplicate, plain text for stable width */}
       <div className="hero-ticker" aria-hidden="true">
         <div className="hero-ticker-inner">
-          {[...heroTickerItems, ...heroTickerItems].map((item, i) => (
+          {tickerItems.map((item, i) => (
             <span key={i} className={`item${item.accent ? ' accent' : ''}`}>
               <span className="bullet">■</span>
-              <ScrambleText text={item.label} chars="uppercase" revealRate={42} settleDuration={260} />
+              {item.label}
             </span>
           ))}
         </div>

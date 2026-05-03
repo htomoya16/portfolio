@@ -1,5 +1,4 @@
 // Server component
-import ScrambleText from '@/components/animation/ScrambleText'
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { projects } from '@/content/site/projects'
@@ -8,18 +7,14 @@ import type { Project } from '@/content/site/projects'
 function PreviewQuest() {
   return (
     <div className="preview-quest">
-      <div className="preview-quest-header">
-        <ScrambleText text="QUEST HUB" chars="uppercase" revealRate={36} settleDuration={420} />
-      </div>
+      <div className="preview-quest-header">QUEST HUB</div>
       <div className="preview-quest-thumbs">
         <div className="qthumb v1" />
         <div className="qthumb v2" />
         <div className="qthumb v3" />
         <div className="qthumb v4" />
       </div>
-      <div className="preview-quest-btn">
-        <ScrambleText text="START QUEST" chars="uppercase" revealRate={40} settleDuration={300} />
-      </div>
+      <div className="preview-quest-btn">START QUEST</div>
     </div>
   )
 }
@@ -35,7 +30,7 @@ function PreviewScore() {
     <div className="preview-score">
       <div className="preview-score-card">
         <div className="rank-title">
-          <ScrambleText text="RANKING" chars="uppercase" revealRate={36} settleDuration={420} />
+          RANKING
           <span className="pts">PTS</span>
         </div>
         {rows.map((row) => (
@@ -54,11 +49,10 @@ function PreviewPixel() {
     <div className="preview-pixel">
       <div className="preview-pixel-inner">
         <div className="preview-pixel-header">
-          <ScrambleText text="PIXEL DIARY" chars="uppercase" revealRate={42} settleDuration={360} />
-          <ScrambleText text="2024/04" chars="numbers" revealRate={32} settleDuration={300} />
+          <span>PIXEL DIARY</span>
+          <span>2024/04</span>
         </div>
         <div className="preview-pixel-fig">
-          {/* 8x8 dot grid illustration */}
           <svg width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true">
             {Array.from({ length: 8 }, (_, r) =>
               Array.from({ length: 8 }, (_, c) => {
@@ -96,7 +90,7 @@ export default function ProjectsSection() {
 
       <div className="projects-wrap">
         <div className="projects-head">
-          <SectionHeading number="// 03" title="PROJECTS" className="section-head-compact" />
+          <SectionHeading number="// 03" title="PROJECTS" className="section-head-compact" blink />
           <span
             style={{
               fontFamily: "'JetBrains Mono', monospace",
@@ -113,19 +107,14 @@ export default function ProjectsSection() {
           {projects.map((project) => (
             <article key={project.num} className="project-card">
               <div className="project-preview">
-                <ScrambleText as="span" className="project-num-badge mono" text={project.num} chars="numbers" />
+                {/* plain text badge */}
+                <span className="project-num-badge mono">{project.num}</span>
                 <ProjectPreview project={project} />
               </div>
               <div className="project-meta">
-                <ScrambleText as="p" className="project-num-sm mono" text={`PROJECT ${project.num}`} chars="uppercase" />
-                <ScrambleText
-                  as="h3"
-                  className="project-title"
-                  text={project.title}
-                  chars="uppercase"
-                  revealRate={34}
-                  settleDuration={520}
-                />
+                {/* plain text — MotionProvider handles hover scramble */}
+                <p className="project-num-sm mono">{`PROJECT ${project.num}`}</p>
+                <h3 className="project-title">{project.title}</h3>
                 <p className="project-desc">{project.desc}</p>
                 <div className="project-tags">
                   {project.tags.map((tag) => (

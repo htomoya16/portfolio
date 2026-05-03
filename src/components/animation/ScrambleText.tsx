@@ -3,6 +3,9 @@
 import { animate, scrambleText } from 'animejs'
 import { type ComponentPropsWithoutRef, type ElementType, useEffect, useRef } from 'react'
 
+// Loading-style char pool: block chars + binary/symbols for data-load vibe
+const LOADER_CHARS = '░▒▓█10!%'
+
 type ScrambleTextProps<T extends ElementType> = {
   as?: T
   text: string
@@ -22,7 +25,7 @@ type ScrambleTextProps<T extends ElementType> = {
 export default function ScrambleText<T extends ElementType = 'span'>({
   as,
   text,
-  chars = 'uppercase',
+  chars = LOADER_CHARS,
   delay = 0,
   duration,
   revealRate = 52,
@@ -50,10 +53,29 @@ export default function ScrambleText<T extends ElementType = 'span'>({
 
     let hasPlayed = false
     let animation: ReturnType<typeof animate> | undefined
+    let isPlaying = false
+    let lastPlayTime = 0
+    const COOLDOWN = 600 // ms — prevent retriggering mid-animation
+
+    // Lock element size BEFORE animation to prevent layout shift
+    const lockSize = () => {
+      const rect = el.getBoundingClientRect()
+      if (rect.width > 0) {
+        el.style.display = 'inline-block'
+        el.style.minWidth = `${rect.width}px`
+      }
+    }
 
     const play = () => {
+      const now = Date.now()
+      if (now - lastPlayTime < COOLDOWN) return
+      lastPlayTime = now
+
       animation?.cancel()
+      lockSize()
       el.textContent = text
+      isPlaying = true
+
       animation = animate(el, {
         innerHTML: scrambleText({
           text,
@@ -67,8 +89,11 @@ export default function ScrambleText<T extends ElementType = 'span'>({
           from,
           cursor,
           override: '',
-          perturbation: 0.35,
+          perturbation: 0.45,
         }),
+        onComplete: () => {
+          isPlaying = false
+        },
       })
       hasPlayed = true
     }
@@ -80,13 +105,13 @@ export default function ScrambleText<T extends ElementType = 'span'>({
           observer.disconnect()
         }
       },
-      { threshold: 0.35 }
+      { threshold: 0.3 }
     )
 
     observer.observe(el)
 
     const handlePointerEnter = () => {
-      if (replayOnHover) play()
+      if (replayOnHover && !isPlaying) play()
     }
 
     el.addEventListener('pointerenter', handlePointerEnter)

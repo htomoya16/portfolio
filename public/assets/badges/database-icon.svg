@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <g fill="none" stroke="#FFFFFF" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" vector-effect="non-scaling-stroke">
+    
+      <ellipse cx="16" cy="10.5" rx="7" ry="3.2" />
+      <path d="M9 10.5 V21.5 C9 23.3 12.1 24.8 16 24.8 C19.9 24.8 23 23.3 23 21.5 V10.5" />
+      <path d="M9 16 C9 17.8 12.1 19.2 16 19.2 C19.9 19.2 23 17.8 23 16" />
+    
+  </g>
+</svg>

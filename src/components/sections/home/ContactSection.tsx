@@ -1,5 +1,4 @@
 // Server component
-import ScrambleText from '@/components/animation/ScrambleText'
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { contactLinks, contactStats } from '@/content/site/contact'
@@ -69,21 +68,21 @@ export default function ContactSection() {
             まずはお気軽にどうぞ。
           </p>
 
-          {/* stats */}
+          {/* stats — plain text, bar starts at 0 width, MotionProvider animates on hover */}
           <div className="ct-stats">
             {contactStats.map((stat) => (
-              <div key={stat.label} className="ct-stat-row">
-                <ScrambleText as="span" className="ct-stat-label mono" text={stat.label} chars="uppercase" />
+              <div key={stat.label} className="ct-stat-row" data-pct={stat.pct} data-display={stat.display}>
+                <span className="ct-stat-label mono">{stat.label}</span>
                 <span className="ct-stat-bar">
-                  <span style={{ width: `${stat.pct}%` }} />
+                  <span className="ct-stat-bar-fill" style={{ width: 0 }} />
                 </span>
-                <ScrambleText as="span" className="ct-stat-num mono" text={stat.display} chars="numbers" />
+                <span className="ct-stat-num mono">{stat.display}</span>
               </div>
             ))}
           </div>
 
           <span className="ct-prompt mono">
-            <ScrambleText text="> SEND MESSAGE" chars="uppercase" revealRate={32} settleDuration={320} />
+            &gt; SEND MESSAGE
             <span className="caret-blink" aria-hidden="true" />
           </span>
         </div>
@@ -101,7 +100,8 @@ export default function ContactSection() {
                 <ContactIcon type={card.type} />
               </div>
               <div>
-                <ScrambleText as="div" className="ct-card-label mono" text={card.label} chars="uppercase" />
+                {/* plain text — MotionProvider scrambles on ct-card hover */}
+                <div className="ct-card-label mono">{card.label}</div>
                 <div className="ct-card-handle">{card.handle}</div>
               </div>
               <span className="ct-card-arrow mono" aria-hidden="true">→</span>
