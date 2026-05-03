@@ -18,7 +18,7 @@ export default function SectionHeading({ number, title, blink = false, className
         from="left"
         revealRate={34}
         settleDuration={360}
-        replayOnHover={false}
+        replayOnHover={true}
       />
       <h2 className="section-title">
         <ScrambleText
@@ -29,7 +29,7 @@ export default function SectionHeading({ number, title, blink = false, className
           delay={120}
           revealRate={28}
           settleDuration={520}
-          replayOnHover={false}
+          replayOnHover={true}
         />
         {/* accent: underbar style with blink */}
         <span className={`accent${blink ? ' blink' : ''}`} />
