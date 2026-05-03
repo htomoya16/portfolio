@@ -3,8 +3,8 @@
 import { animate, scrambleText } from 'animejs'
 import { type ComponentPropsWithoutRef, type ElementType, useEffect, useRef } from 'react'
 
-// Loading-style char pool: block chars + binary/symbols for data-load vibe
-const LOADER_CHARS = '░▒▓█10!%'
+// Loading-style char pool: block chars + binary/symbols + alphabets for data-load vibe
+const LOADER_CHARS = '░▒▓█10!%ABXYZ'
 
 type ScrambleTextProps<T extends ElementType> = {
   as?: T

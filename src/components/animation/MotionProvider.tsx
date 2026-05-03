@@ -11,7 +11,7 @@ import ParticleField from './ParticleField'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const LOADER_CHARS = '░▒▓█10!%'
+const LOADER_CHARS = '░▒▓█10!%ABXYZ'
 
 /** Track in-progress scramble animations per element to allow mid-flight cancellation */
 const activeAnims = new WeakMap<HTMLElement, ReturnType<typeof animate>>()
