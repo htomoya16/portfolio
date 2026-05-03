@@ -25,52 +25,24 @@ export default function HeroSection() {
       {/* right background panel */}
       <div className="hero-right-bg" aria-hidden="true" />
 
-      {/* decorative corner brackets around hero-visual area */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          top: '12%',
-          right: '3%',
-          width: '54%',
-          height: '76%',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}
-      >
-        <div className="corner-bracket tl" style={{ top: 0, left: 0 }} />
-        <div className="corner-bracket tr" style={{ top: 0, right: 0 }} />
-        <div className="corner-bracket bl" style={{ bottom: 0, left: 0 }} />
-        <div className="corner-bracket br" style={{ bottom: 0, right: 0 }} />
+      {/* Hero SVG decorations — マージン帯のみ（コンテンツと重ならない） */}
+      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/decor/decor_sparkle_diamond_blue.svg" alt="" className="bg-decor" width={34}
+          style={{ position: 'absolute', top: '4%', left: '2%', opacity: 0.40 }} draggable={false} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/decor/decor_dot_grid_8x6_blue.svg" alt="" className="bg-decor" width={78}
+          style={{ position: 'absolute', top: '3%', right: '2%', opacity: 0.24 }} draggable={false} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/decor/decor_small_cross_navy.svg" alt="" className="bg-decor" width={26}
+          style={{ position: 'absolute', bottom: '4%', left: '2%', opacity: 0.30 }} draggable={false} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/decor/plus_cyan.svg" alt="" className="bg-decor" width={22}
+          style={{ position: 'absolute', bottom: '4%', right: '2%', opacity: 0.36 }} draggable={false} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/decor/decor_slash_logo_marks.svg" alt="" className="bg-decor" width={68}
+          style={{ position: 'absolute', top: '44%', left: '1%', opacity: 0.20 }} draggable={false} />
       </div>
-
-      {/* dot grid decoration */}
-      <div
-        className="dot-grid"
-        aria-hidden="true"
-        style={{ width: 80, height: 64, top: '18%', left: '46%', opacity: 0.4, zIndex: 1 }}
-      />
-
-      {/* pixel frame accent */}
-      <div
-        className="pixel-frame"
-        aria-hidden="true"
-        style={{ width: 56, height: 56, bottom: '22%', right: '8%', zIndex: 1 }}
-      />
-
-      {/* SVG bg decorations — animated by MotionProvider (.bg-decor) */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/assets/decor/decor_sparkle_diamond_blue.svg" alt="" className="bg-decor"
-        width={40} style={{ position: 'absolute', top: '12%', left: '42%', opacity: 0.42, zIndex: 1, pointerEvents: 'none' }} draggable={false} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/assets/decor/decor_dot_grid_8x6_blue.svg" alt="" className="bg-decor"
-        width={80} style={{ position: 'absolute', bottom: '18%', left: '4%', opacity: 0.25, zIndex: 1, pointerEvents: 'none' }} draggable={false} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/assets/decor/plus_cyan.svg" alt="" className="bg-decor"
-        width={24} style={{ position: 'absolute', top: '32%', left: '6%', opacity: 0.38, zIndex: 1, pointerEvents: 'none' }} draggable={false} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/assets/decor/decor_small_cross_navy.svg" alt="" className="bg-decor"
-        width={28} style={{ position: 'absolute', bottom: '30%', right: '6%', opacity: 0.32, zIndex: 1, pointerEvents: 'none' }} draggable={false} />
 
       {/* hero content */}
       <div className="hero-content">

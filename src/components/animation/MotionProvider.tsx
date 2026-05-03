@@ -157,7 +157,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
         )
       })
 
-      // ── Idle atmo animations (no scroll dependency) ──
+      // ── Idle atmo + bg-decor animations ──
       // Blob breathing
       gsap.utils.toArray<HTMLElement>('.atmo-blob').forEach((blob, i) => {
         gsap.to(blob, {
@@ -165,46 +165,14 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
           duration: gsap.utils.random(4, 7), repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.4,
         })
       })
-      // Dots float
-      gsap.utils.toArray<HTMLElement>('.atmo-sq').forEach((el, i) => {
-        gsap.to(el, {
-          y: gsap.utils.random(-14, 14), x: gsap.utils.random(-10, 10),
-          duration: gsap.utils.random(3, 5), repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.18,
-        })
-      })
-      // Quads continuous rotation
-      gsap.utils.toArray<HTMLElement>('.atmo-quad').forEach((el, i) => {
-        gsap.to(el, {
-          rotate: `+=${i % 2 === 0 ? 360 : -360}`,
-          duration: gsap.utils.random(20, 32), repeat: -1, ease: 'none', delay: i * 0.6,
-        })
-      })
-      // Plus marks float
-      gsap.utils.toArray<HTMLElement>('.atmo-px').forEach((el, i) => {
-        gsap.to(el, {
-          y: gsap.utils.random(-18, 18), x: gsap.utils.random(-12, 12),
-          rotate: `+=${gsap.utils.random(45, 120)}`,
-          duration: gsap.utils.random(4, 8), repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.22,
-        })
-      })
-      // Slashes drift
-      gsap.utils.toArray<HTMLElement>('.atmo-slash').forEach((el, i) => {
-        gsap.to(el, {
-          x: gsap.utils.random(-22, 22), rotate: `+=${i % 2 === 0 ? 20 : -20}`,
-          duration: gsap.utils.random(5, 10), repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.3,
-        })
-      })
-      // SVG bg-decor idle float — each element gets randomized float + occasional rotation
+      // SVG bg-decor idle float — float + 3つに1つだけ回転
       gsap.utils.toArray<HTMLElement>('.bg-decor').forEach((el, i) => {
         gsap.to(el, {
           y: gsap.utils.random(-14, 14),
           x: gsap.utils.random(-8, 8),
-          rotate: i % 3 !== 0 ? 0 : `+=${gsap.utils.random(-22, 22)}`,
+          rotate: i % 3 === 0 ? `+=${gsap.utils.random(-22, 22)}` : 0,
           duration: gsap.utils.random(3.5, 7),
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: i * 0.28,
+          repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.28,
         })
       })
     },
