@@ -60,10 +60,10 @@ export default function CursorFollower() {
       aria-hidden="true"
       style={{
         position: 'fixed',
-        left: -20,
-        top: -20,
-        width: 40,
-        height: 40,
+        left: -30,
+        top: -30,
+        width: 60,
+        height: 60,
         pointerEvents: 'none',
         zIndex: 9999,
         transform: 'translate3d(0,0,0)',
@@ -73,8 +73,8 @@ export default function CursorFollower() {
       {/* Green crosshair — green_crosshair_no_outline.svg inline */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="40"
-        height="40"
+        width="60"
+        height="60"
         viewBox="0 0 1280 1280"
         style={{ display: 'block' }}
       >
