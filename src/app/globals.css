@@ -476,7 +476,6 @@ a { color: inherit; text-decoration: none; }
 .ab-div-sq { position: absolute; left: 8px; width: 16px; height: 16px; background: rgba(67,103,255,0.18); border: 1.5px solid var(--blue); }
 .ab-div-sq.top { top: 0; }
 .ab-div-sq.bot { bottom: 0; background: var(--blue); }
-.ab-div-lime { position: absolute; left: 10px; top: 50%; width: 12px; height: 12px; background: var(--lime); transform: translateY(-50%); opacity: 0.5; }
 /* Sliding indicator that moves to hovered card */
 .ab-div-indicator {
   position: absolute; left: 6px; top: 0;

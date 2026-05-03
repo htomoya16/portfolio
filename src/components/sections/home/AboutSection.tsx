@@ -111,7 +111,6 @@ export default function AboutSection() {
         {/* center divider with sliding indicator */}
         <div className="about-divider" ref={dividerRef} aria-hidden="true">
           <div className="ab-div-sq top" />
-          <div className="ab-div-lime" />
           {/* sliding indicator */}
           <div className="ab-div-indicator" ref={indicatorRef} />
           <div className="ab-div-sq bot" />
