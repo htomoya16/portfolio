@@ -1,6 +1,47 @@
 // Server component — pixel/atmosphere decoration primitives
+import type { CSSProperties } from 'react'
+
+type BgDecorDef = { src: string; width: number; style: CSSProperties }
+
+const VARIANT_DECORS: Record<string, BgDecorDef[]> = {
+  a: [
+    { src: '/assets/decor/decor_dot_grid_8x6_blue.svg',      width: 90,  style: { top: '7%',    right: '3%',    opacity: 0.28 } },
+    { src: '/assets/decor/decor_sparkle_diamond_blue.svg',   width: 38,  style: { top: '28%',   left: '5%',     opacity: 0.45 } },
+    { src: '/assets/decor/decor_small_cross_navy.svg',       width: 30,  style: { bottom: '18%',right: '6%',    opacity: 0.35 } },
+    { src: '/assets/decor/decor_slash_logo_marks.svg',       width: 80,  style: { bottom: '7%', left: '2%',     opacity: 0.22 } },
+  ],
+  b: [
+    { src: '/assets/decor/halftone_blue.svg',                width: 200, style: { top: -10,     right: -10,     opacity: 0.10 } },
+    { src: '/assets/decor/decor_dot_grid_5x4_lime.svg',      width: 80,  style: { bottom: '10%',left: '4%',     opacity: 0.38 } },
+    { src: '/assets/decor/decor_sparkle_diamond_blue.svg',   width: 34,  style: { top: '18%',   right: '7%',    opacity: 0.48 } },
+    { src: '/assets/decor/plus_pink.svg',                    width: 26,  style: { bottom: '22%',right: '5%',    opacity: 0.45 } },
+    { src: '/assets/decor/plus_cyan.svg',                    width: 26,  style: { top: '42%',   left: '2%',     opacity: 0.45 } },
+  ],
+  c: [
+    { src: '/assets/decor/halftone_gray.svg',                width: 160, style: { bottom: -10,  left: -10,      opacity: 0.09 } },
+    { src: '/assets/decor/square_blue.svg',                  width: 30,  style: { top: '14%',   right: '3%',    opacity: 0.38 } },
+    { src: '/assets/decor/square_cyan.svg',                  width: 26,  style: { bottom: '22%',right: '7%',    opacity: 0.32 } },
+    { src: '/assets/decor/decor_dot_grid_6x5_blue.svg',      width: 85,  style: { top: '6%',    left: '3%',     opacity: 0.28 } },
+    { src: '/assets/decor/plus_purple.svg',                  width: 26,  style: { top: '42%',   right: '4%',    opacity: 0.38 } },
+  ],
+  d: [
+    { src: '/assets/decor/decor_diagonal_line_lime_blue.svg',width: 65,  style: { top: '10%',   left: '4%',     opacity: 0.32 } },
+    { src: '/assets/decor/slashes_purple.svg',               width: 100, style: { bottom: '16%',right: '4%',    opacity: 0.28 } },
+    { src: '/assets/decor/decor_dot_grid_10x4_blue.svg',     width: 110, style: { top: '22%',   right: '2%',    opacity: 0.24 } },
+    { src: '/assets/decor/decor_small_cross_navy.svg',       width: 34,  style: { bottom: '8%', left: '5%',     opacity: 0.38 } },
+  ],
+  e: [
+    { src: '/assets/decor/decor_sparkle_diamond_blue.svg',   width: 42,  style: { top: '10%',   left: '5%',     opacity: 0.48 } },
+    { src: '/assets/decor/decor_sparkle_diamond_blue.svg',   width: 34,  style: { bottom: '14%',right: '4%',    opacity: 0.38 } },
+    { src: '/assets/decor/decor_corner_brackets_square.svg', width: 75,  style: { top: '8%',    right: '3%',    opacity: 0.28 } },
+    { src: '/assets/decor/decor_plus_lime.svg',              width: 30,  style: { bottom: '20%',left: '6%',     opacity: 0.48 } },
+    { src: '/assets/decor/square_pink.svg',                  width: 26,  style: { top: '36%',   right: '6%',    opacity: 0.38 } },
+  ],
+}
 
 export function Atmo({ variant = 'a', tone = 'cool' }: { variant?: string; tone?: string }) {
+  const decors = VARIANT_DECORS[variant] ?? []
+
   return (
     <div className={`atmo atmo-${variant} atmo-${tone}`} aria-hidden="true">
       <div className="atmo-grid" />
@@ -23,6 +64,20 @@ export function Atmo({ variant = 'a', tone = 'cool' }: { variant?: string; tone?
       <span className="atmo-slash sl1" />
       <span className="atmo-slash sl2" />
       <div className="atmo-noise" />
+
+      {/* Section-specific SVG decorations */}
+      {decors.map((d, i) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          key={i}
+          src={d.src}
+          alt=""
+          className="bg-decor"
+          width={d.width}
+          style={d.style}
+          draggable={false}
+        />
+      ))}
     </div>
   )
 }

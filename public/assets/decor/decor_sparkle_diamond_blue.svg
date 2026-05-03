@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+  <title>decor_sparkle_diamond_blue</title>
+  <g shape-rendering="geometricPrecision">
+
+    <rect x="36" y="30" width="8" height="8" transform="rotate(45 40 34)" stroke="#4367FF" stroke-width="1.5" fill="none"/>
+    <circle cx="55" cy="50" r="2" fill="#B9C8E4" opacity="0.8"/>
+
+  </g>
+</svg>

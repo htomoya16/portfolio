@@ -58,6 +58,20 @@ export default function HeroSection() {
         style={{ width: 56, height: 56, bottom: '22%', right: '8%', zIndex: 1 }}
       />
 
+      {/* SVG bg decorations — animated by MotionProvider (.bg-decor) */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/assets/decor/decor_sparkle_diamond_blue.svg" alt="" className="bg-decor"
+        width={40} style={{ position: 'absolute', top: '12%', left: '42%', opacity: 0.42, zIndex: 1, pointerEvents: 'none' }} draggable={false} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/assets/decor/decor_dot_grid_8x6_blue.svg" alt="" className="bg-decor"
+        width={80} style={{ position: 'absolute', bottom: '18%', left: '4%', opacity: 0.25, zIndex: 1, pointerEvents: 'none' }} draggable={false} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/assets/decor/plus_cyan.svg" alt="" className="bg-decor"
+        width={24} style={{ position: 'absolute', top: '32%', left: '6%', opacity: 0.38, zIndex: 1, pointerEvents: 'none' }} draggable={false} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/assets/decor/decor_small_cross_navy.svg" alt="" className="bg-decor"
+        width={28} style={{ position: 'absolute', bottom: '30%', right: '6%', opacity: 0.32, zIndex: 1, pointerEvents: 'none' }} draggable={false} />
+
       {/* hero content */}
       <div className="hero-content">
         <ScrambleText

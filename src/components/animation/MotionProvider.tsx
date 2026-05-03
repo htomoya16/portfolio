@@ -194,6 +194,19 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
           duration: gsap.utils.random(5, 10), repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.3,
         })
       })
+      // SVG bg-decor idle float — each element gets randomized float + occasional rotation
+      gsap.utils.toArray<HTMLElement>('.bg-decor').forEach((el, i) => {
+        gsap.to(el, {
+          y: gsap.utils.random(-14, 14),
+          x: gsap.utils.random(-8, 8),
+          rotate: i % 3 !== 0 ? 0 : `+=${gsap.utils.random(-22, 22)}`,
+          duration: gsap.utils.random(3.5, 7),
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: i * 0.28,
+        })
+      })
     },
     { scope: rootRef }
   )

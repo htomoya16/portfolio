@@ -435,6 +435,15 @@ a { color: inherit; text-decoration: none; }
   background-image: url('/assets/decor/micro_dots.svg');
   background-size: 512px 512px; background-repeat: repeat; opacity: 0.5;
 }
+/* SVG bg decorations — positioned inside .atmo, animated by MotionProvider */
+.bg-decor {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+  object-fit: contain;
+  display: block;
+}
 .atmo.atmo-cool  { background: transparent; }
 .atmo.atmo-paper { background: transparent; }
 .atmo.atmo-warm  { background: transparent; }
