@@ -10,8 +10,8 @@ export default function HeroSection() {
     if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const handleScrollToContact = () => {
-    const el = document.getElementById('contact')
+  const handleScrollToProjects = () => {
+    const el = document.getElementById('projects')
     if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
@@ -98,8 +98,8 @@ export default function HeroSection() {
           Web Engineer / UI Developer
         </p>
         {/* btn-primary: plain text, no scramble */}
-        <button className="btn-primary" onClick={handleScrollToContact} type="button">
-          START GAME
+        <button className="btn-primary" onClick={handleScrollToProjects} type="button">
+          VIEW WORKS
           <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
             <path d="M13 1L19 7L13 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             <line x1="1" y1="7" x2="18" y2="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
