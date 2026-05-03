@@ -13,14 +13,30 @@ gsap.registerPlugin(ScrollTrigger)
 
 const LOADER_CHARS = '░▒▓█10!%'
 
+/** Track in-progress scramble animations per element to allow mid-flight cancellation */
+const activeAnims = new WeakMap<HTMLElement, ReturnType<typeof animate>>()
+
+/** Cancel an active scramble and immediately restore the original text */
+function cancelScramble(el: HTMLElement | null | undefined, text: string) {
+  if (!el) return
+  const prev = activeAnims.get(el)
+  if (prev) {
+    prev.pause()
+    el.textContent = text
+    activeAnims.delete(el)
+  }
+}
+
 /** Scramble one element via animejs (used for hover effects) */
 function scrambleEl(
   el: HTMLElement,
   text: string,
   opts?: { chars?: string; revealRate?: number; settleDuration?: number }
 ) {
+  // Cancel any in-progress animation first
+  cancelScramble(el, text)
   el.textContent = text
-  animate(el, {
+  const anim = animate(el, {
     innerHTML: scrambleText({
       text,
       chars: opts?.chars ?? LOADER_CHARS,
@@ -30,7 +46,12 @@ function scrambleEl(
       override: '',
       perturbation: 0.45,
     }),
+    onComplete: () => {
+      el.textContent = text
+      activeAnims.delete(el)
+    },
   })
+  activeAnims.set(el, anim)
 }
 
 export default function MotionProvider({ children }: { children: ReactNode }) {
@@ -252,13 +273,23 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       const hpLabel = hpEl.querySelector<HTMLElement>('.hp-label')
       const hpNum   = hpEl.querySelector<HTMLElement>('.hp-num')
       const hpFill  = hpEl.querySelector<HTMLElement>('.hp-fill')
+      const hpLabelText = 'HP'
+      const hpNumText   = '83'
       const onEnter = () => {
-        if (hpLabel) scrambleEl(hpLabel, 'HP')
-        if (hpNum)   scrambleEl(hpNum, '83', { chars: '░▒▓█10' })
+        if (hpLabel) scrambleEl(hpLabel, hpLabelText)
+        if (hpNum)   scrambleEl(hpNum, hpNumText, { chars: '░▒▓█10' })
         if (hpFill)  gsap.fromTo(hpFill, { width: '0%' }, { width: '83%', duration: 0.9, ease: 'power3.out' })
       }
+      const onLeave = () => {
+        cancelScramble(hpLabel, hpLabelText)
+        cancelScramble(hpNum,   hpNumText)
+      }
       hpEl.addEventListener('pointerenter', onEnter)
-      cleaners.push(() => hpEl.removeEventListener('pointerenter', onEnter))
+      hpEl.addEventListener('pointerleave', onLeave)
+      cleaners.push(() => {
+        hpEl.removeEventListener('pointerenter', onEnter)
+        hpEl.removeEventListener('pointerleave', onLeave)
+      })
     }
 
     // sk-cat-head → scramble sk-cat-title
@@ -267,8 +298,13 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       if (!title) return
       const text = title.textContent?.trim() || ''
       const onEnter = () => scrambleEl(title, text)
+      const onLeave = () => cancelScramble(title, text)
       head.addEventListener('pointerenter', onEnter)
-      cleaners.push(() => head.removeEventListener('pointerenter', onEnter))
+      head.addEventListener('pointerleave', onLeave)
+      cleaners.push(() => {
+        head.removeEventListener('pointerenter', onEnter)
+        head.removeEventListener('pointerleave', onLeave)
+      })
     })
 
     // sk-tile → scramble sk-tile-name
@@ -277,20 +313,36 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       if (!name) return
       const text = name.textContent?.trim() || ''
       const onEnter = () => scrambleEl(name, text, { revealRate: 48, settleDuration: 280 })
+      const onLeave = () => cancelScramble(name, text)
       tile.addEventListener('pointerenter', onEnter)
-      cleaners.push(() => tile.removeEventListener('pointerenter', onEnter))
+      tile.addEventListener('pointerleave', onLeave)
+      cleaners.push(() => {
+        tile.removeEventListener('pointerenter', onEnter)
+        tile.removeEventListener('pointerleave', onLeave)
+      })
     })
 
     // exp-card → scramble exp-date + exp-badge
     root.querySelectorAll<HTMLElement>('.exp-card').forEach((card) => {
       const date  = card.querySelector<HTMLElement>('.exp-date')
       const badge = card.querySelector<HTMLElement>('.exp-badge')
+      // Capture originals BEFORE any animation runs
+      const dateText  = date?.textContent?.trim()  || ''
+      const badgeText = badge?.textContent?.trim() || ''
       const onEnter = () => {
-        if (date)  scrambleEl(date,  date.textContent?.trim()  || '', { chars: '░▒▓█10', revealRate: 28 })
-        if (badge) scrambleEl(badge, badge.textContent?.trim() || '', { revealRate: 36 })
+        if (date)  scrambleEl(date,  dateText,  { chars: '░▒▓█10', revealRate: 28 })
+        if (badge) scrambleEl(badge, badgeText, { revealRate: 36 })
+      }
+      const onLeave = () => {
+        cancelScramble(date,  dateText)
+        cancelScramble(badge, badgeText)
       }
       card.addEventListener('pointerenter', onEnter)
-      cleaners.push(() => card.removeEventListener('pointerenter', onEnter))
+      card.addEventListener('pointerleave', onLeave)
+      cleaners.push(() => {
+        card.removeEventListener('pointerenter', onEnter)
+        card.removeEventListener('pointerleave', onLeave)
+      })
     })
 
     // ct-stat-row → scramble label + num, animate bar
@@ -299,13 +351,23 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       const num     = row.querySelector<HTMLElement>('.ct-stat-num')
       const barFill = row.querySelector<HTMLElement>('.ct-stat-bar-fill')
       const pct = Number(row.dataset.pct ?? 0)
+      const labelText = label?.textContent?.trim() || ''
+      const numText   = num?.textContent?.trim()   || ''
       const onEnter = () => {
-        if (label)   scrambleEl(label,   label.textContent?.trim()   || '', { revealRate: 40 })
-        if (num)     scrambleEl(num,     num.textContent?.trim()     || '', { revealRate: 28 })
+        if (label)   scrambleEl(label,   labelText, { revealRate: 40 })
+        if (num)     scrambleEl(num,     numText,   { revealRate: 28 })
         if (barFill) gsap.fromTo(barFill, { width: '0%' }, { width: `${pct}%`, duration: 0.9, ease: 'power3.out' })
       }
+      const onLeave = () => {
+        cancelScramble(label, labelText)
+        cancelScramble(num,   numText)
+      }
       row.addEventListener('pointerenter', onEnter)
-      cleaners.push(() => row.removeEventListener('pointerenter', onEnter))
+      row.addEventListener('pointerleave', onLeave)
+      cleaners.push(() => {
+        row.removeEventListener('pointerenter', onEnter)
+        row.removeEventListener('pointerleave', onLeave)
+      })
     })
 
     // ct-card → scramble ct-card-label
@@ -314,8 +376,13 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       if (!label) return
       const text = label.textContent?.trim() || ''
       const onEnter = () => scrambleEl(label, text, { revealRate: 42, settleDuration: 300 })
+      const onLeave = () => cancelScramble(label, text)
       card.addEventListener('pointerenter', onEnter)
-      cleaners.push(() => card.removeEventListener('pointerenter', onEnter))
+      card.addEventListener('pointerleave', onLeave)
+      cleaners.push(() => {
+        card.removeEventListener('pointerenter', onEnter)
+        card.removeEventListener('pointerleave', onLeave)
+      })
     })
 
     return () => cleaners.forEach((fn) => fn())
