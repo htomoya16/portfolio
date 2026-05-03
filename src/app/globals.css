@@ -523,7 +523,7 @@ a { color: inherit; text-decoration: none; }
 .skills-lead { font-family: 'Inter', 'Noto Sans JP', sans-serif; font-size: 14px; color: var(--muted-2); margin-top: -18px; margin-bottom: 46px; letter-spacing: 0.05em; }
 .sk-cat { margin-bottom: 30px; }
 .sk-cat-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
-.sk-cat-badge { width: 32px; height: 32px; background: var(--blue); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sk-cat-badge { width: 40px; height: 40px; background: var(--blue); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .sk-cat-title { font-family: 'Press Start 2P', monospace; font-size: 14px; color: var(--ink); letter-spacing: 0.06em; flex-shrink: 0; }
 .sk-cat-rule { flex: 1; height: 1px; background-image: linear-gradient(90deg, var(--line-3) 50%, transparent 50%); background-size: 6px 1px; }
 .sk-cat-count { font-size: 11px; color: var(--muted); letter-spacing: 0.22em; flex-shrink: 0; }

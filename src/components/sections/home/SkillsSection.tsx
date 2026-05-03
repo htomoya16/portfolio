@@ -92,7 +92,7 @@ export default function SkillsSection() {
                 <div className="sk-cat-badge" aria-hidden="true">
                   {badgeIcon ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={badgeIcon} alt="" width={20} height={20} />
+                    <img src={badgeIcon} alt="" width={28} height={28} />
                   ) : (
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                       <rect x="6" y="0" width="2" height="14" fill="#fff" />
