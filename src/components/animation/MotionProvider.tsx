@@ -112,6 +112,19 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
         )
       })
 
+      // ct-stat bars: scroll-triggered initial fill
+      gsap.utils.toArray<HTMLElement>('.ct-stat-row').forEach((row) => {
+        const fill = row.querySelector<HTMLElement>('.ct-stat-bar-fill')
+        const pct  = Number((row as HTMLElement).dataset.pct ?? 0)
+        if (!fill) return
+        gsap.fromTo(
+          fill,
+          { width: '0%' },
+          { width: `${pct}%`, duration: 1.4, ease: 'power3.out',
+            scrollTrigger: { trigger: row, start: 'top 88%', once: true } }
+        )
+      })
+
       // Project card clip-path reveal
       gsap.fromTo(
         '.project-card',
