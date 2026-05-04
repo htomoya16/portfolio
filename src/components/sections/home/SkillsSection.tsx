@@ -1,4 +1,5 @@
 // Server component
+import ScrambleText from '@/components/animation/ScrambleText'
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { ReactIcon, TailwindIcon, NodeJsIcon, VercelIcon, GitHubIcon } from '@/components/ui/TechIcons'
@@ -110,8 +111,8 @@ export default function SkillsSection() {
                 {cat.tiles.map((tile) => (
                   <div key={tile.name} className="sk-tile">
                     <TileIcon tile={tile} />
-                    {/* plain text — scramble triggered by MotionProvider on sk-tile hover */}
-                    <span className="sk-tile-name">{tile.name}</span>
+                    {/* ScrambleText fires on scroll-in (IntersectionObserver) + hover replay */}
+                    <ScrambleText as="span" className="sk-tile-name" text={tile.name} revealRate={48} settleDuration={280} replayOnHover={true} />
                   </div>
                 ))}
               </div>

@@ -238,8 +238,39 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
           duration: gsap.utils.random(4, 7), repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.4,
         })
       })
-      // bg-decor: セクションに固定されたまま静止。
-      // repeat アニメーションを付けるとスクロール中に位置がずれて見えるため除去。
+
+      // ── Atmo parallax: scroll-driven subtle movement ──
+      gsap.utils.toArray<HTMLElement>('section').forEach((section) => {
+        const blobs = section.querySelectorAll<HTMLElement>('.atmo-blob')
+        if (blobs.length) {
+          gsap.to(blobs, {
+            yPercent: -16,
+            scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 1.4 },
+          })
+        }
+      })
+
+      // bg-decor SVG decorations — subtle rotation + y shift per section
+      gsap.utils.toArray<HTMLElement>('section').forEach((section, i) => {
+        const decors = section.querySelectorAll<HTMLElement>('.bg-decor')
+        decors.forEach((d, j) => {
+          const dir = (i + j) % 2 === 0 ? 1 : -1
+          gsap.to(d, {
+            yPercent: dir * 14,
+            rotate: dir * 18,
+            scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 1.8 },
+          })
+        })
+      })
+
+      // atmo-grid background pan
+      gsap.utils.toArray<HTMLElement>('.atmo-grid').forEach((grid) => {
+        gsap.to(grid, {
+          backgroundPosition: '+=80px +=80px',
+          ease: 'none',
+          scrollTrigger: { trigger: grid.closest('section') ?? grid, start: 'top bottom', end: 'bottom top', scrub: 0.9 },
+        })
+      })
     },
     { scope: rootRef }
   )
@@ -362,20 +393,8 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       })
     })
 
-    // sk-tile → scramble sk-tile-name
-    root.querySelectorAll<HTMLElement>('.sk-tile').forEach((tile) => {
-      const name = tile.querySelector<HTMLElement>('.sk-tile-name')
-      if (!name) return
-      const text = name.textContent?.trim() || ''
-      const onEnter = () => scrambleEl(name, text, { revealRate: 48, settleDuration: 280 })
-      const onLeave = () => cancelScramble(name, text)
-      tile.addEventListener('pointerenter', onEnter)
-      tile.addEventListener('pointerleave', onLeave)
-      cleaners.push(() => {
-        tile.removeEventListener('pointerenter', onEnter)
-        tile.removeEventListener('pointerleave', onLeave)
-      })
-    })
+    // sk-tile-name は ScrambleText コンポーネントで IntersectionObserver + hover replay を管理するため
+    // MotionProvider 側ではスクランブルしない（二重発火を防ぐ）
 
     // exp-card → scramble exp-date + exp-badge
     root.querySelectorAll<HTMLElement>('.exp-card').forEach((card) => {
@@ -437,6 +456,19 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       cleaners.push(() => {
         card.removeEventListener('pointerenter', onEnter)
         card.removeEventListener('pointerleave', onLeave)
+      })
+    })
+
+    // nav links → scramble on hover
+    root.querySelectorAll<HTMLElement>('.nav ul a').forEach((link) => {
+      const text = link.textContent?.trim() || ''
+      const onEnter = () => scrambleEl(link, text, { revealRate: 52, settleDuration: 260 })
+      const onLeave = () => cancelScramble(link, text)
+      link.addEventListener('pointerenter', onEnter)
+      link.addEventListener('pointerleave', onLeave)
+      cleaners.push(() => {
+        link.removeEventListener('pointerenter', onEnter)
+        link.removeEventListener('pointerleave', onLeave)
       })
     })
 
