@@ -111,8 +111,8 @@ export default function SkillsSection() {
                 {cat.tiles.map((tile) => (
                   <div key={tile.name} className="sk-tile">
                     <TileIcon tile={tile} />
-                    {/* ScrambleText fires on scroll-in (IntersectionObserver) + hover replay */}
-                    <ScrambleText as="span" className="sk-tile-name" text={tile.name} revealRate={48} settleDuration={280} replayOnHover={true} />
+                    {/* ScrambleText fires on scroll-in (IntersectionObserver) のみ。hover は親 sk-tile 経由で MotionProvider が制御 */}
+                    <ScrambleText as="span" className="sk-tile-name" text={tile.name} revealRate={48} settleDuration={280} replayOnHover={false} />
                   </div>
                 ))}
               </div>

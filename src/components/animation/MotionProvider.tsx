@@ -397,8 +397,21 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       })
     })
 
-    // sk-tile-name は ScrambleText コンポーネントで IntersectionObserver + hover replay を管理するため
-    // MotionProvider 側ではスクランブルしない（二重発火を防ぐ）
+    // sk-tile にカーソルが入ったら sk-tile-name を scramble（親要素でトリガー）
+    // ScrambleText は replayOnHover=false なので二重発火しない
+    root.querySelectorAll<HTMLElement>('.sk-tile').forEach((tile) => {
+      const name = tile.querySelector<HTMLElement>('.sk-tile-name')
+      if (!name) return
+      const text = name.textContent?.trim() || ''
+      const onEnter = () => scrambleEl(name, text, { revealRate: 48, settleDuration: 280 })
+      const onLeave = () => cancelScramble(name, text)
+      tile.addEventListener('pointerenter', onEnter)
+      tile.addEventListener('pointerleave', onLeave)
+      cleaners.push(() => {
+        tile.removeEventListener('pointerenter', onEnter)
+        tile.removeEventListener('pointerleave', onLeave)
+      })
+    })
 
     // exp-card → scramble exp-date + exp-badge
     root.querySelectorAll<HTMLElement>('.exp-card').forEach((card) => {
