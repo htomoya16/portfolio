@@ -1,5 +1,6 @@
 // Server component — pixel/atmosphere decoration primitives
 import type { CSSProperties } from 'react'
+import ParticleField from '@/components/animation/ParticleField'
 
 type BgDecorDef = { src: string; width: number; style: CSSProperties }
 
@@ -60,6 +61,7 @@ export function Atmo({ variant = 'a', tone = 'cool' }: { variant?: string; tone?
         // eslint-disable-next-line @next/next/no-img-element
         <img key={i} src={d.src} alt="" className="bg-decor" width={d.width} style={d.style} draggable={false} />
       ))}
+      <ParticleField count={10} />
     </div>
   )
 }

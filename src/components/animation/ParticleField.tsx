@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react'
 
 const COLORS = ['#4367FF', '#4FD8FF', '#B5C2FF', '#F072B0', '#D7FF00']
 const SHAPES = ['square', 'plus', 'dot'] as const
-const COUNT = 36
 
 type Shape = (typeof SHAPES)[number]
 
@@ -24,8 +23,8 @@ interface Particle {
   opacity: number
 }
 
-function buildParticles(): Particle[] {
-  return Array.from({ length: COUNT }, (_, i) => ({
+function buildParticles(count: number): Particle[] {
+  return Array.from({ length: count }, (_, i) => ({
     id: i,
     size: Math.random() * 6 + 3,
     color: COLORS[Math.floor(Math.random() * COLORS.length)],
@@ -41,14 +40,19 @@ function buildParticles(): Particle[] {
   }))
 }
 
-export default function ParticleField() {
+interface ParticleFieldProps {
+  /** セクション内に配置する場合は count を指定して position:absolute で使用 */
+  count?: number
+}
+
+export default function ParticleField({ count = 12 }: ParticleFieldProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [particles, setParticles] = useState<Particle[]>([])
 
   // Build particles only on client to avoid SSR hydration mismatch
   useEffect(() => {
-    setParticles(buildParticles())
-  }, [])
+    setParticles(buildParticles(count))
+  }, [count])
 
   useEffect(() => {
     const root = containerRef.current
@@ -86,7 +90,7 @@ export default function ParticleField() {
       ref={containerRef}
       aria-hidden="true"
       style={{
-        position: 'fixed',
+        position: 'absolute',
         inset: 0,
         pointerEvents: 'none',
         zIndex: 1,

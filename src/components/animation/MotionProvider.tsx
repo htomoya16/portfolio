@@ -8,7 +8,6 @@ import Lenis from 'lenis'
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import CursorFollower from './CursorFollower'
-import ParticleField from './ParticleField'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -529,7 +528,6 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
   // position:fixed の固定解除を完全に回避するための最も確実な手段。
   return (
     <>
-      {mounted && createPortal(<ParticleField />, document.body)}
       {mounted && createPortal(<CursorFollower />, document.body)}
       <div ref={rootRef}>
         {children}
