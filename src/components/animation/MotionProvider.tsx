@@ -133,6 +133,20 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
           stagger: 0.14, scrollTrigger: { trigger: '.projects-grid', start: 'top 75%', once: true } }
       )
 
+      // Experience node + card reveal
+      gsap.fromTo(
+        '.exp-node',
+        { autoAlpha: 0, scale: 0 },
+        { autoAlpha: 1, scale: 1, duration: 0.38, ease: 'back.out(2.5)',
+          stagger: 0.12, scrollTrigger: { trigger: '.exp-list', start: 'top 78%', once: true } }
+      )
+      gsap.fromTo(
+        '.exp-card',
+        { autoAlpha: 0, x: -44, clipPath: 'inset(0 100% 0 0)' },
+        { autoAlpha: 1, x: 0, clipPath: 'inset(0 0% 0 0)', duration: 0.65, ease: 'power3.out',
+          stagger: 0.12, scrollTrigger: { trigger: '.exp-list', start: 'top 78%', once: true } }
+      )
+
       // Skill tile reveal
       gsap.fromTo(
         '.sk-tile',
