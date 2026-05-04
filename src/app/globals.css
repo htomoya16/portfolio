@@ -387,19 +387,19 @@ a { color: inherit; text-decoration: none; }
 .atmo-grid {
   position: absolute; inset: 0;
   background-image:
-    linear-gradient(rgba(67,103,255,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(67,103,255,0.045) 1px, transparent 1px);
+    linear-gradient(rgba(67,103,255,0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(67,103,255,0.09) 1px, transparent 1px);
   background-size: 28px 28px; background-position: -1px -1px;
   mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, #000 50%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, #000 50%, transparent 100%);
   opacity: 0.85;
 }
 .atmo-blob {
-  position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5;
+  position: absolute; border-radius: 50%; filter: blur(72px); opacity: 0.78;
 }
-.atmo-blob.b1 { width: 480px; height: 480px; background: radial-gradient(circle, #B5C2FF 0%, transparent 70%); }
-.atmo-blob.b2 { width: 380px; height: 380px; background: radial-gradient(circle, #C5E2FF 0%, transparent 70%); }
-.atmo-blob.b3 { width: 320px; height: 320px; background: radial-gradient(circle, #DDD6FF 0%, transparent 70%); opacity: 0.35; }
+.atmo-blob.b1 { width: 520px; height: 520px; background: radial-gradient(circle, #6B8AFF 0%, transparent 68%); }
+.atmo-blob.b2 { width: 400px; height: 400px; background: radial-gradient(circle, #7DC3FF 0%, transparent 68%); }
+.atmo-blob.b3 { width: 340px; height: 340px; background: radial-gradient(circle, #A891FF 0%, transparent 68%); opacity: 0.55; }
 .atmo-noise {
   position: absolute; inset: 0;
   background-image: url('/assets/decor/micro_dots.svg');
@@ -417,8 +417,8 @@ a { color: inherit; text-decoration: none; }
 .atmo.atmo-cool  { background: transparent; }
 .atmo.atmo-paper { background: transparent; }
 .atmo.atmo-warm  { background: transparent; }
-.atmo.atmo-warm .atmo-blob.b1 { background: radial-gradient(circle, #FFE8C8 0%, transparent 70%); opacity: 0.3; }
-.atmo.atmo-warm .atmo-blob.b3 { background: radial-gradient(circle, #FFCFE0 0%, transparent 70%); opacity: 0.25; }
+.atmo.atmo-warm .atmo-blob.b1 { background: radial-gradient(circle, #FFB347 0%, transparent 68%); opacity: 0.52; }
+.atmo.atmo-warm .atmo-blob.b3 { background: radial-gradient(circle, #FF85B3 0%, transparent 68%); opacity: 0.44; }
 
 /* variant A - About */
 .atmo-a .atmo-blob.b1 { top: -120px; left: -100px; }
@@ -427,19 +427,19 @@ a { color: inherit; text-decoration: none; }
 /* variant B - Skills */
 .atmo-b .atmo-blob.b1 { top: -60px; right: -80px; }
 .atmo-b .atmo-blob.b2 { bottom: -100px; left: -60px; }
-.atmo-b .atmo-blob.b3 { top: 40%; left: 35%; opacity: 0.22; }
+.atmo-b .atmo-blob.b3 { top: 40%; left: 35%; opacity: 0.48; }
 /* variant C - Projects */
-.atmo-c .atmo-blob.b1 { top: -80px; left: 12%; background: radial-gradient(circle, #B5C2FF 0%, transparent 70%); opacity: 0.6; }
-.atmo-c .atmo-blob.b2 { top: 38%; right: -80px; background: radial-gradient(circle, #A8C5FF 0%, transparent 70%); opacity: 0.55; }
-.atmo-c .atmo-blob.b3 { bottom: -100px; left: 30%; background: radial-gradient(circle, #C5C2FF 0%, transparent 70%); opacity: 0.4; }
+.atmo-c .atmo-blob.b1 { top: -80px; left: 12%; background: radial-gradient(circle, #5B7BFF 0%, transparent 68%); opacity: 0.72; }
+.atmo-c .atmo-blob.b2 { top: 38%; right: -80px; background: radial-gradient(circle, #5BAAFF 0%, transparent 68%); opacity: 0.65; }
+.atmo-c .atmo-blob.b3 { bottom: -100px; left: 30%; background: radial-gradient(circle, #8B7BFF 0%, transparent 68%); opacity: 0.55; }
 /* variant D - Experience */
 .atmo-d .atmo-blob.b1 { top: -100px; right: -100px; }
-.atmo-d .atmo-blob.b2 { bottom: -80px; left: -60px; opacity: 0.35; }
-.atmo-d .atmo-blob.b3 { top: 50%; right: 12%; opacity: 0.25; }
+.atmo-d .atmo-blob.b2 { bottom: -80px; left: -60px; opacity: 0.60; }
+.atmo-d .atmo-blob.b3 { top: 50%; right: 12%; opacity: 0.48; }
 /* variant E - Contact */
-.atmo-e .atmo-blob.b1 { top: -120px; left: -100px; opacity: 0.35; }
-.atmo-e .atmo-blob.b2 { top: 40%; right: 20%; opacity: 0.3; }
-.atmo-e .atmo-blob.b3 { bottom: -60px; left: 40%; opacity: 0.25; }
+.atmo-e .atmo-blob.b1 { top: -120px; left: -100px; opacity: 0.60; }
+.atmo-e .atmo-blob.b2 { top: 40%; right: 20%; opacity: 0.52; }
+.atmo-e .atmo-blob.b3 { bottom: -60px; left: 40%; opacity: 0.44; }
 
 /* ABOUT */
 .about {
