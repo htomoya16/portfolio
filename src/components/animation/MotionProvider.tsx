@@ -280,23 +280,31 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     if (prefersReducedMotion) return
     if (window.matchMedia('(pointer: coarse)').matches) return
 
-    const cards = root.querySelectorAll<HTMLElement>('.project-card, .ct-card')
+    // 3D tilt は project-card のみ。
+    // ct-card に transformPerspective を適用すると子要素の getBoundingClientRect() が
+    // perspective-distorted な値を返し lockElSize が誤った min-width を設定する。
+    // また quickTo(el, 'rotateX') は resetTo を内部で呼ぶが composite transform には
+    // 対応していない → gsap.to + overwrite:'auto' に統一して警告も解消。
+    const cards = root.querySelectorAll<HTMLElement>('.project-card')
     const cleaners: Array<() => void> = []
 
     cards.forEach((card) => {
-      const rotX = gsap.quickTo(card, 'rotateX', { duration: 0.45, ease: 'power3.out' })
-      const rotY = gsap.quickTo(card, 'rotateY', { duration: 0.45, ease: 'power3.out' })
-      // ct-card は backdrop-filter があるため preserve-3d を付けると
-      // stacking context が二重になり兄弟要素がズレる → project-card のみ適用。
-      const is3d = card.classList.contains('project-card')
-      gsap.set(card, { transformPerspective: 900, ...(is3d ? { transformStyle: 'preserve-3d' } : {}) })
+      gsap.set(card, { transformPerspective: 900, transformStyle: 'preserve-3d' })
 
       const onMove = (e: MouseEvent) => {
         const r = card.getBoundingClientRect()
-        rotY(((e.clientX - r.left) / r.width - 0.5) * 10)
-        rotX(-((e.clientY - r.top) / r.height - 0.5) * 8)
+        gsap.to(card, {
+          rotateX: -((e.clientY - r.top) / r.height - 0.5) * 8,
+          rotateY:  ((e.clientX - r.left) / r.width - 0.5) * 10,
+          duration: 0.45, ease: 'power3.out', overwrite: 'auto',
+        })
       }
-      const onLeave = () => { rotX(0); rotY(0) }
+      const onLeave = () => {
+        gsap.to(card, {
+          rotateX: 0, rotateY: 0,
+          duration: 0.45, ease: 'power3.out', overwrite: 'auto',
+        })
+      }
       card.addEventListener('mousemove', onMove)
       card.addEventListener('mouseleave', onLeave)
       cleaners.push(() => { card.removeEventListener('mousemove', onMove); card.removeEventListener('mouseleave', onLeave) })

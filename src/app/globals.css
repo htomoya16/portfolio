@@ -679,7 +679,7 @@ a { color: inherit; text-decoration: none; }
 .ct-cb.br { bottom: 8px; right: 8px; border-bottom: 1.5px solid var(--blue); border-right: 1.5px solid var(--blue); }
 .ct-card-icon { color: var(--ink); margin-bottom: 10px; }
 .ct-card-dot { position: absolute; top: 26px; right: 26px; width: 11px; height: 11px; border-radius: 50%; background: #00FF3B; box-shadow: 0 0 6px #00FF3B, 0 0 0 4px rgba(0,255,59,0.15); }
-.ct-card-label { font-size: 12px; color: var(--ink); letter-spacing: 0.18em; font-weight: 600; }
+.ct-card-label { font-size: 12px; color: var(--ink); letter-spacing: 0.18em; font-weight: 600; overflow: hidden; white-space: nowrap; }
 .ct-card-handle { font-size: 10px; color: var(--muted-2); letter-spacing: 0.06em; margin-top: 4px; overflow-wrap: anywhere; }
 .ct-card-arrow { position: absolute; right: 28px; bottom: 22px; font-size: 16px; color: var(--ink-2); font-family: 'JetBrains Mono', monospace; transition: transform .2s ease, color .2s ease; }
 .ct-card:hover .ct-card-arrow { color: var(--blue); transform: translateX(4px); }
