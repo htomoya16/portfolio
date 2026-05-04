@@ -489,58 +489,34 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       })
     })
 
-    // nav logo → idle flash + hover glow (scramble は enter 時のみ)
+    // nav logo → hover で青くなる + scramble（enter 時のみ）
     const logoEl = root.querySelector<HTMLElement>('.nav .logo')
     if (logoEl) {
       const logoText = logoEl.textContent?.trim() || ''
-      let isHovered = false
-      let flashTimer: ReturnType<typeof setTimeout>
-
-      // アイドルフラッシュ: 4〜5.5 秒ごとに青くなって戻る（scramble なし）
-      const doFlash = () => {
-        if (isHovered) return
-        gsap.timeline()
-          .to(logoEl, { color: 'var(--blue)', textShadow: '0 0 14px rgba(67,103,255,0.55)', duration: 0.18, ease: 'power2.out' })
-          .to(logoEl, { color: 'var(--ink)', textShadow: 'none', duration: 0.38, ease: 'power2.in', delay: 0.22 })
-      }
-      const scheduleFlash = () => {
-        flashTimer = setTimeout(() => { doFlash(); scheduleFlash() }, 4000 + Math.random() * 1500)
-      }
-      flashTimer = setTimeout(scheduleFlash, 2400)
-
       const onEnter = () => {
-        isHovered = true
-        clearTimeout(flashTimer)
-        gsap.killTweensOf(logoEl) // アイドルフラッシュを即停止
-        // scramble は enter 時のみ発火
         scrambleEl(logoEl, logoText, { revealRate: 38, settleDuration: 440 })
         gsap.to(logoEl, {
           color: 'var(--blue)',
-          textShadow: '0 0 20px rgba(67,103,255,0.75), 0 0 6px rgba(67,103,255,0.4)',
+          textShadow: '0 0 18px rgba(67,103,255,0.7)',
           duration: 0.2,
           ease: 'power2.out',
           overwrite: 'auto',
         })
       }
       const onLeave = () => {
-        isHovered = false
-        // scramble を即停止してテキストを復元（再発火させない）
         cancelScramble(logoEl, logoText)
-        // 青を少し保ってからゆっくりフェードアウト、完了後アイドル再開
         gsap.to(logoEl, {
           color: 'var(--ink)',
           textShadow: 'none',
-          duration: 0.55,
-          delay: 0.25,
+          duration: 0.5,
+          delay: 0.2,
           ease: 'power2.in',
           overwrite: 'auto',
-          onComplete: scheduleFlash,
         })
       }
       logoEl.addEventListener('pointerenter', onEnter)
       logoEl.addEventListener('pointerleave', onLeave)
       cleaners.push(() => {
-        clearTimeout(flashTimer)
         logoEl.removeEventListener('pointerenter', onEnter)
         logoEl.removeEventListener('pointerleave', onLeave)
       })
