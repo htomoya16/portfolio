@@ -509,7 +509,8 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
         })
       }
       const onLeave = () => {
-        cancelScramble(logoEl, logoText)
+        // cancelScramble しない — 自然完走させる
+        // cancelScramble すると即停止→クールダウン中に再 enter しても弾かれて動かなくなる
         gsap.to(logoEl, {
           color: 'var(--ink)',
           textShadow: 'none',
@@ -519,7 +520,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
           overwrite: 'auto',
         })
       }
-      // クリック時は scramble を即キャンセル（押した後に scramble させない）
+      // クリック時だけ即キャンセル
       const onDown = () => cancelScramble(logoEl, logoText)
       logoEl.addEventListener('pointerenter', onEnter)
       logoEl.addEventListener('pointerleave', onLeave)
@@ -528,6 +529,37 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
         logoEl.removeEventListener('pointerenter', onEnter)
         logoEl.removeEventListener('pointerleave', onLeave)
         logoEl.removeEventListener('pointerdown', onDown)
+      })
+    }
+
+    // hero-title ホバー → 3ワードを stagger で scramble
+    const heroTitleEl = root.querySelector<HTMLElement>('.hero-title')
+    if (heroTitleEl) {
+      // ScrambleText が描画した span を取得し、初期テキストを保持
+      const wordSpans = Array.from(
+        heroTitleEl.querySelectorAll<HTMLElement>('.line > span:not(.caret)')
+      )
+      const wordTexts = wordSpans.map((s) => s.textContent?.trim() || '')
+      let heroLastEnter = 0
+      const HERO_COOLDOWN = 800
+
+      const timers: ReturnType<typeof setTimeout>[] = []
+      const onEnter = () => {
+        const now = Date.now()
+        if (now - heroLastEnter < HERO_COOLDOWN) return
+        heroLastEnter = now
+        timers.forEach(clearTimeout)
+        timers.length = 0
+        wordSpans.forEach((span, i) => {
+          timers.push(
+            setTimeout(() => scrambleEl(span, wordTexts[i], { revealRate: 30, settleDuration: 520 }), i * 90)
+          )
+        })
+      }
+      heroTitleEl.addEventListener('pointerenter', onEnter)
+      cleaners.push(() => {
+        timers.forEach(clearTimeout)
+        heroTitleEl.removeEventListener('pointerenter', onEnter)
       })
     }
 
