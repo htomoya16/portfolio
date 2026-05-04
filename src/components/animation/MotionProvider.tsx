@@ -5,7 +5,8 @@ import { animate, scrambleText } from 'animejs'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
-import { type ReactNode, useEffect, useRef } from 'react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import CursorFollower from './CursorFollower'
 import ParticleField from './ParticleField'
 
@@ -76,6 +77,10 @@ function scrambleEl(
 
 export default function MotionProvider({ children }: { children: ReactNode }) {
   const rootRef = useRef<HTMLDivElement | null>(null)
+
+  // Portal マウント判定 (SSR では document が存在しない)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
   // ── Lenis smooth scroll ─────────────────────────────────────────────────
   useEffect(() => {
@@ -479,12 +484,13 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
   }, [])
 
   // ParticleField / CursorFollower を rootRef の外に置く。
-  // GSAP が rootRef 配下の要素に transform を適用すると
-  // position:fixed の子が固定解除されスクロールでついてくる問題を回避。
+  // React Portal で ParticleField / CursorFollower を document.body 直下に描画する。
+  // html { background-attachment: fixed } や祖先の CSS transform / will-change による
+  // position:fixed の固定解除を完全に回避するための最も確実な手段。
   return (
     <>
-      <ParticleField />
-      <CursorFollower />
+      {mounted && createPortal(<ParticleField />, document.body)}
+      {mounted && createPortal(<CursorFollower />, document.body)}
       <div ref={rootRef}>
         {children}
       </div>
