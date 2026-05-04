@@ -18,10 +18,9 @@ export default function ExperienceSection() {
   const handleCardLeave = (i: number) => {
     const node = nodeRefs.current[i]
     if (!node) return
-    const isCurrent = experiences[i]?.current
     gsap.to(node, {
       scale: 1,
-      backgroundColor: isCurrent ? 'var(--blue)' : 'rgba(255,255,255,1)',
+      backgroundColor: 'rgba(255,255,255,1)',
       boxShadow: 'none',
       duration: 0.2,
       ease: 'power2.out',
