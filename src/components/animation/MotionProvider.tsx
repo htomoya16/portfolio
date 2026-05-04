@@ -230,7 +230,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
           section,
           { '--divider-scale': 0 },
           { '--divider-scale': 1, ease: 'power2.out',
-            scrollTrigger: { trigger: section, start: 'top 60%', end: 'bottom 90%', scrub: 1 } }
+            scrollTrigger: { trigger: section, start: 'top 70%', end: 'top 15%', scrub: 1 } }
         )
       })
 

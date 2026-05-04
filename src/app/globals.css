@@ -154,7 +154,7 @@ a { color: inherit; text-decoration: none; }
 
 /* HERO */
 .hero {
-  position: relative; min-height: 100vh;
+  position: relative; min-height: 100vh; z-index: 1;
   padding: 140px 120px 180px;
   display: flex; flex-direction: row;
   gap: 20px; align-items: center; justify-content: space-between;
@@ -382,7 +382,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ATMO */
 .atmo {
-  position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;
+  position: absolute; inset: 0; pointer-events: none; overflow: visible; z-index: 0;
 }
 .atmo-grid {
   position: absolute; inset: 0;
@@ -446,7 +446,7 @@ a { color: inherit; text-decoration: none; }
   background:
     linear-gradient(180deg, #fff 0%, #fff 78%, rgba(244,248,255,0.86) 100%);
   position: relative;
-  overflow: hidden;
+  overflow-x: clip;
   padding: 88px 96px 96px;
   min-height: 100vh;
   display: flex;
@@ -516,7 +516,7 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow-x: clip;
 }
 .skills > *:not(.atmo) { position: relative; z-index: 2; }
 .skills-wrap { position: relative; z-index: 2; max-width: 1280px; width: 100%; margin: 0 auto; }
@@ -554,7 +554,7 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow-x: clip;
 }
 .projects > *:not(.atmo) { position: relative; z-index: 2; }
 .projects-wrap { position: relative; z-index: 2; max-width: 1280px; width: 100%; margin: 0 auto; }
@@ -604,7 +604,7 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow-x: clip;
 }
 .experience > *:not(.atmo) { position: relative; z-index: 2; }
 .exp-wrap { position: relative; z-index: 2; max-width: 1280px; width: 100%; margin: 0 auto; }
@@ -650,7 +650,7 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow-x: clip;
 }
 .contact > *:not(.atmo) { position: relative; z-index: 2; }
 .contact-grid { display: grid; grid-template-columns: minmax(360px, 0.95fr) 1.15fr; gap: 80px; align-items: center; position: relative; z-index: 2; max-width: 1280px; width: 100%; margin: 0 auto; }

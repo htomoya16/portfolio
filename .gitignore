@@ -43,3 +43,5 @@ next-env.d.ts
 .codex/
 .claude/
 .claire/
+
+.playwright-mcp/
