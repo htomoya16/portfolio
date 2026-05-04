@@ -27,6 +27,18 @@ function cancelScramble(el: HTMLElement | null | undefined, text: string) {
   }
 }
 
+/** Lock element dimensions before scrambling to prevent layout shift */
+function lockElSize(el: HTMLElement) {
+  if (el.dataset.sizeLocked) return
+  const rect = el.getBoundingClientRect()
+  if (rect.width > 0 && rect.height > 0) {
+    el.style.display = 'inline-block'
+    el.style.minWidth  = `${rect.width}px`
+    el.style.minHeight = `${rect.height}px`
+    el.dataset.sizeLocked = '1'
+  }
+}
+
 /** Scramble one element via animejs (used for hover effects) */
 function scrambleEl(
   el: HTMLElement,
@@ -35,6 +47,8 @@ function scrambleEl(
 ) {
   // Cancel any in-progress animation first
   cancelScramble(el, text)
+  // Lock size to prevent layout shift during scramble
+  lockElSize(el)
   el.textContent = text
   const anim = animate(el, {
     innerHTML: scrambleText({

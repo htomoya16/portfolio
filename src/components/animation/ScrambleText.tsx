@@ -59,10 +59,13 @@ export default function ScrambleText<T extends ElementType = 'span'>({
 
     // Lock element size BEFORE animation to prevent layout shift
     const lockSize = () => {
+      if (el.dataset.sizeLocked) return
       const rect = el.getBoundingClientRect()
-      if (rect.width > 0) {
+      if (rect.width > 0 && rect.height > 0) {
         el.style.display = 'inline-block'
-        el.style.minWidth = `${rect.width}px`
+        el.style.minWidth  = `${rect.width}px`
+        el.style.minHeight = `${rect.height}px`
+        el.dataset.sizeLocked = '1'
       }
     }
 
