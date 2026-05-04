@@ -1,4 +1,5 @@
 // Server component
+import ScrambleText from '@/components/animation/ScrambleText'
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { projects } from '@/content/site/projects'
@@ -7,7 +8,7 @@ import type { Project } from '@/content/site/projects'
 function PreviewQuest() {
   return (
     <div className="preview-quest">
-      <div className="preview-quest-header">QUEST HUB</div>
+      <ScrambleText as="div" className="preview-quest-header" text="QUEST HUB" revealRate={52} settleDuration={300} replayOnHover={true} />
       <div className="preview-quest-thumbs">
         <div className="qthumb v1" />
         <div className="qthumb v2" />
@@ -30,7 +31,7 @@ function PreviewScore() {
     <div className="preview-score">
       <div className="preview-score-card">
         <div className="rank-title">
-          RANKING
+          <ScrambleText as="span" text="RANKING" revealRate={52} settleDuration={300} replayOnHover={true} />
           <span className="pts">PTS</span>
         </div>
         {rows.map((row) => (
@@ -49,7 +50,7 @@ function PreviewPixel() {
     <div className="preview-pixel">
       <div className="preview-pixel-inner">
         <div className="preview-pixel-header">
-          <span>PIXEL DIARY</span>
+          <ScrambleText as="span" text="PIXEL DIARY" revealRate={52} settleDuration={300} replayOnHover={true} />
           <span>2024/04</span>
         </div>
         <div className="preview-pixel-fig">
@@ -112,9 +113,10 @@ export default function ProjectsSection() {
                 <ProjectPreview project={project} />
               </div>
               <div className="project-meta">
-                {/* plain text — MotionProvider handles hover scramble */}
+                {/* plain text badge */}
                 <p className="project-num-sm mono">{`PROJECT ${project.num}`}</p>
-                <h3 className="project-title">{project.title}</h3>
+                {/* ScrambleText fires on scroll-in + hover replay */}
+                <ScrambleText as="h3" className="project-title" text={project.title} revealRate={34} settleDuration={520} replayOnHover={true} />
                 <p className="project-desc">{project.desc}</p>
                 <div className="project-tags">
                   {project.tags.map((tag) => (
