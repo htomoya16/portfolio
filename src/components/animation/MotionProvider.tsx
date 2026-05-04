@@ -233,16 +233,8 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
           duration: gsap.utils.random(4, 7), repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.4,
         })
       })
-      // SVG bg-decor idle float — float + 3つに1つだけ回転
-      gsap.utils.toArray<HTMLElement>('.bg-decor').forEach((el, i) => {
-        gsap.to(el, {
-          y: gsap.utils.random(-14, 14),
-          x: gsap.utils.random(-8, 8),
-          rotate: i % 3 === 0 ? `+=${gsap.utils.random(-22, 22)}` : 0,
-          duration: gsap.utils.random(3.5, 7),
-          repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.28,
-        })
-      })
+      // bg-decor: セクションに固定されたまま静止。
+      // repeat アニメーションを付けるとスクロール中に位置がずれて見えるため除去。
     },
     { scope: rootRef }
   )
