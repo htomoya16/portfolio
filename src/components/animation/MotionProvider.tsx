@@ -441,11 +441,16 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     return () => cleaners.forEach((fn) => fn())
   }, [])
 
+  // ParticleField / CursorFollower を rootRef の外に置く。
+  // GSAP が rootRef 配下の要素に transform を適用すると
+  // position:fixed の子が固定解除されスクロールでついてくる問題を回避。
   return (
-    <div ref={rootRef}>
+    <>
       <ParticleField />
       <CursorFollower />
-      {children}
-    </div>
+      <div ref={rootRef}>
+        {children}
+      </div>
+    </>
   )
 }
