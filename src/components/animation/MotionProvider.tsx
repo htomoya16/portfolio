@@ -32,15 +32,20 @@ function lockElSize(el: HTMLElement) {
   if (el.dataset.sizeLocked) return
   const rect = el.getBoundingClientRect()
   if (rect.width > 0 && rect.height > 0) {
-    // display を変えるのは pure-inline 要素だけ。
-    // block / inline-block / flex / grid など既存の表示を変えると
-    // グリッド/フレックスのレイアウトが崩れる原因になる。
     const computed = window.getComputedStyle(el).display
     if (computed === 'inline') {
       el.style.display = 'inline-block'
+      el.style.minWidth = `${rect.width}px`
+      el.style.minHeight = `${rect.height}px`
+    } else if (computed === 'inline-block' || computed === 'inline-flex') {
+      el.style.minWidth = `${rect.width}px`
+      el.style.minHeight = `${rect.height}px`
+    } else {
+      // Block elements already occupy their available inline size.
+      // Freezing min-width from getBoundingClientRect() inflates grid min-content
+      // and can shift sibling columns, especially in the contact card grid.
+      el.style.minHeight = `${rect.height}px`
     }
-    el.style.minWidth  = `${rect.width}px`
-    el.style.minHeight = `${rect.height}px`
     el.dataset.sizeLocked = '1'
   }
 }
@@ -503,7 +508,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReducedMotion) return
 
-    const targets = root.querySelectorAll<HTMLElement>('.sk-tile, .ct-card')
+    const targets = root.querySelectorAll<HTMLElement>('.sk-tile')
     const cleaners: Array<() => void> = []
 
     const handleEnter = (event: Event) => {
