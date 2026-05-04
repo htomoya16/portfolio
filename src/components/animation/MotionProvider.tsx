@@ -514,11 +514,15 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
           overwrite: 'auto',
         })
       }
+      // クリック時は scramble を即キャンセル（押した後に scramble させない）
+      const onDown = () => cancelScramble(logoEl, logoText)
       logoEl.addEventListener('pointerenter', onEnter)
       logoEl.addEventListener('pointerleave', onLeave)
+      logoEl.addEventListener('pointerdown', onDown)
       cleaners.push(() => {
         logoEl.removeEventListener('pointerenter', onEnter)
         logoEl.removeEventListener('pointerleave', onLeave)
+        logoEl.removeEventListener('pointerdown', onDown)
       })
     }
 
