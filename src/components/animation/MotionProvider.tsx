@@ -426,6 +426,26 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       })
     })
 
+    // nav logo → scramble + GSAP glow on hover
+    const logoEl = root.querySelector<HTMLElement>('.nav .logo')
+    if (logoEl) {
+      const logoText = logoEl.textContent?.trim() || ''
+      const onEnter = () => {
+        scrambleEl(logoEl, logoText, { revealRate: 38, settleDuration: 440 })
+        gsap.to(logoEl, { color: 'var(--blue)', textShadow: '0 0 18px rgba(67,103,255,0.7)', duration: 0.22, ease: 'power2.out' })
+      }
+      const onLeave = () => {
+        cancelScramble(logoEl, logoText)
+        gsap.to(logoEl, { color: 'var(--ink)', textShadow: 'none', duration: 0.28, ease: 'power2.in' })
+      }
+      logoEl.addEventListener('pointerenter', onEnter)
+      logoEl.addEventListener('pointerleave', onLeave)
+      cleaners.push(() => {
+        logoEl.removeEventListener('pointerenter', onEnter)
+        logoEl.removeEventListener('pointerleave', onLeave)
+      })
+    }
+
     return () => cleaners.forEach((fn) => fn())
   }, [])
 
