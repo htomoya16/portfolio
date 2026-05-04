@@ -1,5 +1,6 @@
 'use client'
 
+import ScrambleText from '@/components/animation/ScrambleText'
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { experiences } from '@/content/site/experience'
@@ -58,7 +59,7 @@ export default function ExperienceSection() {
                   <span className="exp-date mono">{exp.date}</span>
                   <span className={`exp-badge t-${exp.tone}`}>{exp.badge}</span>
                 </div>
-                <h3 className="exp-title">{exp.title}</h3>
+                <ScrambleText as="h3" className="exp-title" text={exp.title} revealRate={28} settleDuration={520} replayOnHover={true} />
                 <p className="exp-desc">{exp.desc}</p>
               </div>
             </div>

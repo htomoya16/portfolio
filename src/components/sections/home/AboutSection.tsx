@@ -1,5 +1,6 @@
 'use client'
 
+import ScrambleText from '@/components/animation/ScrambleText'
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
 import gsap from 'gsap'
@@ -133,7 +134,7 @@ export default function AboutSection() {
               <div className="about-card-icon">{card.icon}</div>
               <div className="about-card-body">
                 <span className="about-card-date">{card.date}</span>
-                <span className="about-card-title">{card.title}</span>
+                <ScrambleText as="span" className="about-card-title" text={card.title} revealRate={24} settleDuration={520} replayOnHover={true} />
               </div>
               <div className="about-card-plus" aria-hidden="true">
                 <span />
