@@ -1,14 +1,15 @@
 'use client'
 
-import gsap from 'gsap'
 import { useEffect, useRef } from 'react'
 
 export default function CursorFollower() {
   const crosshairRef = useRef<HTMLDivElement | null>(null)
+  const visualRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const el = crosshairRef.current
-    if (!el) return
+    const visual = visualRef.current
+    if (!el || !visual) return
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReducedMotion) return
@@ -19,19 +20,19 @@ export default function CursorFollower() {
     // Hide default system cursor on body
     document.body.style.cursor = 'none'
 
-    const xTo = gsap.quickTo(el, 'x', { duration: 0.12, ease: 'power3.out' })
-    const yTo = gsap.quickTo(el, 'y', { duration: 0.12, ease: 'power3.out' })
+    const updateTransform = (x: number, y: number) => {
+      el.style.transform = `translate3d(${x - 104}px, ${y - 104}px, 0)`
+    }
 
     const onMove = (e: MouseEvent) => {
-      xTo(e.clientX)
-      yTo(e.clientY)
+      updateTransform(e.clientX, e.clientY)
     }
 
     const handleEnterInteractive = () => {
-      gsap.to(el, { scale: 1.6, duration: 0.2, ease: 'power3.out' })
+      visual.style.transform = 'scale(1.6)'
     }
     const handleLeaveInteractive = () => {
-      gsap.to(el, { scale: 1, duration: 0.2, ease: 'power3.out' })
+      visual.style.transform = 'scale(1)'
     }
 
     window.addEventListener('mousemove', onMove)
@@ -60,31 +61,43 @@ export default function CursorFollower() {
       aria-hidden="true"
       style={{
         position: 'fixed',
-        left: -104,
-        top: -104,
+        left: 0,
+        top: 0,
         width: 208,
         height: 208,
         pointerEvents: 'none',
         zIndex: 9999,
-        transform: 'translate3d(0,0,0)',
+        transform: 'translate3d(0, 0, 0)',
         willChange: 'transform',
       }}
     >
-      {/* Green crosshair — green_crosshair_no_outline.svg inline */}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="208"
-        height="208"
-        viewBox="0 0 1280 1280"
-        style={{ display: 'block' }}
+      <div
+        ref={visualRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          transform: 'scale(1)',
+          transformOrigin: 'center center',
+          transition: 'transform 0.16s ease-out',
+          willChange: 'transform',
+        }}
       >
-        <g fill="#00ff3b">
-          <rect x="630" y="540" width="18" height="45" />
-          <rect x="573" y="594" width="48" height="20" />
-          <rect x="659" y="594" width="48" height="20" />
-          <rect x="630" y="623" width="18" height="45" />
-        </g>
-      </svg>
+        {/* Green crosshair — green_crosshair_no_outline.svg inline */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="208"
+          height="208"
+          viewBox="0 0 1280 1280"
+          style={{ display: 'block' }}
+        >
+          <g fill="#00ff3b">
+            <rect x="630" y="540" width="18" height="45" />
+            <rect x="573" y="594" width="48" height="20" />
+            <rect x="659" y="594" width="48" height="20" />
+            <rect x="630" y="623" width="18" height="45" />
+          </g>
+        </svg>
+      </div>
     </div>
   )
 }

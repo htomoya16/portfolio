@@ -94,7 +94,7 @@ export default function ProjectsSection() {
           <SectionHeading number="// 03" title="PROJECTS" className="section-head-compact" blink />
           <span
             style={{
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: 'var(--font-jetbrains-mono), ui-monospace, monospace',
               fontSize: 10,
               color: 'var(--muted)',
               letterSpacing: '0.22em',
