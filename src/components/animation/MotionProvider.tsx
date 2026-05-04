@@ -32,7 +32,13 @@ function lockElSize(el: HTMLElement) {
   if (el.dataset.sizeLocked) return
   const rect = el.getBoundingClientRect()
   if (rect.width > 0 && rect.height > 0) {
-    el.style.display = 'inline-block'
+    // display を変えるのは pure-inline 要素だけ。
+    // block / inline-block / flex / grid など既存の表示を変えると
+    // グリッド/フレックスのレイアウトが崩れる原因になる。
+    const computed = window.getComputedStyle(el).display
+    if (computed === 'inline') {
+      el.style.display = 'inline-block'
+    }
     el.style.minWidth  = `${rect.width}px`
     el.style.minHeight = `${rect.height}px`
     el.dataset.sizeLocked = '1'
@@ -283,7 +289,10 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     cards.forEach((card) => {
       const rotX = gsap.quickTo(card, 'rotateX', { duration: 0.45, ease: 'power3.out' })
       const rotY = gsap.quickTo(card, 'rotateY', { duration: 0.45, ease: 'power3.out' })
-      gsap.set(card, { transformPerspective: 900, transformStyle: 'preserve-3d' })
+      // ct-card は backdrop-filter があるため preserve-3d を付けると
+      // stacking context が二重になり兄弟要素がズレる → project-card のみ適用。
+      const is3d = card.classList.contains('project-card')
+      gsap.set(card, { transformPerspective: 900, ...(is3d ? { transformStyle: 'preserve-3d' } : {}) })
 
       const onMove = (e: MouseEvent) => {
         const r = card.getBoundingClientRect()
