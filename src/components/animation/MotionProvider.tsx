@@ -493,7 +493,12 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     const logoEl = root.querySelector<HTMLElement>('.nav .logo')
     if (logoEl) {
       const logoText = logoEl.textContent?.trim() || ''
+      let logoLastEnter = 0
+      const LOGO_COOLDOWN = 700 // scramble 中の DOM 変化で pointerenter が再発火するのを防ぐ
       const onEnter = () => {
+        const now = Date.now()
+        if (now - logoLastEnter < LOGO_COOLDOWN) return
+        logoLastEnter = now
         scrambleEl(logoEl, logoText, { revealRate: 38, settleDuration: 440 })
         gsap.to(logoEl, {
           color: 'var(--blue)',
