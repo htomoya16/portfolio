@@ -435,7 +435,9 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
         gsap.to(logoEl, { color: 'var(--blue)', textShadow: '0 0 18px rgba(67,103,255,0.7)', duration: 0.22, ease: 'power2.out' })
       }
       const onLeave = () => {
-        cancelScramble(logoEl, logoText)
+        // cancelScramble しない — アニメーションを最後まで再生させる。
+        // onComplete で textContent が logoText に戻る。
+        // カラーのみ即時リセット。
         gsap.to(logoEl, { color: 'var(--ink)', textShadow: 'none', duration: 0.28, ease: 'power2.in' })
       }
       logoEl.addEventListener('pointerenter', onEnter)
