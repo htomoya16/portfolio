@@ -26,19 +26,19 @@ const MODAL_STYLE: React.CSSProperties = {
   width: '100%',
   height: 'min(94vh, 960px)',
   maxHeight: '94vh',
-  borderRadius: '12px',
-  background: 'linear-gradient(145deg, #FFFFFF 0%, #F5F8FF 45%, #EEF3FF 75%, #F8F9FF 100%)',
-  border: '1px solid rgba(67,103,255,0.14)',
-  boxShadow: '0 20px 64px rgba(67,103,255,0.14), 0 4px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
+  borderRadius: '16px',
+  // Transparent so backdrop-filter on pm-left blurs the actual page behind
+  background: 'transparent',
+  border: '1px solid rgba(255,255,255,0.38)',
+  boxShadow: '0 28px 72px rgba(0,0,30,0.32), 0 0 0 1px rgba(255,255,255,0.18)',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
 }
 
+// No backdropFilter on overlay — let the glass panel handle all blur
 const OVERLAY_STYLE: React.CSSProperties = {
-  background: 'rgba(10,20,60,0.50)',
-  backdropFilter: 'blur(6px)',
-  WebkitBackdropFilter: 'blur(6px)',
+  background: 'rgba(8,16,48,0.46)',
 }
 
 function canScrollVertically(element: HTMLElement) {
