@@ -45,41 +45,54 @@ function canScrollVertically(element: HTMLElement) {
   return element.scrollHeight > element.clientHeight
 }
 
-function shouldBlockScrollBoundary(element: HTMLElement, deltaY: number) {
-  if (!canScrollVertically(element)) return true
+function findModalScrollArea(target: EventTarget | null, content: HTMLElement) {
+  if (!(target instanceof Element)) return null
 
-  const atTop = element.scrollTop <= 0
-  const atBottom = Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight
-  return (deltaY < 0 && atTop) || (deltaY > 0 && atBottom)
+  const scrollArea = target.closest<HTMLElement>('.pm-media-carousel, .pm-right')
+  if (!scrollArea || !content.contains(scrollArea)) return null
+  return scrollArea
+}
+
+function applyWheelScroll(element: HTMLElement, deltaY: number) {
+  if (!canScrollVertically(element)) return
+  element.scrollTop += deltaY
 }
 
 function useModalScrollGuard(open: boolean, contentRef: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
     if (!open) return
 
-    const content = contentRef.current
-    if (!content) return
+    const getContent = () => contentRef.current
 
     const handleWheel = (event: WheelEvent) => {
-      const target = event.target
-      if (!(target instanceof Element)) return
+      const content = getContent()
+      if (!content) return
 
-      const scrollArea = target.closest<HTMLElement>('.pm-media-carousel, .pm-right')
-      if (!scrollArea || !content.contains(scrollArea)) {
-        event.preventDefault()
-        event.stopPropagation()
-        return
-      }
-
+      const scrollArea = findModalScrollArea(event.target, content)
+      event.preventDefault()
       event.stopPropagation()
-      if (shouldBlockScrollBoundary(scrollArea, event.deltaY)) {
-        event.preventDefault()
+      event.stopImmediatePropagation()
+
+      if (scrollArea) {
+        applyWheelScroll(scrollArea, event.deltaY)
       }
     }
 
-    content.addEventListener('wheel', handleWheel, { passive: false })
+    const handleTouchMove = (event: TouchEvent) => {
+      const content = getContent()
+      if (!content) return
+      if (!content.contains(event.target as Node)) return
+
+      event.preventDefault()
+      event.stopPropagation()
+      event.stopImmediatePropagation()
+    }
+
+    window.addEventListener('wheel', handleWheel, { capture: true, passive: false })
+    window.addEventListener('touchmove', handleTouchMove, { capture: true, passive: false })
     return () => {
-      content.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('wheel', handleWheel, { capture: true })
+      window.removeEventListener('touchmove', handleTouchMove, { capture: true })
     }
   }, [contentRef, open])
 }
@@ -88,11 +101,28 @@ function useBodyScrollLock(open: boolean) {
   useEffect(() => {
     if (!open) return
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const scrollY = window.scrollY
+    const html = document.documentElement
+    const body = document.body
+    const previousHtmlOverflow = html.style.overflow
+    const previousBodyOverflow = body.style.overflow
+    const previousBodyPosition = body.style.position
+    const previousBodyTop = body.style.top
+    const previousBodyWidth = body.style.width
+
+    html.style.overflow = 'hidden'
+    body.style.overflow = 'hidden'
+    body.style.position = 'fixed'
+    body.style.top = `-${scrollY}px`
+    body.style.width = '100%'
 
     return () => {
-      document.body.style.overflow = previousOverflow
+      html.style.overflow = previousHtmlOverflow
+      body.style.overflow = previousBodyOverflow
+      body.style.position = previousBodyPosition
+      body.style.top = previousBodyTop
+      body.style.width = previousBodyWidth
+      window.scrollTo(0, scrollY)
     }
   }, [open])
 }
@@ -105,9 +135,18 @@ function useDragScroll(open: boolean, scrollRef: React.RefObject<HTMLElement | n
     if (!element) return
 
     let dragging = false
+    let moved = false
     let startY = 0
     let startScrollTop = 0
     let pointerId: number | null = null
+
+    const stopDragging = () => {
+      if (!dragging) return
+      dragging = false
+      pointerId = null
+      element.classList.remove('is-dragging')
+      window.setTimeout(() => { moved = false }, 0)
+    }
 
     const handlePointerDown = (event: PointerEvent) => {
       if (event.pointerType !== 'mouse') return
@@ -120,43 +159,48 @@ function useDragScroll(open: boolean, scrollRef: React.RefObject<HTMLElement | n
       }
 
       dragging = true
+      moved = false
       startY = event.clientY
       startScrollTop = element.scrollTop
       pointerId = event.pointerId
       element.classList.add('is-dragging')
-      element.setPointerCapture(event.pointerId)
+      event.preventDefault()
     }
 
     const handlePointerMove = (event: PointerEvent) => {
       if (!dragging || event.pointerId !== pointerId) return
+
+      const deltaY = event.clientY - startY
+      if (Math.abs(deltaY) > 3) moved = true
+      element.scrollTop = startScrollTop - deltaY
       event.preventDefault()
-      element.scrollTop = startScrollTop - (event.clientY - startY)
+      event.stopPropagation()
     }
 
-    const stopDragging = (event: PointerEvent) => {
-      if (!dragging || event.pointerId !== pointerId) return
-      dragging = false
-      pointerId = null
-      element.classList.remove('is-dragging')
-      if (element.hasPointerCapture(event.pointerId)) {
-        element.releasePointerCapture(event.pointerId)
-      }
+    const handleClickCapture = (event: MouseEvent) => {
+      if (!moved) return
+      event.preventDefault()
+      event.stopPropagation()
+      event.stopImmediatePropagation()
     }
 
     element.addEventListener('pointerdown', handlePointerDown)
-    element.addEventListener('pointermove', handlePointerMove)
-    element.addEventListener('pointerup', stopDragging)
-    element.addEventListener('pointercancel', stopDragging)
+    element.addEventListener('click', handleClickCapture, true)
+    window.addEventListener('pointermove', handlePointerMove, { passive: false })
+    window.addEventListener('pointerup', stopDragging)
+    window.addEventListener('pointercancel', stopDragging)
 
     return () => {
       element.classList.remove('is-dragging')
       element.removeEventListener('pointerdown', handlePointerDown)
-      element.removeEventListener('pointermove', handlePointerMove)
-      element.removeEventListener('pointerup', stopDragging)
-      element.removeEventListener('pointercancel', stopDragging)
+      element.removeEventListener('click', handleClickCapture, true)
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerup', stopDragging)
+      window.removeEventListener('pointercancel', stopDragging)
     }
   }, [open, scrollRef])
 }
+
 
 export default function ProjectModal({ project, open, onOpenChange }: Props) {
   const contentRef = useRef<HTMLDivElement>(null)
