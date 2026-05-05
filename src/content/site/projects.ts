@@ -1,3 +1,11 @@
+export type ProjectMedia = {
+  type: 'image' | 'video'
+  src: string
+  poster?: string
+  alt: string
+  caption?: string
+}
+
 export interface Project {
   num: string
   title: string
@@ -5,6 +13,7 @@ export interface Project {
   longDesc?: string
   tags: string[]
   previewType: 'quest' | 'score' | 'pixel'
+  media?: ProjectMedia[]
   role?: string
   period?: string
   status?: string
@@ -28,6 +37,32 @@ export const projects: Project[] = [
       'ゲーマーが集まり、イベントを企画・参加できるコミュニティプラットフォーム。リアルタイムチャット、イベントスケジュール管理、ゲーム実績の共有機能を備えた本格的なWebアプリ。',
     tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Prisma', 'WebSocket'],
     previewType: 'quest',
+    media: [
+      {
+        type: 'image',
+        src: '/assets/projects/questhub/overview.png',
+        alt: 'QuestHub event discovery dashboard mockup',
+        caption: 'イベント一覧、Party Finder、コミュニティ状況をまとめたメイン画面',
+      },
+      {
+        type: 'image',
+        src: '/assets/projects/questhub/events.png',
+        alt: 'QuestHub event cards and party finder mockup',
+        caption: 'イベントカードと Party Finder の導線を見せる画面',
+      },
+      {
+        type: 'image',
+        src: '/assets/projects/questhub/detail.png',
+        alt: 'QuestHub event detail and community stats mockup',
+        caption: 'イベント詳細とコミュニティ統計を確認する画面',
+      },
+      {
+        type: 'image',
+        src: '/assets/projects/questhub/detail.png',
+        alt: 'QuestHub event detail and community stats mockup',
+        caption: 'イベント詳細とコミュニティ統計を確認する画面',
+      },
+    ],
     role: 'Full-Stack Engineer',
     period: '2024.02 — 2024.05',
     status: 'SHIPPED',
@@ -74,6 +109,26 @@ export const projects: Project[] = [
       'ゲーム大会のスコアをリアルタイムで記録・共有するWebアプリ。Firebase Realtime Database を活用したライブ更新と、直感的なスコア入力UIを実装。',
     tags: ['React', 'Firebase', 'Tailwind CSS', 'TypeScript'],
     previewType: 'score',
+    media: [
+      {
+        type: 'image',
+        src: '/assets/projects/scoreboard/overview.png',
+        alt: 'ScoreBoard live tournament scoring dashboard mockup',
+        caption: 'ライブスコア、対戦カード、ブラケットを一画面で確認できる運営画面',
+      },
+      {
+        type: 'image',
+        src: '/assets/projects/scoreboard/live-match.png',
+        alt: 'ScoreBoard live match score input mockup',
+        caption: '試合中のスコア入力とリアルタイム反映を想定した画面',
+      },
+      {
+        type: 'image',
+        src: '/assets/projects/scoreboard/bracket.png',
+        alt: 'ScoreBoard tournament bracket mockup',
+        caption: 'トーナメント表と順位変動を確認する画面',
+      },
+    ],
     role: 'Frontend Engineer',
     period: '2024.06 — 2024.08',
     status: 'SHIPPED',
@@ -121,6 +176,26 @@ export const projects: Project[] = [
       'ドット絵スタイルのカレンダーに毎日の気分・出来事を記録するライフログアプリ。Prisma + PostgreSQL で堅牢なデータ管理を実現し、統計ダッシュボードで自己分析を可能にする。',
     tags: ['Next.js', 'Prisma', 'PostgreSQL', 'Tailwind CSS', 'Canvas API'],
     previewType: 'pixel',
+    media: [
+      {
+        type: 'image',
+        src: '/assets/projects/pixel-diary/overview.png',
+        alt: 'Pixel Diary calendar and pixel editor mockup',
+        caption: '月間カレンダー、ドット絵エディタ、気分統計を並べた記録画面',
+      },
+      {
+        type: 'image',
+        src: '/assets/projects/pixel-diary/calendar.png',
+        alt: 'Pixel Diary monthly calendar mockup',
+        caption: '日々の記録をドット絵で一覧できるカレンダー画面',
+      },
+      {
+        type: 'image',
+        src: '/assets/projects/pixel-diary/editor.png',
+        alt: 'Pixel Diary pixel editor and mood stats mockup',
+        caption: 'ドット絵編集と気分統計を並べた入力画面',
+      },
+    ],
     role: 'Full-Stack Engineer',
     period: '2024.09 — 現在',
     status: 'IN DEV',

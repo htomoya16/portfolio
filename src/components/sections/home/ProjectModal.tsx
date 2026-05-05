@@ -1,10 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import ScrambleText from '@/components/animation/ScrambleText'
 import type { Project } from '@/content/site/projects'
-import { PreviewQuest, PreviewScore, PreviewPixel } from './ProjectPreviews'
+import ProjectMediaCarousel from './ProjectMediaCarousel'
 import {
   Dialog,
   DialogContent,
@@ -26,63 +26,147 @@ const MODAL_STYLE: React.CSSProperties = {
   width: '100%',
   height: 'min(94vh, 960px)',
   maxHeight: '94vh',
-  borderRadius: 0,
-  background: '#F7F9FF',
-  border: '1px solid rgba(67,103,255,0.22)',
-  boxShadow: '0 32px 80px rgba(10,15,40,0.3), 0 0 0 1px rgba(67,103,255,0.08)',
+  borderRadius: '12px',
+  background: 'linear-gradient(135deg, #070A1E 0%, #0C1245 38%, #160933 72%, #080C22 100%)',
+  border: '1px solid rgba(255,255,255,0.08)',
+  boxShadow: '0 32px 80px rgba(0,0,20,0.75), 0 0 0 1px rgba(67,103,255,0.18), inset 0 1px 0 rgba(255,255,255,0.06)',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
 }
 
 const OVERLAY_STYLE: React.CSSProperties = {
-  background: 'rgba(10,15,28,0.68)',
-  backdropFilter: 'blur(12px)',
-  WebkitBackdropFilter: 'blur(12px)',
+  background: 'rgba(5,8,20,0.82)',
+  backdropFilter: 'blur(8px)',
+  WebkitBackdropFilter: 'blur(8px)',
 }
 
-export default function ProjectModal({ project, open, onOpenChange }: Props) {
-  const rightRef = useRef<HTMLDivElement>(null)
+function canScrollVertically(element: HTMLElement) {
+  return element.scrollHeight > element.clientHeight
+}
 
-  const handleModalWheel = useCallback((event: WheelEvent) => {
-    const right = rightRef.current
-    if (!right) return
+function shouldBlockScrollBoundary(element: HTMLElement, deltaY: number) {
+  if (!canScrollVertically(element)) return true
 
-    const canScroll = right.scrollHeight > right.clientHeight
-    if (!canScroll) return
+  const atTop = element.scrollTop <= 0
+  const atBottom = Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight
+  return (deltaY < 0 && atTop) || (deltaY > 0 && atBottom)
+}
 
-    const target = event.target as Node
-    const isInsideRightPane = right.contains(target)
-
-    if (!isInsideRightPane) {
-      event.preventDefault()
-      right.scrollTop += event.deltaY
-      event.stopPropagation()
-      return
-    }
-
-    const atTop = right.scrollTop <= 0
-    const atBottom = Math.ceil(right.scrollTop + right.clientHeight) >= right.scrollHeight
-    if ((event.deltaY < 0 && atTop) || (event.deltaY > 0 && atBottom)) {
-      event.preventDefault()
-    }
-    event.stopPropagation()
-  }, [])
-
+function useModalScrollGuard(open: boolean, contentRef: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
     if (!open) return
 
-    let content: HTMLElement | null = null
-    const timer = window.setTimeout(() => {
-      content = document.querySelector<HTMLElement>('.pm-dialog-content')
-      content?.addEventListener('wheel', handleModalWheel, { passive: false })
-    }, 0)
+    const content = contentRef.current
+    if (!content) return
+
+    const handleWheel = (event: WheelEvent) => {
+      const target = event.target
+      if (!(target instanceof Element)) return
+
+      const scrollArea = target.closest<HTMLElement>('.pm-media-carousel, .pm-right')
+      if (!scrollArea || !content.contains(scrollArea)) {
+        event.preventDefault()
+        event.stopPropagation()
+        return
+      }
+
+      event.stopPropagation()
+      if (shouldBlockScrollBoundary(scrollArea, event.deltaY)) {
+        event.preventDefault()
+      }
+    }
+
+    content.addEventListener('wheel', handleWheel, { passive: false })
+    return () => {
+      content.removeEventListener('wheel', handleWheel)
+    }
+  }, [contentRef, open])
+}
+
+function useBodyScrollLock(open: boolean) {
+  useEffect(() => {
+    if (!open) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
 
     return () => {
-      window.clearTimeout(timer)
-      content?.removeEventListener('wheel', handleModalWheel)
+      document.body.style.overflow = previousOverflow
     }
-  }, [handleModalWheel, open])
+  }, [open])
+}
+
+function useDragScroll(open: boolean, scrollRef: React.RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    if (!open) return
+
+    const element = scrollRef.current
+    if (!element) return
+
+    let dragging = false
+    let startY = 0
+    let startScrollTop = 0
+    let pointerId: number | null = null
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') return
+      if (event.button !== 0) return
+
+      const target = event.target
+      if (!(target instanceof Element)) return
+      if (target.closest('a, input, textarea, select, video, .pm-close-btn, .pm-media-lightbox-close')) {
+        return
+      }
+
+      dragging = true
+      startY = event.clientY
+      startScrollTop = element.scrollTop
+      pointerId = event.pointerId
+      element.classList.add('is-dragging')
+      element.setPointerCapture(event.pointerId)
+    }
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!dragging || event.pointerId !== pointerId) return
+      event.preventDefault()
+      element.scrollTop = startScrollTop - (event.clientY - startY)
+    }
+
+    const stopDragging = (event: PointerEvent) => {
+      if (!dragging || event.pointerId !== pointerId) return
+      dragging = false
+      pointerId = null
+      element.classList.remove('is-dragging')
+      if (element.hasPointerCapture(event.pointerId)) {
+        element.releasePointerCapture(event.pointerId)
+      }
+    }
+
+    element.addEventListener('pointerdown', handlePointerDown)
+    element.addEventListener('pointermove', handlePointerMove)
+    element.addEventListener('pointerup', stopDragging)
+    element.addEventListener('pointercancel', stopDragging)
+
+    return () => {
+      element.classList.remove('is-dragging')
+      element.removeEventListener('pointerdown', handlePointerDown)
+      element.removeEventListener('pointermove', handlePointerMove)
+      element.removeEventListener('pointerup', stopDragging)
+      element.removeEventListener('pointercancel', stopDragging)
+    }
+  }, [open, scrollRef])
+}
+
+export default function ProjectModal({ project, open, onOpenChange }: Props) {
+  const contentRef = useRef<HTMLDivElement>(null)
+  const leftMediaRef = useRef<HTMLDivElement>(null)
+  const rightRef = useRef<HTMLDivElement>(null)
+
+  useBodyScrollLock(open)
+  useModalScrollGuard(open, contentRef)
+  useDragScroll(open, leftMediaRef)
+  useDragScroll(open, rightRef)
 
   useEffect(() => {
     if (!open) return
@@ -103,16 +187,12 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
     return () => { clearTimeout(timer) }
   }, [open, project])
 
-  const Preview =
-    project.previewType === 'quest' ? PreviewQuest
-    : project.previewType === 'score' ? PreviewScore
-    : PreviewPixel
-
   const statusColor = project.status === 'IN DEV' ? '#FFB347' : '#00FF3B'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
+        ref={contentRef}
         showCloseButton={false}
         className="pm-dialog-content"
         style={MODAL_STYLE}
@@ -157,9 +237,7 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
 
           {/* Left: dark panel — preview + meta */}
           <div className="pm-left">
-            <div className="pm-preview-wrap">
-              <Preview />
-            </div>
+            <ProjectMediaCarousel ref={leftMediaRef} key={project.num} project={project} />
             <div className="pm-left-meta">
               {project.role && (
                 <div className="pm-meta-row">
