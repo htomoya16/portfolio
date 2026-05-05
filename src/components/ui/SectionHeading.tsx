@@ -14,7 +14,7 @@ export default function SectionHeading({ number, title, blink = false, className
         as="span"
         className="section-num"
         text={number}
-        chars="░▒▓█10!%"
+        pattern="label"
         from="left"
         revealRate={34}
         settleDuration={360}
@@ -24,7 +24,7 @@ export default function SectionHeading({ number, title, blink = false, className
         <ScrambleText
           as="span"
           text={title}
-          chars="░▒▓█10!%"
+          pattern="title"
           from="left"
           delay={120}
           revealRate={28}

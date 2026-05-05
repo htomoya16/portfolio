@@ -5,7 +5,7 @@ export default function NavBar() {
   return (
     <nav className="nav">
       <NavProgressBar />
-      <a href="#" className="logo">// htomoya16</a>
+      <a href="#" className="logo">{'// htomoya16'}</a>
       <ul>
         {navLinks.map((link) => (
           <li key={link.href}>

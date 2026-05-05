@@ -3,12 +3,19 @@
 import { animate, scrambleText } from 'animejs'
 import { type ComponentPropsWithoutRef, type ElementType, useEffect, useRef } from 'react'
 
-// Loading-style char pool: block chars + binary/symbols + alphabets for data-load vibe
-const LOADER_CHARS = '░▒▓█10!%ABXYZ'
+export const SCRAMBLE_CHARS = {
+  title: '._:+*#01XYZ',
+  label: '01<>[]{}',
+  code: 'abcdef0123456789',
+  soft: '.:-+*',
+} as const
+
+export type ScramblePattern = keyof typeof SCRAMBLE_CHARS
 
 type ScrambleTextProps<T extends ElementType> = {
   as?: T
   text: string
+  pattern?: ScramblePattern
   chars?: string
   delay?: number
   duration?: number
@@ -25,7 +32,8 @@ type ScrambleTextProps<T extends ElementType> = {
 export default function ScrambleText<T extends ElementType = 'span'>({
   as,
   text,
-  chars = LOADER_CHARS,
+  pattern = 'title',
+  chars,
   delay = 0,
   duration,
   revealRate = 52,
@@ -39,6 +47,7 @@ export default function ScrambleText<T extends ElementType = 'span'>({
   ...props
 }: ScrambleTextProps<T>) {
   const Component = as || 'span'
+  const charPool = chars ?? SCRAMBLE_CHARS[pattern]
   const ref = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
@@ -82,7 +91,7 @@ export default function ScrambleText<T extends ElementType = 'span'>({
       animation = animate(el, {
         innerHTML: scrambleText({
           text,
-          chars,
+          chars: charPool,
           delay,
           duration,
           revealRate,
@@ -125,7 +134,7 @@ export default function ScrambleText<T extends ElementType = 'span'>({
       animation?.cancel()
     }
   }, [
-    chars,
+    charPool,
     cursor,
     delay,
     duration,

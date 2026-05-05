@@ -5,13 +5,12 @@ import { animate, scrambleText } from 'animejs'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
-import { type ReactNode, useEffect, useRef, useState } from 'react'
+import { type ReactNode, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import CursorFollower from './CursorFollower'
+import { SCRAMBLE_CHARS, type ScramblePattern } from './ScrambleText'
 
 gsap.registerPlugin(ScrollTrigger)
-
-const LOADER_CHARS = '░▒▓█10!%ABXYZ'
 
 /** Track in-progress scramble animations per element to allow mid-flight cancellation */
 const activeAnims = new WeakMap<HTMLElement, ReturnType<typeof animate>>()
@@ -54,7 +53,7 @@ function lockElSize(el: HTMLElement) {
 function scrambleEl(
   el: HTMLElement,
   text: string,
-  opts?: { chars?: string; revealRate?: number; settleDuration?: number }
+  opts?: { chars?: string; pattern?: ScramblePattern; revealRate?: number; settleDuration?: number }
 ) {
   // Cancel any in-progress animation first
   cancelScramble(el, text)
@@ -64,7 +63,7 @@ function scrambleEl(
   const anim = animate(el, {
     innerHTML: scrambleText({
       text,
-      chars: opts?.chars ?? LOADER_CHARS,
+      chars: opts?.chars ?? SCRAMBLE_CHARS[opts?.pattern ?? 'label'],
       revealRate: opts?.revealRate ?? 44,
       settleDuration: opts?.settleDuration ?? 360,
       from: 'left',
@@ -81,10 +80,7 @@ function scrambleEl(
 
 export default function MotionProvider({ children }: { children: ReactNode }) {
   const rootRef = useRef<HTMLDivElement | null>(null)
-
-  // Portal マウント判定 (SSR では document が存在しない)
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  const portalTarget = typeof document === 'undefined' ? null : document.body
 
   // ── Lenis smooth scroll ─────────────────────────────────────────────────
   useEffect(() => {
@@ -366,8 +362,8 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       const hpLabelText = 'HP'
       const hpNumText   = '83'
       const onEnter = () => {
-        if (hpLabel) scrambleEl(hpLabel, hpLabelText)
-        if (hpNum)   scrambleEl(hpNum, hpNumText, { chars: '░▒▓█10' })
+        if (hpLabel) scrambleEl(hpLabel, hpLabelText, { pattern: 'label' })
+        if (hpNum)   scrambleEl(hpNum, hpNumText, { pattern: 'label' })
         if (hpFill)  gsap.fromTo(hpFill, { width: '0%' }, { width: '83%', duration: 0.9, ease: 'power3.out' })
       }
       const onLeave = () => {
@@ -387,7 +383,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       const title = head.querySelector<HTMLElement>('.sk-cat-title')
       if (!title) return
       const text = title.textContent?.trim() || ''
-      const onEnter = () => scrambleEl(title, text)
+      const onEnter = () => scrambleEl(title, text, { pattern: 'title' })
       const onLeave = () => cancelScramble(title, text)
       head.addEventListener('pointerenter', onEnter)
       head.addEventListener('pointerleave', onLeave)
@@ -403,7 +399,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       const name = tile.querySelector<HTMLElement>('.sk-tile-name')
       if (!name) return
       const text = name.textContent?.trim() || ''
-      const onEnter = () => scrambleEl(name, text, { revealRate: 48, settleDuration: 280 })
+      const onEnter = () => scrambleEl(name, text, { pattern: 'soft', revealRate: 48, settleDuration: 280 })
       const onLeave = () => cancelScramble(name, text)
       tile.addEventListener('pointerenter', onEnter)
       tile.addEventListener('pointerleave', onLeave)
@@ -421,8 +417,8 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       const dateText  = date?.textContent?.trim()  || ''
       const badgeText = badge?.textContent?.trim() || ''
       const onEnter = () => {
-        if (date)  scrambleEl(date,  dateText,  { chars: '░▒▓█10', revealRate: 28 })
-        if (badge) scrambleEl(badge, badgeText, { revealRate: 36 })
+        if (date)  scrambleEl(date,  dateText,  { pattern: 'code', revealRate: 28 })
+        if (badge) scrambleEl(badge, badgeText, { pattern: 'label', revealRate: 36 })
       }
       const onLeave = () => {
         cancelScramble(date,  dateText)
@@ -445,8 +441,8 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       const labelText = label?.textContent?.trim() || ''
       const numText   = num?.textContent?.trim()   || ''
       const onEnter = () => {
-        if (label)   scrambleEl(label,   labelText, { revealRate: 40 })
-        if (num)     scrambleEl(num,     numText,   { revealRate: 28 })
+        if (label)   scrambleEl(label,   labelText, { pattern: 'label', revealRate: 40 })
+        if (num)     scrambleEl(num,     numText,   { pattern: 'code', revealRate: 28 })
         if (barFill) gsap.fromTo(barFill, { width: '0%' }, { width: `${pct}%`, duration: 0.9, ease: 'power3.out' })
       }
       const onLeave = () => {
@@ -466,7 +462,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       const label = card.querySelector<HTMLElement>('.ct-card-label')
       if (!label) return
       const text = label.textContent?.trim() || ''
-      const onEnter = () => scrambleEl(label, text, { revealRate: 42, settleDuration: 300 })
+      const onEnter = () => scrambleEl(label, text, { pattern: 'soft', revealRate: 42, settleDuration: 300 })
       const onLeave = () => cancelScramble(label, text)
       card.addEventListener('pointerenter', onEnter)
       card.addEventListener('pointerleave', onLeave)
@@ -479,7 +475,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     // nav links → scramble on hover
     root.querySelectorAll<HTMLElement>('.nav ul a').forEach((link) => {
       const text = link.textContent?.trim() || ''
-      const onEnter = () => scrambleEl(link, text, { revealRate: 52, settleDuration: 260 })
+      const onEnter = () => scrambleEl(link, text, { pattern: 'label', revealRate: 52, settleDuration: 260 })
       const onLeave = () => cancelScramble(link, text)
       link.addEventListener('pointerenter', onEnter)
       link.addEventListener('pointerleave', onLeave)
@@ -499,7 +495,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
         const now = Date.now()
         if (now - logoLastEnter < LOGO_COOLDOWN) return
         logoLastEnter = now
-        scrambleEl(logoEl, logoText, { revealRate: 38, settleDuration: 440 })
+        scrambleEl(logoEl, logoText, { pattern: 'title', revealRate: 38, settleDuration: 440 })
         gsap.to(logoEl, {
           color: 'var(--blue)',
           textShadow: '0 0 18px rgba(67,103,255,0.7)',
@@ -552,7 +548,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
         timers.length = 0
         wordSpans.forEach((span, i) => {
           timers.push(
-            setTimeout(() => scrambleEl(span, wordTexts[i], { revealRate: 30, settleDuration: 520 }), i * 90)
+            setTimeout(() => scrambleEl(span, wordTexts[i], { pattern: 'title', revealRate: 30, settleDuration: 520 }), i * 90)
           )
         })
       }
@@ -598,7 +594,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
   // position:fixed の固定解除を完全に回避するための最も確実な手段。
   return (
     <>
-      {mounted && createPortal(<CursorFollower />, document.body)}
+      {portalTarget && createPortal(<CursorFollower />, portalTarget)}
       <div ref={rootRef}>
         {children}
       </div>

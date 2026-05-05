@@ -50,7 +50,7 @@ export default function HeroSection() {
           as="p"
           className="hero-eyebrow"
           text="PLAYER SELECT"
-          chars="░▒▓█10!%"
+          pattern="label"
           revealRate={36}
           settleDuration={420}
           replayOnHover={false}
@@ -61,7 +61,7 @@ export default function HeroSection() {
               as="span"
               className="blue"
               text="CRAFT"
-              chars="░▒▓█10!%"
+              pattern="title"
               delay={160}
               revealRate={30}
               settleDuration={520}
@@ -72,7 +72,7 @@ export default function HeroSection() {
             <ScrambleText
               as="span"
               text="CODE &"
-              chars="░▒▓█10!%"
+              pattern="title"
               delay={260}
               revealRate={30}
               settleDuration={520}
@@ -83,7 +83,7 @@ export default function HeroSection() {
             <ScrambleText
               as="span"
               text="DESIGN"
-              chars="░▒▓█10!%"
+              pattern="title"
               delay={360}
               revealRate={30}
               settleDuration={520}

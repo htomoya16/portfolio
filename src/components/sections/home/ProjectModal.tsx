@@ -130,7 +130,7 @@ export default function ProjectModal({ project, onClose }: Props) {
           {/* Right: detail */}
           <div className="pm-right" ref={contentRef}>
             <div className="pm-reveal">
-              <p className="pm-label">// {project.num}</p>
+              <p className="pm-label">{`// ${project.num}`}</p>
               <ScrambleText
                 as="h2"
                 className="pm-title"
