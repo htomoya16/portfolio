@@ -768,29 +768,49 @@ a { color: inherit; text-decoration: none; }
   position: relative;
 }
 
-/* Vivid gradient blobs — glassmorphism backdrop (left panel only area) */
+/* Vivid gradient blobs — Liquid Glass needs vivid colour behind the pane */
 .pm-body::before {
   content: '';
   position: absolute; inset: 0; pointer-events: none; z-index: 0;
-  /* Blobs concentrated on left 43% so they show through the glass */
+  /* High-saturation blobs concentrated left of the 43% split */
   background:
-    radial-gradient(ellipse 65% 60% at 5% 15%, rgba(67,103,255,0.42) 0%, transparent 65%),
-    radial-gradient(ellipse 48% 52% at 28% 92%, rgba(100,55,255,0.28) 0%, transparent 62%),
-    radial-gradient(ellipse 42% 38% at 2% 72%, rgba(0,175,220,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 35% 42% at 18% 48%, rgba(67,103,255,0.22) 0%, transparent 58%);
+    radial-gradient(ellipse 72% 68% at 4% 12%,  rgba(67,103,255,0.65) 0%, transparent 62%),
+    radial-gradient(ellipse 55% 58% at 26% 94%,  rgba(100,55,255,0.50) 0%, transparent 60%),
+    radial-gradient(ellipse 48% 42% at 1%  72%,  rgba(0,175,220,0.38)  0%, transparent 58%),
+    radial-gradient(ellipse 40% 46% at 19% 46%,  rgba(67,103,255,0.32) 0%, transparent 56%),
+    radial-gradient(ellipse 35% 32% at 36% 22%,  rgba(130,80,255,0.22) 0%, transparent 52%);
 }
 .pm-left, .pm-right { position: relative; z-index: 1; }
 
-/* Left glassmorphism panel — frosted blue-white glass */
+/* Left panel — iOS Liquid Glass
+   High blur + ultra-low white tint + bright edge highlight */
 .pm-left {
   width: auto; min-width: 0;
   display: flex; flex-direction: column;
-  background: rgba(255,255,255,0.32);
-  backdrop-filter: blur(24px) saturate(1.8);
-  -webkit-backdrop-filter: blur(24px) saturate(1.8);
-  border-right: 1px solid rgba(255,255,255,0.70);
-  box-shadow: inset -1px 0 0 rgba(255,255,255,0.5);
+  /* Very transparent so colourful blobs show through vividly */
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(48px) saturate(1.9) brightness(1.06);
+  -webkit-backdrop-filter: blur(48px) saturate(1.9) brightness(1.06);
+  /* Liquid Glass edge: bright right border + inset shimmer */
+  border-right: 1px solid rgba(255,255,255,0.32);
+  box-shadow:
+    inset -1px 0 0 rgba(255,255,255,0.14),   /* inner right edge  */
+    inset  0  0 40px rgba(255,255,255,0.04);  /* interior glow     */
   overflow: hidden;
+}
+/* Top shimmer line — characteristic of Apple Liquid Glass */
+.pm-left::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent           0%,
+    rgba(255,255,255,0.70) 15%,
+    rgba(255,255,255,0.95) 48%,
+    rgba(255,255,255,0.70) 82%,
+    transparent           100%
+  );
+  z-index: 20; pointer-events: none;
 }
 
 /* Media carousel inside glass panel */
@@ -894,11 +914,11 @@ a { color: inherit; text-decoration: none; }
   color: var(--muted-2);
 }
 
-/* Left panel meta section */
+/* Left panel meta section — ultra-thin divider, near-invisible tint */
 .pm-left-meta {
   flex-shrink: 0; padding: 16px 18px;
-  border-top: 1px solid rgba(255,255,255,0.65);
-  background: rgba(255,255,255,0.38);
+  border-top: 1px solid rgba(255,255,255,0.28);
+  background: rgba(255,255,255,0.05);
   display: flex; flex-direction: column; gap: 8px;
 }
 .pm-meta-row { display: flex; align-items: baseline; gap: 10px; }
