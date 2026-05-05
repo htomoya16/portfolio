@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import ScrambleText from '@/components/animation/ScrambleText'
 import type { Project } from '@/content/site/projects'
@@ -22,10 +22,10 @@ interface Props {
 const MODAL_STYLE: React.CSSProperties = {
   padding: 0,
   gap: 0,
-  maxWidth: 'min(960px, calc(100vw - 32px))',
+  maxWidth: 'min(1360px, calc(100vw - 20px))',
   width: '100%',
-  height: '88vh',
-  maxHeight: '88vh',
+  height: 'min(94vh, 960px)',
+  maxHeight: '94vh',
   borderRadius: 0,
   background: '#F7F9FF',
   border: '1px solid rgba(67,103,255,0.22)',
@@ -43,6 +43,46 @@ const OVERLAY_STYLE: React.CSSProperties = {
 
 export default function ProjectModal({ project, open, onOpenChange }: Props) {
   const rightRef = useRef<HTMLDivElement>(null)
+
+  const handleModalWheel = useCallback((event: WheelEvent) => {
+    const right = rightRef.current
+    if (!right) return
+
+    const canScroll = right.scrollHeight > right.clientHeight
+    if (!canScroll) return
+
+    const target = event.target as Node
+    const isInsideRightPane = right.contains(target)
+
+    if (!isInsideRightPane) {
+      event.preventDefault()
+      right.scrollTop += event.deltaY
+      event.stopPropagation()
+      return
+    }
+
+    const atTop = right.scrollTop <= 0
+    const atBottom = Math.ceil(right.scrollTop + right.clientHeight) >= right.scrollHeight
+    if ((event.deltaY < 0 && atTop) || (event.deltaY > 0 && atBottom)) {
+      event.preventDefault()
+    }
+    event.stopPropagation()
+  }, [])
+
+  useEffect(() => {
+    if (!open) return
+
+    let content: HTMLElement | null = null
+    const timer = window.setTimeout(() => {
+      content = document.querySelector<HTMLElement>('.pm-dialog-content')
+      content?.addEventListener('wheel', handleModalWheel, { passive: false })
+    }, 0)
+
+    return () => {
+      window.clearTimeout(timer)
+      content?.removeEventListener('wheel', handleModalWheel)
+    }
+  }, [handleModalWheel, open])
 
   useEffect(() => {
     if (!open) return
