@@ -17,7 +17,18 @@ interface Props {
 }
 
 export default function ProjectsGrid({ projects }: Props) {
-  const [selected, setSelected] = useState<Project | null>(null)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  const openProject = (project: Project) => {
+    setSelectedProject(project)
+    setDialogOpen(true)
+  }
+
+  const handleOpenChange = (open: boolean) => {
+    setDialogOpen(open)
+    if (!open) setTimeout(() => setSelectedProject(null), 300)
+  }
 
   return (
     <>
@@ -26,13 +37,13 @@ export default function ProjectsGrid({ projects }: Props) {
           <article
             key={project.num}
             className="project-card"
-            onClick={() => setSelected(project)}
+            onClick={() => openProject(project)}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault()
-                setSelected(project)
+                openProject(project)
               }
             }}
             aria-label={`View details for ${project.title}`}
@@ -66,8 +77,12 @@ export default function ProjectsGrid({ projects }: Props) {
         ))}
       </div>
 
-      {selected && (
-        <ProjectModal project={selected} onClose={() => setSelected(null)} />
+      {selectedProject && (
+        <ProjectModal
+          project={selectedProject}
+          open={dialogOpen}
+          onOpenChange={handleOpenChange}
+        />
       )}
     </>
   )
