@@ -27,18 +27,18 @@ const MODAL_STYLE: React.CSSProperties = {
   height: 'min(94vh, 960px)',
   maxHeight: '94vh',
   borderRadius: '12px',
-  background: 'linear-gradient(135deg, #070A1E 0%, #0C1245 38%, #160933 72%, #080C22 100%)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  boxShadow: '0 32px 80px rgba(0,0,20,0.75), 0 0 0 1px rgba(67,103,255,0.18), inset 0 1px 0 rgba(255,255,255,0.06)',
+  background: 'linear-gradient(145deg, #FFFFFF 0%, #F5F8FF 45%, #EEF3FF 75%, #F8F9FF 100%)',
+  border: '1px solid rgba(67,103,255,0.14)',
+  boxShadow: '0 20px 64px rgba(67,103,255,0.14), 0 4px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
 }
 
 const OVERLAY_STYLE: React.CSSProperties = {
-  background: 'rgba(5,8,20,0.82)',
-  backdropFilter: 'blur(8px)',
-  WebkitBackdropFilter: 'blur(8px)',
+  background: 'rgba(10,20,60,0.50)',
+  backdropFilter: 'blur(6px)',
+  WebkitBackdropFilter: 'blur(6px)',
 }
 
 function canScrollVertically(element: HTMLElement) {
