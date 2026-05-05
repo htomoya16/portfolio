@@ -5,12 +5,16 @@ import { animate, scrambleText } from 'animejs'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
-import { type ReactNode, useEffect, useRef } from 'react'
+import { type ReactNode, useEffect, useRef, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import CursorFollower from './CursorFollower'
 import { SCRAMBLE_CHARS, type ScramblePattern } from './ScrambleText'
 
 gsap.registerPlugin(ScrollTrigger)
+
+const subscribeToHydration = () => () => {}
+const getClientSnapshot = () => true
+const getServerSnapshot = () => false
 
 /** Track in-progress scramble animations per element to allow mid-flight cancellation */
 const activeAnims = new WeakMap<HTMLElement, ReturnType<typeof animate>>()
@@ -80,7 +84,7 @@ function scrambleEl(
 
 export default function MotionProvider({ children }: { children: ReactNode }) {
   const rootRef = useRef<HTMLDivElement | null>(null)
-  const portalTarget = typeof document === 'undefined' ? null : document.body
+  const isHydrated = useSyncExternalStore(subscribeToHydration, getClientSnapshot, getServerSnapshot)
 
   // ── Lenis smooth scroll ─────────────────────────────────────────────────
   useEffect(() => {
@@ -362,7 +366,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       const hpLabelText = 'HP'
       const hpNumText   = '83'
       const onEnter = () => {
-        if (hpLabel) scrambleEl(hpLabel, hpLabelText, { pattern: 'label' })
+        if (hpLabel) scrambleEl(hpLabel, hpLabelText, { pattern: 'braille' })
         if (hpNum)   scrambleEl(hpNum, hpNumText, { pattern: 'label' })
         if (hpFill)  gsap.fromTo(hpFill, { width: '0%' }, { width: '83%', duration: 0.9, ease: 'power3.out' })
       }
@@ -418,7 +422,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       const badgeText = badge?.textContent?.trim() || ''
       const onEnter = () => {
         if (date)  scrambleEl(date,  dateText,  { pattern: 'code', revealRate: 28 })
-        if (badge) scrambleEl(badge, badgeText, { pattern: 'label', revealRate: 36 })
+        if (badge) scrambleEl(badge, badgeText, { pattern: 'braille', revealRate: 36 })
       }
       const onLeave = () => {
         cancelScramble(date,  dateText)
@@ -441,7 +445,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       const labelText = label?.textContent?.trim() || ''
       const numText   = num?.textContent?.trim()   || ''
       const onEnter = () => {
-        if (label)   scrambleEl(label,   labelText, { pattern: 'label', revealRate: 40 })
+        if (label)   scrambleEl(label,   labelText, { pattern: 'braille', revealRate: 40 })
         if (num)     scrambleEl(num,     numText,   { pattern: 'code', revealRate: 28 })
         if (barFill) gsap.fromTo(barFill, { width: '0%' }, { width: `${pct}%`, duration: 0.9, ease: 'power3.out' })
       }
@@ -475,7 +479,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     // nav links → scramble on hover
     root.querySelectorAll<HTMLElement>('.nav ul a').forEach((link) => {
       const text = link.textContent?.trim() || ''
-      const onEnter = () => scrambleEl(link, text, { pattern: 'label', revealRate: 52, settleDuration: 260 })
+      const onEnter = () => scrambleEl(link, text, { pattern: 'braille', revealRate: 52, settleDuration: 260 })
       const onLeave = () => cancelScramble(link, text)
       link.addEventListener('pointerenter', onEnter)
       link.addEventListener('pointerleave', onLeave)
@@ -594,7 +598,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
   // position:fixed の固定解除を完全に回避するための最も確実な手段。
   return (
     <>
-      {portalTarget && createPortal(<CursorFollower />, portalTarget)}
+      {isHydrated && createPortal(<CursorFollower />, document.body)}
       <div ref={rootRef}>
         {children}
       </div>

@@ -50,7 +50,7 @@ export default function HeroSection() {
           as="p"
           className="hero-eyebrow"
           text="PLAYER SELECT"
-          pattern="label"
+          pattern="braille"
           revealRate={36}
           settleDuration={420}
           replayOnHover={false}

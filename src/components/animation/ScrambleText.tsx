@@ -8,6 +8,7 @@ export const SCRAMBLE_CHARS = {
   label: '01<>[]{}',
   code: 'abcdef0123456789',
   soft: '.:-+*',
+  braille: '⠂⠆⠒⠲⠶⠿',
 } as const
 
 export type ScramblePattern = keyof typeof SCRAMBLE_CHARS
