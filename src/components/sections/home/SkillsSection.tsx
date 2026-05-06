@@ -93,7 +93,7 @@ export default function SkillsSection() {
             <div key={cat.title} className="sk-cat">
               <div className="sk-cat-head">
                 <div className="sk-cat-marker" aria-hidden="true">
-                  <span />
+                  <Image className="sk-cat-marker-img" src={cat.iconSrc} alt="" width={24} height={24} />
                 </div>
                 <span className="sk-cat-title">{cat.title}</span>
                 <div className="sk-cat-rule" />

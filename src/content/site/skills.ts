@@ -16,6 +16,7 @@ export interface SkillTile {
 
 export interface SkillCategory {
   title: string
+  iconSrc: string
   tiles: SkillTile[]
 }
 
@@ -30,6 +31,7 @@ export const skillLevelDefinitions = [
 export const skillCategories: SkillCategory[] = [
   {
     title: 'Languages',
+    iconSrc: '/assets/icons/skills/languages.svg',
     tiles: [
       { name: 'Go', level: 3.6, iconSrc: '/assets/icons/skills/go.svg' },
       { name: 'Python', level: 3.5, iconSrc: '/assets/icons/skills/python.svg' },
@@ -43,6 +45,7 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     title: 'Framework / Library',
+    iconSrc: '/assets/icons/skills/framework-library.svg',
     tiles: [
       { name: 'Echo', level: 3.6, iconSrc: '/assets/icons/skills/echo.png' },
       { name: 'FastAPI', level: 3.4, iconSrc: '/assets/icons/skills/fast-api.svg' },
@@ -53,6 +56,7 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     title: 'Database',
+    iconSrc: '/assets/icons/skills/database.svg',
     tiles: [
       { name: 'PostgreSQL', level: 3.4, iconSrc: '/assets/icons/skills/postgresql.svg' },
       { name: 'MySQL', level: 3.3, iconSrc: '/assets/icons/skills/mysql.svg' },
@@ -61,6 +65,7 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     title: 'Tools / DevOps / Others',
+    iconSrc: '/assets/icons/skills/tools-devops-others.svg',
     tiles: [
       { name: 'Git', level: 3.6, iconSrc: '/assets/icons/skills/git.svg' },
       { name: 'GitHub', level: 3.6, iconSrc: '/assets/icons/skills/github-dark.svg' },
