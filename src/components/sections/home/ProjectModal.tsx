@@ -109,6 +109,8 @@ function useBodyScrollLock(open: boolean) {
     const previousBodyPosition = body.style.position
     const previousBodyTop = body.style.top
     const previousBodyWidth = body.style.width
+    const previousHtmlScrollBehavior = html.style.scrollBehavior
+    const previousBodyScrollBehavior = body.style.scrollBehavior
 
     html.style.overflow = 'hidden'
     body.style.overflow = 'hidden'
@@ -117,12 +119,19 @@ function useBodyScrollLock(open: boolean) {
     body.style.width = '100%'
 
     return () => {
+      html.style.scrollBehavior = 'auto'
+      body.style.scrollBehavior = 'auto'
       html.style.overflow = previousHtmlOverflow
       body.style.overflow = previousBodyOverflow
       body.style.position = previousBodyPosition
       body.style.top = previousBodyTop
       body.style.width = previousBodyWidth
-      window.scrollTo(0, scrollY)
+      window.scrollTo({ top: scrollY, left: 0, behavior: 'auto' })
+
+      window.requestAnimationFrame(() => {
+        html.style.scrollBehavior = previousHtmlScrollBehavior
+        body.style.scrollBehavior = previousBodyScrollBehavior
+      })
     }
   }, [open])
 }
