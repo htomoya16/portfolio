@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import ScrambleText from '@/components/animation/ScrambleText'
-import type { Project } from '@/content/site/projects'
+import { projectsCopy, type Project } from '@/content/site/projects'
 import { PreviewQuest, PreviewScore, PreviewPixel } from './ProjectPreviews'
 import ProjectModal from './ProjectModal'
 
@@ -46,16 +46,16 @@ export default function ProjectsGrid({ projects }: Props) {
                 openProject(project)
               }
             }}
-            aria-label={`View details for ${project.title}`}
+            aria-label={`${projectsCopy.viewDetailsAriaPrefix} ${project.title}`}
           >
             <div className="project-preview">
               <span className="project-num-badge mono">{project.num}</span>
               <ProjectPreview project={project} />
               {/* hover overlay */}
-              <div className="project-view-hint" aria-hidden="true">VIEW DETAILS</div>
+              <div className="project-view-hint" aria-hidden="true">{projectsCopy.viewHint}</div>
             </div>
             <div className="project-meta">
-              <p className="project-num-sm mono">{`PROJECT ${project.num}`}</p>
+              <p className="project-num-sm mono">{`${projectsCopy.itemLabelPrefix} ${project.num}`}</p>
               <ScrambleText
                 as="h3"
                 className="project-title"

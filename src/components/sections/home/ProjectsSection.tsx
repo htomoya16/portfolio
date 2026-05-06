@@ -1,7 +1,7 @@
 // Server component
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
-import { projects } from '@/content/site/projects'
+import { projects, projectsCopy } from '@/content/site/projects'
 import ProjectsGrid from './ProjectsGrid'
 
 export default function ProjectsSection() {
@@ -11,7 +11,7 @@ export default function ProjectsSection() {
 
       <div className="projects-wrap">
         <div className="projects-head">
-          <SectionHeading number="// 03" title="PROJECTS" className="section-head-compact" blink />
+          <SectionHeading number={projectsCopy.sectionNumber} title={projectsCopy.sectionTitle} className="section-head-compact" blink />
           <span
             style={{
               fontFamily: "'JetBrains Mono', monospace",
@@ -20,7 +20,7 @@ export default function ProjectsSection() {
               letterSpacing: '0.22em',
             }}
           >
-            {projects.length} WORKS
+            {projects.length} {projectsCopy.countSuffix}
           </span>
         </div>
 

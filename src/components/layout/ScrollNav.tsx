@@ -1,19 +1,13 @@
 'use client'
 
+import { scrollNavCopy, scrollNavLinks } from '@/content/site/navigation'
 import gsap from 'gsap'
 import { useEffect, useRef, useState } from 'react'
 
-const SECTIONS = [
-  { id: 'hero',       label: 'HERO' },
-  { id: 'about',      label: '01 ABOUT' },
-  { id: 'skills',     label: '02 SKILLS' },
-  { id: 'projects',   label: '03 PROJECTS' },
-  { id: 'experience', label: '04 EXP' },
-  { id: 'contact',    label: '05 CONTACT' },
-]
+type SectionId = (typeof scrollNavLinks)[number]['id']
 
 export default function ScrollNav() {
-  const [active, setActive] = useState('hero')
+  const [active, setActive] = useState<SectionId>('hero')
   const dotsRef = useRef<Record<string, HTMLSpanElement | null>>({})
 
   useEffect(() => {
@@ -29,10 +23,10 @@ export default function ScrollNav() {
   useEffect(() => {
     const update = () => {
       const mid = window.scrollY + window.innerHeight * 0.5
-      let best = SECTIONS[0].id
+      let best: SectionId = scrollNavLinks[0].id
       let minDist = Infinity
 
-      for (const { id } of SECTIONS) {
+      for (const { id } of scrollNavLinks) {
         const el = document.getElementById(id)
         if (!el) continue
         const top = window.scrollY + el.getBoundingClientRect().top
@@ -53,14 +47,14 @@ export default function ScrollNav() {
   }
 
   return (
-    <nav className="scroll-nav" aria-label="Section navigation">
+    <nav className="scroll-nav" aria-label={scrollNavCopy.ariaLabel}>
       <div className="scroll-nav-track" aria-hidden="true" />
-      {SECTIONS.map(({ id, label }) => (
+      {scrollNavLinks.map(({ id, label }) => (
         <button
           key={id}
           className={`scroll-nav-item${active === id ? ' active' : ''}`}
           onClick={() => scrollTo(id)}
-          aria-label={`Go to ${label}`}
+          aria-label={`${scrollNavCopy.itemAriaPrefix} ${label}`}
           type="button"
         >
           <span className="scroll-nav-label">{label}</span>

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import type { CSSProperties } from 'react'
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
-import { skillCategories, skillLevelDefinitions } from '@/content/site/skills'
+import { skillCategories, skillLevelDefinitions, skillsCopy } from '@/content/site/skills'
 import type { SkillTile } from '@/content/site/skills'
 
 type SkillLevelStyle = CSSProperties & {
@@ -66,20 +66,16 @@ export default function SkillsSection() {
       <Atmo variant="b" tone="cool" />
 
       <div className="skills-wrap">
-        <SectionHeading number="// 02" title="SKILLS" blink />
+        <SectionHeading number={skillsCopy.sectionNumber} title={skillsCopy.sectionTitle} blink />
 
         <div className="skills-intro-grid">
           <div className="skills-overview">
-            <p className="skills-kicker">BACKEND-CENTERED LEARNING MAP</p>
-            <p className="skills-lead">
-              バックエンドを中心に学習と個人開発を進めています。全体的な経験はまだ浅く、実務経験がないため、実務レベルの設計・運用・改善判断はこれから積み上げる領域だと認識しています。特にバックエンド領域で経験を重ね、信頼できる実装力へ伸ばしていきたいです。
-            </p>
-            <p className="skills-note">
-              レベルは下記基準に基づく自己評価です。実務経験を示すものではなく、現時点での学習・個人開発・研究での使用感を整理しています。
-            </p>
+            <p className="skills-kicker">{skillsCopy.kicker}</p>
+            <p className="skills-lead">{skillsCopy.lead}</p>
+            <p className="skills-note">{skillsCopy.note}</p>
           </div>
 
-          <div className="skills-level-guide" aria-label="Skill level definitions">
+          <div className="skills-level-guide" aria-label={skillsCopy.levelGuideLabel}>
             {skillLevelDefinitions.map((item) => (
               <div key={item.level} className={`sk-guide-item sk-guide-lv${item.level}`}>
                 <span className="sk-guide-level">Lv.{item.level}</span>
@@ -99,7 +95,7 @@ export default function SkillsSection() {
                 </div>
                 <span className="sk-cat-title">{cat.title}</span>
                 <div className="sk-cat-rule" />
-                <span className="sk-cat-count">{String(cat.tiles.length).padStart(2, '0')} SKILLS</span>
+                <span className="sk-cat-count">{String(cat.tiles.length).padStart(2, '0')} {skillsCopy.countSuffix}</span>
               </div>
 
               <div className="sk-cat-grid">

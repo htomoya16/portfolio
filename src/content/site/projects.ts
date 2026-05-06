@@ -1,3 +1,12 @@
+export const projectsCopy = {
+  sectionNumber: '// 03',
+  sectionTitle: 'PROJECTS',
+  countSuffix: 'WORKS',
+  viewHint: 'VIEW DETAILS',
+  itemLabelPrefix: 'PROJECT',
+  viewDetailsAriaPrefix: 'View details for',
+} as const
+
 export type ProjectMedia = {
   type: 'image' | 'video'
   src: string
@@ -27,6 +36,25 @@ export interface Project {
   challenges?: Array<{ problem: string; solution: string }>
   learnings?: string[]
 }
+
+export const projectModalCopy = {
+  headerProjectPrefix: 'PROJECT',
+  githubLabel: 'GitHub',
+  githubAriaPrefix: 'Open',
+  githubAriaSuffix: 'on GitHub',
+  sections: {
+    background: '開発背景',
+    devContent: '開発内容',
+    techStack: '技術スタック',
+    highlights: '工夫した点',
+    challenges: '苦労した点と解決',
+    learnings: '学び',
+  },
+  challengeLabels: {
+    problem: 'PROBLEM',
+    solution: 'SOLUTION',
+  },
+} as const
 
 export const projects: Project[] = [
   {

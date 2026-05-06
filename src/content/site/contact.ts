@@ -1,3 +1,20 @@
+export const contactCopy = {
+  sectionNumber: '// 05',
+  sectionTitle: 'CONTACT',
+  statusLabel: 'Status: available',
+  statusText: 'AVAILABLE',
+  leadLines: [
+    'お仕事・インターン・勉強会など、',
+    'お気軽にご連絡ください。',
+  ],
+  bodyLines: [
+    '現在はアルバイト・インターンでのご依頼、',
+    '勉強会への登壇依頼などを受け付けています。',
+    'まずはお気軽にどうぞ。',
+  ],
+  prompt: '> SEND MESSAGE',
+} as const
+
 export const contactStats = [
   { label: 'RESPONSE', pct: 95, display: '95%' },
   { label: 'COMMITS', pct: 80, display: '1,200+' },

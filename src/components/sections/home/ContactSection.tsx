@@ -1,7 +1,7 @@
 // Server component
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
-import { contactLinks, contactStats } from '@/content/site/contact'
+import { contactCopy, contactLinks, contactStats } from '@/content/site/contact'
 
 function ContactIcon({ type }: { type: string }) {
   if (type === 'pinterest') {
@@ -51,21 +51,28 @@ export default function ContactSection() {
       <div className="contact-grid">
         {/* left */}
         <div className="contact-left">
-          <div className="contact-status" aria-label="Status: available">
+          <div className="contact-status" aria-label={contactCopy.statusLabel}>
             <span className="dot" />
-            AVAILABLE
+            {contactCopy.statusText}
           </div>
 
-          <SectionHeading number="// 05" title="CONTACT" blink />
+          <SectionHeading number={contactCopy.sectionNumber} title={contactCopy.sectionTitle} blink />
 
           <p className="contact-lead">
-            お仕事・インターン・勉強会など、<br />
-            お気軽にご連絡ください。
+            {contactCopy.leadLines.map((line, index) => (
+              <span key={line}>
+                {line}
+                {index < contactCopy.leadLines.length - 1 && <br />}
+              </span>
+            ))}
           </p>
           <p className="contact-body">
-            現在はアルバイト・インターンでのご依頼、<br />
-            勉強会への登壇依頼などを受け付けています。<br />
-            まずはお気軽にどうぞ。
+            {contactCopy.bodyLines.map((line, index) => (
+              <span key={line}>
+                {line}
+                {index < contactCopy.bodyLines.length - 1 && <br />}
+              </span>
+            ))}
           </p>
 
           {/* stats — plain text, bar starts at 0 width, MotionProvider animates on hover */}
@@ -82,7 +89,7 @@ export default function ContactSection() {
           </div>
 
           <span className="ct-prompt mono">
-            &gt; SEND MESSAGE
+            {contactCopy.prompt}
             <span className="caret-blink" aria-hidden="true" />
           </span>
         </div>

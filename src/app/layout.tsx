@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono, Noto_Sans_JP, Press_Start_2P } from 'next/font/google'
+import { siteMetadata } from '@/content/site/meta'
 import './globals.css'
 
 const inter = Inter({
@@ -31,8 +32,8 @@ const pressStart2P = Press_Start_2P({
 })
 
 export const metadata: Metadata = {
-  title: 'htomoya16 — Web Engineer Portfolio',
-  description: 'コードで、アイデアをカタチにして、ユーザーの体験をアップデートする。',
+  title: siteMetadata.title,
+  description: siteMetadata.description,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

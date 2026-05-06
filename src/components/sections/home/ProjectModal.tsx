@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import ScrambleText from '@/components/animation/ScrambleText'
-import type { Project } from '@/content/site/projects'
+import { projectModalCopy, type Project } from '@/content/site/projects'
 import ProjectMediaCarousel from './ProjectMediaCarousel'
 import {
   Dialog,
@@ -263,7 +263,7 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
 
         {/* Header bar */}
         <div className="pm-header">
-          <span className="pm-header-num">PROJECT {project.num}</span>
+          <span className="pm-header-num">{projectModalCopy.headerProjectPrefix} {project.num}</span>
           <div className="pm-header-right">
             {project.status && (
               <span className="pm-header-status">
@@ -334,9 +334,9 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="pm-github-link"
-                    aria-label={`Open ${project.title} on GitHub`}
+                    aria-label={`${projectModalCopy.githubAriaPrefix} ${project.title} ${projectModalCopy.githubAriaSuffix}`}
                   >
-                    GitHub
+                    {projectModalCopy.githubLabel}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/assets/icons/misc/external-links.svg"
@@ -356,7 +356,7 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {project.background && (
               <div className="pm-reveal pm-section">
                 <h3 className="pm-section-title">
-                  <span className="pm-section-icon">▸</span>開発背景
+                  <span className="pm-section-icon">▸</span>{projectModalCopy.sections.background}
                 </h3>
                 <p className="pm-section-body">{project.background}</p>
               </div>
@@ -366,7 +366,7 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {project.devContent && (
               <div className="pm-reveal pm-section">
                 <h3 className="pm-section-title">
-                  <span className="pm-section-icon">▸</span>開発内容
+                  <span className="pm-section-icon">▸</span>{projectModalCopy.sections.devContent}
                 </h3>
                 <p className="pm-section-body">{project.devContent}</p>
               </div>
@@ -375,7 +375,7 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {/* ── 技術スタック ── */}
             <div className="pm-reveal pm-section">
               <h3 className="pm-section-title">
-                <span className="pm-section-icon">▸</span>技術スタック
+                <span className="pm-section-icon">▸</span>{projectModalCopy.sections.techStack}
               </h3>
               <div className="pm-tags-grid">
                 {project.tags.map((tag) => (
@@ -388,7 +388,7 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {project.highlights && project.highlights.length > 0 && (
               <div className="pm-reveal pm-section">
                 <h3 className="pm-section-title">
-                  <span className="pm-section-icon">▸</span>工夫した点
+                  <span className="pm-section-icon">▸</span>{projectModalCopy.sections.highlights}
                 </h3>
                 <ul className="pm-bullet-list">
                   {project.highlights.map((h, i) => (
@@ -405,17 +405,17 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {project.challenges && project.challenges.length > 0 && (
               <div className="pm-reveal pm-section">
                 <h3 className="pm-section-title">
-                  <span className="pm-section-icon">▸</span>苦労した点と解決
+                  <span className="pm-section-icon">▸</span>{projectModalCopy.sections.challenges}
                 </h3>
                 <div className="pm-challenges">
                   {project.challenges.map((c, i) => (
                     <div key={i} className="pm-challenge-item">
                       <div className="pm-challenge-problem">
-                        <span className="pm-challenge-label">PROBLEM</span>
+                        <span className="pm-challenge-label">{projectModalCopy.challengeLabels.problem}</span>
                         {c.problem}
                       </div>
                       <div className="pm-challenge-solution">
-                        <span className="pm-challenge-label pm-challenge-label-sol">SOLUTION</span>
+                        <span className="pm-challenge-label pm-challenge-label-sol">{projectModalCopy.challengeLabels.solution}</span>
                         {c.solution}
                       </div>
                     </div>
@@ -428,7 +428,7 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {project.learnings && project.learnings.length > 0 && (
               <div className="pm-reveal pm-section">
                 <h3 className="pm-section-title">
-                  <span className="pm-section-icon">▸</span>学び
+                  <span className="pm-section-icon">▸</span>{projectModalCopy.sections.learnings}
                 </h3>
                 <ul className="pm-bullet-list">
                   {project.learnings.map((l, i) => (

@@ -3,7 +3,7 @@
 import ScrambleText from '@/components/animation/ScrambleText'
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
-import { experiences } from '@/content/site/experience'
+import { experienceCopy, experiences } from '@/content/site/experience'
 import { useRef } from 'react'
 import gsap from 'gsap'
 
@@ -33,7 +33,7 @@ export default function ExperienceSection() {
       <Atmo variant="d" tone="cool" />
 
       <div className="exp-wrap">
-        <SectionHeading number="// 04" title="EXPERIENCE" blink />
+        <SectionHeading number={experienceCopy.sectionNumber} title={experienceCopy.sectionTitle} blink />
 
         <div className="exp-list">
           <div className="exp-rail" aria-hidden="true" />

@@ -2,7 +2,7 @@
 
 import ScrambleText from '@/components/animation/ScrambleText'
 import SideRails from '@/components/layout/SideRails'
-import { heroTickerItems } from '@/content/site/hero'
+import { heroCopy, heroTickerItems } from '@/content/site/hero'
 
 export default function HeroSection() {
   const handleScrollToAbout = () => {
@@ -49,57 +49,40 @@ export default function HeroSection() {
         <ScrambleText
           as="p"
           className="hero-eyebrow"
-          text="PLAYER SELECT"
+          text={heroCopy.eyebrow}
           pattern="braille"
           revealRate={36}
           settleDuration={420}
           replayOnHover={false}
         />
         <h1 className="hero-title">
-          <span className="line">
-            <ScrambleText
-              as="span"
-              className="blue"
-              text="CRAFT"
-              pattern="title"
-              delay={160}
-              revealRate={30}
-              settleDuration={520}
-              replayOnHover={false}
-            />
-          </span>
-          <span className="line">
-            <ScrambleText
-              as="span"
-              text="CODE &"
-              pattern="title"
-              delay={260}
-              revealRate={30}
-              settleDuration={520}
-              replayOnHover={false}
-            />
-          </span>
-          <span className="line">
-            <ScrambleText
-              as="span"
-              text="DESIGN"
-              pattern="title"
-              delay={360}
-              revealRate={30}
-              settleDuration={520}
-              replayOnHover={false}
-            />
-            <span className="caret" aria-hidden="true" />
-          </span>
+          {heroCopy.titleLines.map((line, index) => (
+            <span className="line" key={line.text}>
+              <ScrambleText
+                as="span"
+                className={line.accent ? 'blue' : undefined}
+                text={line.text}
+                pattern="title"
+                delay={160 + index * 100}
+                revealRate={30}
+                settleDuration={520}
+                replayOnHover={false}
+              />
+              {index === heroCopy.titleLines.length - 1 && <span className="caret" aria-hidden="true" />}
+            </span>
+          ))}
         </h1>
         <p className="hero-sub">
-          コードで、アイデアをカタチにして、<br />
-          ユーザーの体験をアップデートする。<br />
-          Web Engineer / UI Developer
+          {heroCopy.subtitleLines.map((line, index) => (
+            <span key={line}>
+              {line}
+              {index < heroCopy.subtitleLines.length - 1 && <br />}
+            </span>
+          ))}
         </p>
         {/* btn-primary: plain text, no scramble */}
         <button className="btn-primary" onClick={handleScrollToProjects} type="button">
-          VIEW WORKS
+          {heroCopy.primaryCta}
           <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
             <path d="M13 1L19 7L13 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             <line x1="1" y1="7" x2="18" y2="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -111,16 +94,16 @@ export default function HeroSection() {
       <div className="hero-visual">
         <div className="controller-scene">
           {/* HP bar — hover effects handled by MotionProvider */}
-          <div className="hero-hp" aria-label="HP bar">
-            <span className="hp-label">HP</span>
+          <div className="hero-hp" aria-label={heroCopy.hpAriaLabel}>
+            <span className="hp-label">{heroCopy.hpLabel}</span>
             <div className="hp-bar">
               <div className="hp-fill" />
             </div>
-            <span className="hp-num">83</span>
+            <span className="hp-num">{heroCopy.hpValue}</span>
           </div>
 
           {/* label — plain text, was 100%% bug */}
-          <span className="hero-label-100" aria-hidden="true">100%</span>
+          <span className="hero-label-100" aria-hidden="true">{heroCopy.visualPercent}</span>
 
           {/* main controller */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -149,12 +132,12 @@ export default function HeroSection() {
         className="hero-play-center"
         onClick={handleScrollToAbout}
         type="button"
-        aria-label="Scroll to about section"
+        aria-label={heroCopy.scrollToAboutLabel}
       >
         <div className="play-circle">
           <div className="tri" aria-hidden="true" />
         </div>
-        <span className="play-label">PRESS START</span>
+        <span className="play-label">{heroCopy.playCta}</span>
       </button>
 
       {/* ticker — 4× duplicate, plain text for stable width */}
