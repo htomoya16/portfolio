@@ -23,7 +23,22 @@ export default function HeroSection() {
       <SideRails />
 
       {/* right background panel */}
-      <div className="hero-right-bg" aria-hidden="true" />
+      <div className="hero-right-bg" aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/assets/hero/generated/blackhole-pixel.webp"
+          alt=""
+          className="hero-blackhole-art hero-blackhole-art-motion"
+          draggable={false}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/assets/hero/generated/blackhole-pixel-poster.png"
+          alt=""
+          className="hero-blackhole-art hero-blackhole-art-poster"
+          draggable={false}
+        />
+      </div>
 
       {/* Hero SVG decorations — マージン帯のみ（コンテンツと重ならない） */}
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
@@ -88,31 +103,6 @@ export default function HeroSection() {
             <line x1="1" y1="7" x2="18" y2="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </button>
-      </div>
-
-      {/* hero visual */}
-      <div className="hero-visual">
-        <div className="controller-scene">
-          {/* HP bar — hover effects handled by MotionProvider */}
-          <div className="hero-hp" aria-label={heroCopy.hpAriaLabel}>
-            <span className="hp-label">{heroCopy.hpLabel}</span>
-            <div className="hp-bar">
-              <div className="hp-fill" />
-            </div>
-            <span className="hp-num">{heroCopy.hpValue}</span>
-          </div>
-
-          {/* label — plain text, was 100%% bug */}
-          <span className="hero-label-100" aria-hidden="true">{heroCopy.visualPercent}</span>
-
-          <div className="hero-visual-shell" aria-hidden="true">
-            <div className="hero-visual-grid" />
-            <div className="hero-visual-panel hero-visual-panel-main" />
-            <div className="hero-visual-panel hero-visual-panel-sub" />
-            <div className="hero-visual-line hero-visual-line-top" />
-            <div className="hero-visual-line hero-visual-line-bottom" />
-          </div>
-        </div>
       </div>
 
       {/* play button — plain label */}

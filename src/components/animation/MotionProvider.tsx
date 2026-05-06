@@ -110,14 +110,12 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       if (prefersReducedMotion) return
 
       // Hero entrance
-      gsap.set('.hero-content, .hero-visual, .hero-play-center, .hero-ticker', { autoAlpha: 0, y: 28 })
-      gsap.set('.px-sprite, .hero-hp, .hero-label-100', { autoAlpha: 0, scale: 0.7, y: 16 })
+      gsap.set('.hero-content, .hero-play-center, .hero-ticker', { autoAlpha: 0, y: 28 })
+      gsap.set('.hero-blackhole-art', { autoAlpha: 0, scale: 0.94, x: 28 })
 
       gsap.timeline({ defaults: { ease: 'power3.out' } })
         .to('.hero-content', { autoAlpha: 1, y: 0, duration: 0.8 })
-        .to('.hero-visual', { autoAlpha: 1, y: 0, duration: 0.75 }, '-=0.45')
-        .to('.hero-hp, .hero-label-100', { autoAlpha: 1, scale: 1, y: 0, duration: 0.45, stagger: 0.08 }, '-=0.2')
-        .to('.px-sprite', { autoAlpha: 1, scale: 1, y: 0, duration: 0.55, stagger: 0.08 }, '-=0.2')
+        .to('.hero-blackhole-art', { autoAlpha: 1, scale: 1, x: 0, duration: 0.75 }, '-=0.45')
         .to('.hero-play-center, .hero-ticker', { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08 }, '-=0.15')
 
       // Section reveals
@@ -205,16 +203,9 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 },
       })
 
-      // Hero sprites scroll parallax
-      gsap.utils.toArray<HTMLElement>('.px-sprite').forEach((sprite, i) => {
-        gsap.to(sprite, {
-          y: (i % 2 === 0 ? -1 : 1) * 60,
-          rotate: (i % 2 === 0 ? -1 : 1) * 8,
-          scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.2 },
-        })
-      })
-      gsap.to('.px-controller', {
-        y: -40, rotate: -1,
+      // Hero blackhole scroll parallax
+      gsap.to('.hero-blackhole-art', {
+        y: -42, rotate: -2.8,
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.4 },
       })
 
@@ -364,31 +355,6 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     if (prefersReducedMotion) return
 
     const cleaners: Array<() => void> = []
-
-    // hero-hp → scramble label + num, animate bar fill
-    const hpEl = root.querySelector<HTMLElement>('.hero-hp')
-    if (hpEl) {
-      const hpLabel = hpEl.querySelector<HTMLElement>('.hp-label')
-      const hpNum   = hpEl.querySelector<HTMLElement>('.hp-num')
-      const hpFill  = hpEl.querySelector<HTMLElement>('.hp-fill')
-      const hpLabelText = 'HP'
-      const hpNumText   = '83'
-      const onEnter = () => {
-        if (hpLabel) scrambleEl(hpLabel, hpLabelText, { pattern: 'braille' })
-        if (hpNum)   scrambleEl(hpNum, hpNumText, { pattern: 'label' })
-        if (hpFill)  gsap.fromTo(hpFill, { width: '0%' }, { width: '83%', duration: 0.9, ease: 'power3.out' })
-      }
-      const onLeave = () => {
-        cancelScramble(hpLabel, hpLabelText)
-        cancelScramble(hpNum,   hpNumText)
-      }
-      hpEl.addEventListener('pointerenter', onEnter)
-      hpEl.addEventListener('pointerleave', onLeave)
-      cleaners.push(() => {
-        hpEl.removeEventListener('pointerenter', onEnter)
-        hpEl.removeEventListener('pointerleave', onLeave)
-      })
-    }
 
     // sk-cat-head → scramble sk-cat-title
     root.querySelectorAll<HTMLElement>('.sk-cat-head').forEach((head) => {
