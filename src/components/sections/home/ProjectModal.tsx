@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import Image from 'next/image'
 import gsap from 'gsap'
 import ScrambleText from '@/components/animation/ScrambleText'
 import { projectModalCopy, type Project } from '@/content/site/projects'
@@ -41,6 +42,55 @@ const OVERLAY_STYLE: React.CSSProperties = {
   background: 'rgba(8,16,48,0.46)',
 }
 
+const PROJECT_ICON_BASE = '/assets/icons/projects'
+
+const PROJECT_SECTION_ICONS = {
+  background: `${PROJECT_ICON_BASE}/background.svg`,
+  devContent: `${PROJECT_ICON_BASE}/details.svg`,
+  techStack: `${PROJECT_ICON_BASE}/tech.svg`,
+  highlights: `${PROJECT_ICON_BASE}/point.svg`,
+  challenges: `${PROJECT_ICON_BASE}/flag.svg`,
+  learnings: `${PROJECT_ICON_BASE}/learning.svg`,
+} as const
+
+const PROJECT_META_ICONS = {
+  role: `${PROJECT_ICON_BASE}/role.svg`,
+  period: `${PROJECT_ICON_BASE}/period.svg`,
+  type: `${PROJECT_ICON_BASE}/type.svg`,
+  time: `${PROJECT_ICON_BASE}/time.svg`,
+} as const
+
+const TECH_ICON_MAP: Record<string, string> = {
+  'Next.js': '/assets/icons/skills/nextjs.svg',
+  React: '/assets/icons/skills/reactjs.svg',
+  'Tailwind CSS': '/assets/icons/skills/tailwindcss.svg',
+  PostgreSQL: '/assets/icons/skills/postgresql.svg',
+  Docker: '/assets/icons/skills/docker.svg',
+  Vercel: '/assets/icons/skills/vercel-dark.svg',
+  Python: '/assets/icons/skills/python.svg',
+  Go: '/assets/icons/skills/go.svg',
+  FastAPI: '/assets/icons/skills/fast-api.svg',
+  Echo: '/assets/icons/skills/echo.png',
+  MySQL: '/assets/icons/skills/mysql.svg',
+  SQLite: '/assets/icons/skills/SQLite.svg',
+  Git: '/assets/icons/skills/git.svg',
+  GitHub: '/assets/icons/skills/github-dark.svg',
+  Vite: '/assets/icons/skills/vitejs.svg',
+}
+
+function ProjectIcon({ src, className = 'pm-section-icon-img' }: { src: string; className?: string }) {
+  return (
+    <Image
+      className={className}
+      src={src}
+      alt=""
+      width={18}
+      height={18}
+      aria-hidden="true"
+    />
+  )
+}
+
 function canScrollVertically(element: HTMLElement) {
   return element.scrollHeight > element.clientHeight
 }
@@ -67,6 +117,19 @@ function useModalScrollGuard(open: boolean, contentRef: React.RefObject<HTMLElem
     const handleWheel = (event: WheelEvent) => {
       const content = getContent()
       if (!content) return
+
+      const carousel = event.target instanceof Element
+        ? event.target.closest<HTMLElement>('.pm-carousel-wheel')
+        : null
+      if (carousel && content.contains(carousel)) {
+        event.preventDefault()
+        event.stopPropagation()
+        event.stopImmediatePropagation()
+        carousel.dispatchEvent(new CustomEvent('pm-carousel-wheel', {
+          detail: { deltaY: event.deltaY, deltaX: event.deltaX },
+        }))
+        return
+      }
 
       const scrollArea = findModalScrollArea(event.target, content)
       event.preventDefault()
@@ -163,7 +226,7 @@ function useDragScroll(open: boolean, scrollRef: React.RefObject<HTMLElement | n
 
       const target = event.target
       if (!(target instanceof Element)) return
-      if (target.closest('a, input, textarea, select, video, .pm-close-btn, .pm-media-lightbox-close')) {
+      if (target.closest('a, input, textarea, select, video, .pm-close-btn, .pm-media-lightbox-close, .pm-carousel-wheel, .pm-thumb-strip')) {
         return
       }
 
@@ -240,8 +303,6 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
     return () => { clearTimeout(timer) }
   }, [open, project])
 
-  const statusColor = project.status === 'IN DEV' ? '#FFB347' : '#00FF3B'
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -255,35 +316,13 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
         <DialogTitle className="sr-only">{project.title}</DialogTitle>
         <DialogDescription className="sr-only">{project.desc}</DialogDescription>
 
-        {/* Pixel corner brackets */}
-        <span className="pm-corner pm-tl" aria-hidden="true" />
-        <span className="pm-corner pm-tr" aria-hidden="true" />
-        <span className="pm-corner pm-bl" aria-hidden="true" />
-        <span className="pm-corner pm-br" aria-hidden="true" />
-
-        {/* Header bar */}
-        <div className="pm-header">
-          <span className="pm-header-num">{projectModalCopy.headerProjectPrefix} {project.num}</span>
-          <div className="pm-header-right">
-            {project.status && (
-              <span className="pm-header-status">
-                <span
-                  className="pm-header-dot"
-                  style={{ background: statusColor, boxShadow: `0 0 6px ${statusColor}` }}
-                />
-                {project.status}
-              </span>
-            )}
-            <button
-              className="pm-close-btn"
-              onClick={() => onOpenChange(false)}
-              aria-label="Close modal"
-            >
-              <span className="pm-close-x" aria-hidden="true">✕</span>
-              CLOSE
-            </button>
-          </div>
-        </div>
+        <button
+          className="pm-close-btn"
+          onClick={() => onOpenChange(false)}
+          aria-label="Close modal"
+        >
+          <span className="pm-close-x" aria-hidden="true">×</span>
+        </button>
 
         {/* Two-column body */}
         <div className="pm-body">
@@ -292,22 +331,35 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
           <div className="pm-left">
             <ProjectMediaCarousel ref={leftMediaRef} key={project.num} project={project} />
             <div className="pm-left-meta">
-              {project.role && (
-                <div className="pm-meta-row">
-                  <span className="pm-meta-key">ROLE</span>
-                  <span className="pm-meta-val">{project.role}</span>
-                </div>
-              )}
-              {project.period && (
-                <div className="pm-meta-row">
-                  <span className="pm-meta-key">PERIOD</span>
-                  <span className="pm-meta-val">{project.period}</span>
-                </div>
-              )}
-              <div className="pm-left-tags">
-                {project.tags.map((tag) => (
-                  <span key={tag} className="pm-left-tag">{tag}</span>
-                ))}
+              <div className="pm-left-meta-grid">
+                {project.role && (
+                  <div className="pm-meta-row">
+                    <ProjectIcon src={PROJECT_META_ICONS.role} className="pm-meta-icon" />
+                    <span className="pm-meta-key">ROLE</span>
+                    <span className="pm-meta-val">{project.role}</span>
+                  </div>
+                )}
+                {project.period && (
+                  <div className="pm-meta-row">
+                    <ProjectIcon src={PROJECT_META_ICONS.period} className="pm-meta-icon" />
+                    <span className="pm-meta-key">PERIOD</span>
+                    <span className="pm-meta-val">{project.period}</span>
+                  </div>
+                )}
+                {project.projectType && (
+                  <div className="pm-meta-row">
+                    <ProjectIcon src={PROJECT_META_ICONS.type} className="pm-meta-icon" />
+                    <span className="pm-meta-key">TYPE</span>
+                    <span className="pm-meta-val">{project.projectType}</span>
+                  </div>
+                )}
+                {project.duration && (
+                  <div className="pm-meta-row">
+                    <ProjectIcon src={PROJECT_META_ICONS.time} className="pm-meta-icon" />
+                    <span className="pm-meta-key">TIME</span>
+                    <span className="pm-meta-val">{project.duration}</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -336,11 +388,20 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                     className="pm-github-link"
                     aria-label={`${projectModalCopy.githubAriaPrefix} ${project.title} ${projectModalCopy.githubAriaSuffix}`}
                   >
-                    {projectModalCopy.githubLabel}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/assets/icons/misc/external-links.svg"
+                    <Image
+                      src="/assets/icons/skills/github-dark.svg"
                       alt=""
+                      width={18}
+                      height={18}
+                      aria-hidden="true"
+                      className="pm-github-icon"
+                    />
+                    {projectModalCopy.githubLabel}
+                    <Image
+                      src={`${PROJECT_ICON_BASE}/link-external.svg`}
+                      alt=""
+                      width={14}
+                      height={14}
                       aria-hidden="true"
                       className="pm-external-icon"
                     />
@@ -356,7 +417,8 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {project.background && (
               <div className="pm-reveal pm-section">
                 <h3 className="pm-section-title">
-                  <span className="pm-section-icon">▸</span>{projectModalCopy.sections.background}
+                  <ProjectIcon src={PROJECT_SECTION_ICONS.background} />
+                  {projectModalCopy.sections.background}
                 </h3>
                 <p className="pm-section-body">{project.background}</p>
               </div>
@@ -366,7 +428,8 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {project.devContent && (
               <div className="pm-reveal pm-section">
                 <h3 className="pm-section-title">
-                  <span className="pm-section-icon">▸</span>{projectModalCopy.sections.devContent}
+                  <ProjectIcon src={PROJECT_SECTION_ICONS.devContent} />
+                  {projectModalCopy.sections.devContent}
                 </h3>
                 <p className="pm-section-body">{project.devContent}</p>
               </div>
@@ -375,12 +438,30 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {/* ── 技術スタック ── */}
             <div className="pm-reveal pm-section">
               <h3 className="pm-section-title">
-                <span className="pm-section-icon">▸</span>{projectModalCopy.sections.techStack}
+                <ProjectIcon src={PROJECT_SECTION_ICONS.techStack} />
+                {projectModalCopy.sections.techStack}
               </h3>
               <div className="pm-tags-grid">
-                {project.tags.map((tag) => (
-                  <span key={tag} className="pm-tag">{tag}</span>
-                ))}
+                {project.tags.map((tag) => {
+                  const iconSrc = TECH_ICON_MAP[tag]
+                  return (
+                    <span key={tag} className="pm-tag">
+                      {iconSrc ? (
+                        <Image
+                          className="pm-tag-icon"
+                          src={iconSrc}
+                          alt=""
+                          width={18}
+                          height={18}
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <span className="pm-tag-fallback" aria-hidden="true">{tag.slice(0, 2)}</span>
+                      )}
+                      {tag}
+                    </span>
+                  )
+                })}
               </div>
             </div>
 
@@ -388,12 +469,13 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {project.highlights && project.highlights.length > 0 && (
               <div className="pm-reveal pm-section">
                 <h3 className="pm-section-title">
-                  <span className="pm-section-icon">▸</span>{projectModalCopy.sections.highlights}
+                  <ProjectIcon src={PROJECT_SECTION_ICONS.highlights} />
+                  {projectModalCopy.sections.highlights}
                 </h3>
                 <ul className="pm-bullet-list">
                   {project.highlights.map((h, i) => (
                     <li key={i} className="pm-bullet-item">
-                      <span className="pm-arrow" aria-hidden="true">▸</span>
+                      <ProjectIcon src={`${PROJECT_ICON_BASE}/check.svg`} className="pm-bullet-icon" />
                       {h}
                     </li>
                   ))}
@@ -405,17 +487,24 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {project.challenges && project.challenges.length > 0 && (
               <div className="pm-reveal pm-section">
                 <h3 className="pm-section-title">
-                  <span className="pm-section-icon">▸</span>{projectModalCopy.sections.challenges}
+                  <ProjectIcon src={PROJECT_SECTION_ICONS.challenges} />
+                  {projectModalCopy.sections.challenges}
                 </h3>
                 <div className="pm-challenges">
                   {project.challenges.map((c, i) => (
                     <div key={i} className="pm-challenge-item">
                       <div className="pm-challenge-problem">
-                        <span className="pm-challenge-label">{projectModalCopy.challengeLabels.problem}</span>
+                        <span className="pm-challenge-label">
+                          <ProjectIcon src={`${PROJECT_ICON_BASE}/Issue.svg`} className="pm-challenge-icon" />
+                          {projectModalCopy.challengeLabels.problem}
+                        </span>
                         {c.problem}
                       </div>
                       <div className="pm-challenge-solution">
-                        <span className="pm-challenge-label pm-challenge-label-sol">{projectModalCopy.challengeLabels.solution}</span>
+                        <span className="pm-challenge-label pm-challenge-label-sol">
+                          <ProjectIcon src={`${PROJECT_ICON_BASE}/solution.svg`} className="pm-challenge-icon" />
+                          {projectModalCopy.challengeLabels.solution}
+                        </span>
                         {c.solution}
                       </div>
                     </div>
@@ -428,12 +517,13 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {project.learnings && project.learnings.length > 0 && (
               <div className="pm-reveal pm-section">
                 <h3 className="pm-section-title">
-                  <span className="pm-section-icon">▸</span>{projectModalCopy.sections.learnings}
+                  <ProjectIcon src={PROJECT_SECTION_ICONS.learnings} />
+                  {projectModalCopy.sections.learnings}
                 </h3>
                 <ul className="pm-bullet-list">
                   {project.learnings.map((l, i) => (
                     <li key={i} className="pm-bullet-item">
-                      <span className="pm-arrow" aria-hidden="true">▸</span>
+                      <ProjectIcon src={`${PROJECT_ICON_BASE}/check.svg`} className="pm-bullet-icon" />
                       {l}
                     </li>
                   ))}

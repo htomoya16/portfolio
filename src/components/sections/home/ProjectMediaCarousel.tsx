@@ -2,20 +2,31 @@
 
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useRef,
   useState,
 } from 'react'
+import Image from 'next/image'
 import { createPortal } from 'react-dom'
+import type { CarouselApi } from '@/components/ui/carousel'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel'
 import type { Project, ProjectMedia } from '@/content/site/projects'
 
 interface ProjectMediaCarouselProps {
   project: Project
 }
 
-function MediaFrame({ item, videoRef }: {
+function MediaFrame({ item, videoRef, priority = false }: {
   item: ProjectMedia
   videoRef?: (node: HTMLVideoElement | null) => void
+  priority?: boolean
 }) {
   if (item.type === 'video') {
     return (
@@ -31,16 +42,90 @@ function MediaFrame({ item, videoRef }: {
     )
   }
 
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img className="pm-media-el" src={item.src} alt={item.alt} draggable={false} decoding="async" />
+  return (
+    <Image
+      className="pm-media-el"
+      src={item.src}
+      alt={item.alt}
+      fill
+      sizes="(max-width: 760px) 100vw, 48vw"
+      priority={priority}
+      draggable={false}
+    />
+  )
+}
+
+function ThumbFrame({ item }: { item: ProjectMedia }) {
+  if (item.type === 'video') {
+    return (
+      <video
+        className="pm-thumb-el"
+        src={item.src}
+        poster={item.poster}
+        preload="metadata"
+        muted
+        aria-hidden="true"
+      />
+    )
+  }
+
+  return (
+    <Image
+      className="pm-thumb-el"
+      src={item.src}
+      alt=""
+      fill
+      sizes="120px"
+      draggable={false}
+      aria-hidden="true"
+    />
+  )
 }
 
 const ProjectMediaCarousel = forwardRef<HTMLDivElement, ProjectMediaCarouselProps>(
 function ProjectMediaCarousel({ project }, ref) {
   const media = project.media ?? []
+  const [api, setApi] = useState<CarouselApi>()
+  const [selectedIndex, setSelectedIndex] = useState(0)
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+  const rootRef = useRef<HTMLDivElement | null>(null)
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([])
   const expanded = expandedIndex === null ? null : media[expandedIndex]
+
+  const setRootRef = useCallback((node: HTMLDivElement | null) => {
+    rootRef.current = node
+    if (typeof ref === 'function') {
+      ref(node)
+    } else if (ref) {
+      ref.current = node
+    }
+  }, [ref])
+
+  const pauseInactiveVideos = useCallback((activeIndex: number) => {
+    videoRefs.current.forEach((video, index) => {
+      if (!video || index === activeIndex) return
+      video.pause()
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!api) return
+
+    const handleSelect = () => {
+      const current = api.selectedScrollSnap()
+      setSelectedIndex(current)
+      pauseInactiveVideos(current)
+    }
+
+    handleSelect()
+    api.on('select', handleSelect)
+    api.on('reInit', handleSelect)
+
+    return () => {
+      api.off('select', handleSelect)
+      api.off('reInit', handleSelect)
+    }
+  }, [api, pauseInactiveVideos])
 
   useEffect(() => {
     if (expandedIndex === null) return
@@ -57,51 +142,106 @@ function ProjectMediaCarousel({ project }, ref) {
     }
   }, [expandedIndex])
 
+  useEffect(() => {
+    const node = rootRef.current
+    if (!node || !api) return
+
+    const handleWheel = (event: Event) => {
+      const detail = (event as CustomEvent<{ deltaY: number; deltaX: number }>).detail
+      const delta = Math.abs(detail.deltaX) > Math.abs(detail.deltaY) ? detail.deltaX : detail.deltaY
+      if (delta > 0) {
+        api.scrollNext()
+      } else if (delta < 0) {
+        api.scrollPrev()
+      }
+    }
+
+    node.addEventListener('pm-carousel-wheel', handleWheel)
+    return () => {
+      node.removeEventListener('pm-carousel-wheel', handleWheel)
+    }
+  }, [api])
+
   if (media.length === 0) {
     return null
   }
 
   return (
     <div
-      ref={ref}
+      ref={setRootRef}
       className="pm-media-carousel"
       aria-label={`Media previews for ${project.title}`}
     >
-      <div className="pm-media-list" role="list">
-        {media.map((item, index) => (
-          <figure
-            key={`${item.src}-${index}`}
-            className="pm-media-card"
-            role="listitem"
-          >
-            <div className="pm-media-stage">
-              <div className="pm-media-screen">
-                {item.type === 'image' ? (
-                  <button
-                    type="button"
-                    className="pm-media-open"
-                    onClick={() => setExpandedIndex(index)}
-                    aria-label={`Open large preview: ${item.alt}`}
-                  >
-                    <MediaFrame item={item} />
-                  </button>
-                ) : (
-                  <MediaFrame
-                    item={item}
-                    videoRef={(node) => { videoRefs.current[index] = node }}
-                  />
+      <p className="pm-left-kicker">PROJECT {project.num}</p>
+      <Carousel
+        setApi={setApi}
+        opts={{ loop: media.length > 1, align: 'start' }}
+        className="pm-carousel-shell pm-carousel-wheel"
+      >
+        <CarouselContent className="pm-carousel-track">
+          {media.map((item, index) => (
+            <CarouselItem key={`${item.src}-${index}`} className="pm-carousel-item">
+              <figure className="pm-media-card">
+                <div className="pm-media-stage">
+                  <div className="pm-media-screen">
+                    {item.type === 'image' ? (
+                      <button
+                        type="button"
+                        className="pm-media-open"
+                        onClick={() => setExpandedIndex(index)}
+                        aria-label={`Open large preview: ${item.alt}`}
+                      >
+                        <MediaFrame item={item} priority={index === 0} />
+                      </button>
+                    ) : (
+                      <MediaFrame
+                        item={item}
+                        videoRef={(node) => { videoRefs.current[index] = node }}
+                        priority={index === 0}
+                      />
+                    )}
+                  </div>
+                </div>
+                {item.caption && (
+                  <figcaption className="pm-media-caption">
+                    <span className="pm-media-count">{String(index + 1).padStart(2, '0')}</span>
+                    {item.caption}
+                  </figcaption>
                 )}
-              </div>
-            </div>
-            {item.caption && (
-              <figcaption className="pm-media-caption">
-                <span className="pm-media-count">{String(index + 1).padStart(2, '0')}</span>
-                {item.caption}
-              </figcaption>
-            )}
-          </figure>
-        ))}
-      </div>
+              </figure>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        {media.length > 1 && (
+          <div className="pm-carousel-controls">
+            <CarouselPrevious className="pm-carousel-btn pm-carousel-prev" aria-label="Previous media" />
+            <span className="pm-carousel-index" aria-live="polite">
+              {String(selectedIndex + 1).padStart(2, '0')} / {String(media.length).padStart(2, '0')}
+            </span>
+            <CarouselNext className="pm-carousel-btn pm-carousel-next" aria-label="Next media" />
+          </div>
+        )}
+      </Carousel>
+
+      {media.length > 1 && (
+        <div className="pm-thumb-strip" aria-label="Media thumbnails">
+          {media.map((item, index) => (
+            <button
+              type="button"
+              key={`${item.src}-thumb-${index}`}
+              className="pm-thumb-btn"
+              aria-current={selectedIndex === index ? 'true' : undefined}
+              aria-label={`Show media ${index + 1}: ${item.alt}`}
+              onClick={() => api?.scrollTo(index)}
+            >
+              <span className="pm-thumb-frame">
+                <ThumbFrame item={item} />
+              </span>
+              <span className="pm-thumb-num">{String(index + 1).padStart(2, '0')}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {expanded && expanded.type === 'image' && createPortal(
         <div
@@ -120,13 +260,13 @@ function ProjectMediaCarousel({ project }, ref) {
             >
               CLOSE
             </button>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               className="pm-media-lightbox-img"
               src={expanded.src}
               alt={expanded.alt}
+              width={1280}
+              height={720}
               draggable={false}
-              decoding="async"
             />
             {expanded.caption ? (
               <p className="pm-media-lightbox-caption">{expanded.caption}</p>

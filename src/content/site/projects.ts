@@ -31,6 +31,8 @@ export interface Project {
   media?: ProjectMedia[]
   role?: string
   period?: string
+  projectType?: string
+  duration?: string
   status?: string
   features?: string[]
   repoUrl?: string
@@ -103,6 +105,8 @@ export const projects: Project[] = [
     ],
     role: 'Full-Stack Engineer',
     period: '2024.02 — 2024.05',
+    projectType: '個人開発',
+    duration: '約3ヶ月',
     status: 'SHIPPED',
     features: [
       'リアルタイムイベント通知システム',
@@ -173,6 +177,8 @@ export const projects: Project[] = [
     ],
     role: 'Frontend Engineer',
     period: '2024.06 — 2024.08',
+    projectType: '授業制作',
+    duration: '約2ヶ月',
     status: 'SHIPPED',
     features: [
       'Firebase Realtime Database 連携',
@@ -244,6 +250,8 @@ export const projects: Project[] = [
     ],
     role: 'Full-Stack Engineer',
     period: '2024.09 — 現在',
+    projectType: '個人開発',
+    duration: '約20ヶ月',
     status: 'IN DEV',
     features: [
       'ドット絵カレンダービュー',
