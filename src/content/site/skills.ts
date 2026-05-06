@@ -35,6 +35,7 @@ export const skillCategories: SkillCategory[] = [
     tiles: [
       { name: 'Go', level: 3.6, iconSrc: '/assets/icons/skills/go.svg' },
       { name: 'Python', level: 3.5, iconSrc: '/assets/icons/skills/python.svg' },
+      { name: 'Ruby', level: 1.6, iconSrc: '/assets/icons/skills/ruby.svg' },
       { name: 'C#', level: 3.3, iconSrc: '/assets/icons/skills/c-sharp.svg' },
       { name: 'C', level: 2, iconSrc: '/assets/icons/skills/c.svg' },
       { name: 'Java', level: 1.3, iconSrc: '/assets/icons/skills/java.svg' },
@@ -49,6 +50,7 @@ export const skillCategories: SkillCategory[] = [
     tiles: [
       { name: 'Echo', level: 3.6, iconSrc: '/assets/icons/skills/echo.png' },
       { name: 'FastAPI', level: 3.4, iconSrc: '/assets/icons/skills/fast-api.svg' },
+      { name: 'Ruby on Rails', level: 1.6, iconSrc: '/assets/icons/skills/rails.svg' },
       { name: 'React', level: 2.5, iconSrc: '/assets/icons/skills/reactjs.svg' },
       { name: 'Next.js', level: 2.5, iconSrc: '/assets/icons/skills/nextjs.svg' },
       { name: 'Tailwind CSS', level: 2.5, iconSrc: '/assets/icons/skills/tailwindcss.svg' },
@@ -72,6 +74,7 @@ export const skillCategories: SkillCategory[] = [
       { name: 'GitHub Actions', level: 3.4, iconSrc: '/assets/icons/skills/GitHub%20Actions.svg' },
       { name: 'Docker', level: 3.4, iconSrc: '/assets/icons/skills/docker.svg' },
       { name: 'nginx', level: 3, iconSrc: '/assets/icons/skills/nginx.svg' },
+      { name: 'Heroku', level: 3.4, iconSrc: '/assets/icons/skills/heroku.svg' },
       { name: 'Vercel', level: 3, iconSrc: '/assets/icons/skills/vercel-dark.svg' },
       { name: 'Vite', level: 3, iconSrc: '/assets/icons/skills/vitejs.svg' },
       { name: 'Figma', level: 3.2, iconSrc: '/assets/icons/skills/figma.svg' },
