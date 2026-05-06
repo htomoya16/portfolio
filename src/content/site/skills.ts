@@ -1,59 +1,68 @@
 export interface SkillTile {
   name: string
-  tone: string
-  iconType: 'text' | 'svg'
-  iconText?: string
-  iconColor?: string
+  level: number
 }
 
 export interface SkillCategory {
   title: string
-  count: string
   tiles: SkillTile[]
 }
 
+export const skillLevelDefinitions = [
+  { level: 1, label: '授業・教材・チュートリアルで学習した' },
+  { level: 2, label: '軽く使用した' },
+  { level: 3, label: '個人開発・研究で機能実装に使った' },
+  { level: 4, label: '実務・インターン・チーム開発で使用した' },
+  { level: 5, label: '設計・実装・改善を自走して行える' },
+] as const
+
 export const skillCategories: SkillCategory[] = [
   {
-    title: 'FRONTEND',
-    count: '06',
+    title: 'Languages',
     tiles: [
-      { name: 'TypeScript', tone: 'ts', iconType: 'text', iconText: 'TS' },
-      { name: 'React', tone: 'lt', iconType: 'svg' },
-      { name: 'Next.js', tone: 'lt', iconType: 'text', iconText: 'N', iconColor: '#000' },
-      { name: 'Tailwind CSS', tone: 'lt', iconType: 'svg' },
-      { name: 'HTML5', tone: 'html', iconType: 'text', iconText: '5' },
-      { name: 'CSS3', tone: 'css', iconType: 'text', iconText: '3' },
+      { name: 'Go', level: 3.5 },
+      { name: 'Python', level: 3.2 },
+      { name: 'C#', level: 3 },
+      { name: 'C', level: 1 },
+      { name: 'Java', level: 1 },
+      { name: 'PHP', level: 0.5 },
+      { name: 'HTML', level: 3 },
+      { name: 'CSS', level: 3 },
     ],
   },
   {
-    title: 'BACKEND',
-    count: '04',
+    title: 'Framework / Library',
     tiles: [
-      { name: 'Node.js', tone: 'lt', iconType: 'svg' },
-      { name: 'Express', tone: 'dark', iconType: 'text', iconText: 'Ex' },
-      { name: 'Python', tone: 'lt', iconType: 'text', iconText: 'Py', iconColor: '#3776AB' },
-      { name: 'Firebase', tone: 'fire', iconType: 'text', iconText: 'F' },
+      { name: 'Echo', level: 3.5 },
+      { name: 'FastAPI', level: 3.2 },
+      { name: 'React', level: 3 },
+      { name: 'Next.js', level: 3 },
+      { name: 'Tailwind CSS', level: 3 },
     ],
   },
   {
-    title: 'DATABASE',
-    count: '04',
+    title: 'Database',
     tiles: [
-      { name: 'PostgreSQL', tone: 'lt', iconType: 'text', iconText: 'Pg', iconColor: '#336791' },
-      { name: 'MySQL', tone: 'lt', iconType: 'text', iconText: 'My', iconColor: '#00618A' },
-      { name: 'MongoDB', tone: 'lt', iconType: 'text', iconText: 'M', iconColor: '#47A248' },
-      { name: 'Supabase', tone: 'lt', iconType: 'text', iconText: 'Sb', iconColor: '#3ECF8E' },
+      { name: 'PostgreSQL', level: 3.4 },
+      { name: 'MySQL', level: 3.3 },
+      { name: 'SQLite', level: 3.1 },
     ],
   },
   {
-    title: 'TOOLS  /  DEVOPS',
-    count: '05',
+    title: 'Tools / DevOps / Others',
     tiles: [
-      { name: 'Git', tone: 'git', iconType: 'text', iconText: 'G' },
-      { name: 'GitHub', tone: 'dark', iconType: 'svg' },
-      { name: 'Docker', tone: 'lt', iconType: 'text', iconText: 'D', iconColor: '#2496ED' },
-      { name: 'Vercel', tone: 'dark', iconType: 'svg' },
-      { name: 'Figma', tone: 'lt', iconType: 'text', iconText: 'F', iconColor: '#A259FF' },
+      { name: 'Git', level: 3.6 },
+      { name: 'GitHub', level: 3.6 },
+      { name: 'GitHub Actions', level: 3.3 },
+      { name: 'Docker', level: 3.2 },
+      { name: 'nginx', level: 3 },
+      { name: 'Vercel', level: 3 },
+      { name: 'Vite', level: 3 },
+      { name: 'Figma', level: 3.2 },
+      { name: 'Unity', level: 3.5 },
+      { name: 'Raspberry Pi', level: 3.5 },
+      { name: 'Codex', level: 3.4 },
+      { name: 'Claude Code', level: 3 },
     ],
   },
 ]

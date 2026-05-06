@@ -1,76 +1,39 @@
 // Server component
-import ScrambleText from '@/components/animation/ScrambleText'
+import type { CSSProperties } from 'react'
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
-import { ReactIcon, TailwindIcon, NodeJsIcon, VercelIcon, GitHubIcon } from '@/components/ui/TechIcons'
-import { skillCategories } from '@/content/site/skills'
+import { skillCategories, skillLevelDefinitions } from '@/content/site/skills'
 import type { SkillTile } from '@/content/site/skills'
 
-// Map category title → badge icon path
-const BADGE_ICONS: Record<string, string> = {
-  FRONTEND: '/assets/badges/frontend-icon.svg',
-  BACKEND: '/assets/badges/backend-icon.svg',
-  DATABASE: '/assets/badges/database-icon.svg',
-  'TOOLS  /  DEVOPS': '/assets/badges/tools-devops-icon.svg',
+type SkillLevelStyle = CSSProperties & {
+  '--skill-level': number
 }
 
-function TileIcon({ tile }: { tile: SkillTile }) {
-  if (tile.iconType === 'svg') {
-    if (tile.name === 'React') {
-      return (
-        <div className={`sk-tile-icon t-${tile.tone}`}>
-          <ReactIcon size={18} />
-        </div>
-      )
-    }
-    if (tile.name === 'Tailwind CSS') {
-      return (
-        <div className={`sk-tile-icon t-${tile.tone}`}>
-          <TailwindIcon size={18} />
-        </div>
-      )
-    }
-    if (tile.name === 'Node.js') {
-      return (
-        <div className={`sk-tile-icon t-${tile.tone}`}>
-          <NodeJsIcon size={18} />
-        </div>
-      )
-    }
-    if (tile.name === 'GitHub') {
-      return (
-        <div className={`sk-tile-icon t-${tile.tone}`}>
-          <GitHubIcon size={14} />
-        </div>
-      )
-    }
-    if (tile.name === 'Vercel') {
-      return (
-        <div className={`sk-tile-icon t-${tile.tone}`}>
-          <VercelIcon size={14} />
-        </div>
-      )
-    }
-    return (
-      <div className={`sk-tile-icon t-${tile.tone}`}>
-        <span className="sk-mono" style={{ color: tile.iconColor ?? '#fff', fontSize: 8 }}>
-          {tile.name.slice(0, 2).toUpperCase()}
-        </span>
-      </div>
-    )
-  }
+function formatLevel(level: number) {
+  return Number.isInteger(level) ? level.toFixed(0) : level.toFixed(1)
+}
+
+function levelTone(level: number) {
+  if (level >= 3.5) return 'high'
+  if (level >= 3) return 'mid'
+  if (level >= 2) return 'base'
+  return 'low'
+}
+
+function SkillCard({ tile }: { tile: SkillTile }) {
+  const style: SkillLevelStyle = { '--skill-level': tile.level }
 
   return (
-    <div className={`sk-tile-icon t-${tile.tone}`}>
-      <span
-        className="sk-mono"
-        style={{
-          color: tile.tone === 'lt' ? (tile.iconColor ?? '#000') : '#fff',
-          fontSize: 8,
-        }}
-      >
-        {tile.iconText}
-      </span>
+    <div className={`sk-tile sk-level-${levelTone(tile.level)}`} style={style} data-level={tile.level}>
+      <div className="sk-tile-top">
+        <span className="sk-tile-name">{tile.name}</span>
+        <span className="sk-tile-score" aria-label={`Level ${formatLevel(tile.level)} out of 5`}>
+          {formatLevel(tile.level)}
+        </span>
+      </div>
+      <div className="sk-level-track" aria-hidden="true">
+        <span className="sk-level-fill" />
+      </div>
     </div>
   )
 }
@@ -83,42 +46,48 @@ export default function SkillsSection() {
       <div className="skills-wrap">
         <SectionHeading number="// 02" title="SKILLS" blink />
 
-        <p className="skills-lead">習得済みのスキルスタックと使用技術。</p>
+        <div className="skills-intro-grid">
+          <div className="skills-overview">
+            <p className="skills-kicker">BACKEND-CENTERED LEARNING MAP</p>
+            <p className="skills-lead">
+              バックエンドを中心に学習と個人開発を進めています。全体的な経験はまだ浅く、実務経験がないため、実務レベルの設計・運用・改善判断はこれから積み上げる領域だと認識しています。特にバックエンド領域で経験を重ね、信頼できる実装力へ伸ばしていきたいです。
+            </p>
+            <p className="skills-note">
+              レベルは下記基準に基づく自己評価です。実務経験を示すものではなく、現時点での学習・個人開発・研究での使用感を整理しています。
+            </p>
+          </div>
 
-        {skillCategories.map((cat) => {
-          const badgeIcon = BADGE_ICONS[cat.title]
-          return (
+          <div className="skills-level-guide" aria-label="Skill level definitions">
+            {skillLevelDefinitions.map((item) => (
+              <div key={item.level} className={`sk-guide-item sk-guide-lv${item.level}`}>
+                <span className="sk-guide-level">Lv.{item.level}</span>
+                <span className="sk-guide-label">{item.label}</span>
+                <span className="sk-guide-line" aria-hidden="true" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="skills-list">
+          {skillCategories.map((cat) => (
             <div key={cat.title} className="sk-cat">
               <div className="sk-cat-head">
-                <div className="sk-cat-badge" aria-hidden="true">
-                  {badgeIcon ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={badgeIcon} alt="" width={28} height={28} />
-                  ) : (
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                      <rect x="6" y="0" width="2" height="14" fill="#fff" />
-                      <rect x="0" y="6" width="14" height="2" fill="#fff" />
-                    </svg>
-                  )}
+                <div className="sk-cat-marker" aria-hidden="true">
+                  <span />
                 </div>
-                {/* plain text — scramble triggered by MotionProvider on sk-cat-head hover */}
                 <span className="sk-cat-title">{cat.title}</span>
                 <div className="sk-cat-rule" />
-                <span className="sk-cat-count">{cat.count} SKILLS</span>
+                <span className="sk-cat-count">{String(cat.tiles.length).padStart(2, '0')} SKILLS</span>
               </div>
 
               <div className="sk-cat-grid">
                 {cat.tiles.map((tile) => (
-                  <div key={tile.name} className="sk-tile">
-                    <TileIcon tile={tile} />
-                    {/* ScrambleText fires on scroll-in (IntersectionObserver) のみ。hover は親 sk-tile 経由で MotionProvider が制御 */}
-                    <ScrambleText as="span" className="sk-tile-name" text={tile.name} revealRate={48} settleDuration={280} replayOnHover={false} />
-                  </div>
+                  <SkillCard key={tile.name} tile={tile} />
                 ))}
               </div>
             </div>
-          )
-        })}
+          ))}
+        </div>
       </div>
     </section>
   )

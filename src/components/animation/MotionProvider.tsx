@@ -184,6 +184,14 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
           stagger: 0.04, scrollTrigger: { trigger: '.skills', start: 'top 72%', once: true } }
       )
 
+      // Skill level bars
+      gsap.fromTo(
+        '.sk-level-fill',
+        { scaleX: 0 },
+        { scaleX: 1, duration: 1.1, ease: 'power3.out',
+          stagger: 0.035, scrollTrigger: { trigger: '.skills-list', start: 'top 76%', once: true } }
+      )
+
       // Hero title 3D drop
       gsap.from('.hero-title .line', {
         autoAlpha: 0, y: -80, rotateX: -75, skewX: 12,
