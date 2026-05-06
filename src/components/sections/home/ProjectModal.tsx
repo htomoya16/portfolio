@@ -318,15 +318,35 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             {/* ── Title block ── */}
             <div className="pm-reveal pm-r-title-block">
               <p className="pm-label">{`// ${project.num}`}</p>
-              <ScrambleText
-                as="h2"
-                className="pm-title"
-                text={project.title}
-                revealRate={24}
-                settleDuration={640}
-                delay={220}
-                replayOnHover={false}
-              />
+              <div className="pm-title-row">
+                <ScrambleText
+                  as="h2"
+                  className="pm-title"
+                  text={project.title}
+                  revealRate={24}
+                  settleDuration={640}
+                  delay={220}
+                  replayOnHover={false}
+                />
+                {project.repoUrl && (
+                  <a
+                    href={project.repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pm-github-link"
+                    aria-label={`Open ${project.title} on GitHub`}
+                  >
+                    GitHub
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/assets/icons/misc/external-links.svg"
+                      alt=""
+                      aria-hidden="true"
+                      className="pm-external-icon"
+                    />
+                  </a>
+                )}
+              </div>
               <p className="pm-summary">{project.desc}</p>
             </div>
 
@@ -420,33 +440,6 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                 </ul>
               </div>
             )}
-
-            {/* ── Actions ── */}
-            <div className="pm-reveal pm-actions">
-              {project.repoUrl && (
-                <a
-                  href={project.repoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pm-btn pm-btn-ghost"
-                >
-                  VIEW CODE <span className="pm-btn-arrow">↗</span>
-                </a>
-              )}
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pm-btn pm-btn-primary"
-                >
-                  LIVE DEMO <span className="pm-btn-arrow">↗</span>
-                </a>
-              )}
-              {!project.repoUrl && !project.liveUrl && (
-                <span className="pm-btn pm-btn-dim">COMING SOON</span>
-              )}
-            </div>
 
           </div>{/* /pm-right */}
         </div>{/* /pm-body */}
