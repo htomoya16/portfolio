@@ -15,6 +15,11 @@ export type ProjectMedia = {
   caption?: string
 }
 
+export type ProjectPreviewImage = {
+  src: string
+  alt: string
+}
+
 export interface Project {
   num: string
   title: string
@@ -22,6 +27,7 @@ export interface Project {
   longDesc?: string
   tags: string[]
   previewType: 'quest' | 'score' | 'pixel'
+  previewImage?: ProjectPreviewImage
   media?: ProjectMedia[]
   role?: string
   period?: string
@@ -65,6 +71,10 @@ export const projects: Project[] = [
       'ゲーマーが集まり、イベントを企画・参加できるコミュニティプラットフォーム。リアルタイムチャット、イベントスケジュール管理、ゲーム実績の共有機能を備えた本格的なWebアプリ。',
     tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Prisma', 'WebSocket'],
     previewType: 'quest',
+    previewImage: {
+      src: '/assets/projects/questhub/overview.png',
+      alt: 'QuestHub main dashboard preview',
+    },
     media: [
       {
         type: 'image',
@@ -137,6 +147,10 @@ export const projects: Project[] = [
       'ゲーム大会のスコアをリアルタイムで記録・共有するWebアプリ。Firebase Realtime Database を活用したライブ更新と、直感的なスコア入力UIを実装。',
     tags: ['React', 'Firebase', 'Tailwind CSS', 'TypeScript'],
     previewType: 'score',
+    previewImage: {
+      src: '/assets/projects/scoreboard/overview.png',
+      alt: 'ScoreBoard live match dashboard preview',
+    },
     media: [
       {
         type: 'image',
@@ -204,6 +218,10 @@ export const projects: Project[] = [
       'ドット絵スタイルのカレンダーに毎日の気分・出来事を記録するライフログアプリ。Prisma + PostgreSQL で堅牢なデータ管理を実現し、統計ダッシュボードで自己分析を可能にする。',
     tags: ['Next.js', 'Prisma', 'PostgreSQL', 'Tailwind CSS', 'Canvas API'],
     previewType: 'pixel',
+    previewImage: {
+      src: '/assets/projects/pixel-diary/overview.png',
+      alt: 'Pixel Diary overview screen preview',
+    },
     media: [
       {
         type: 'image',

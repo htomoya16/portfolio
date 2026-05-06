@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
 import ScrambleText from '@/components/animation/ScrambleText'
 import { projectsCopy, type Project } from '@/content/site/projects'
@@ -7,6 +8,20 @@ import { PreviewQuest, PreviewScore, PreviewPixel } from './ProjectPreviews'
 import ProjectModal from './ProjectModal'
 
 function ProjectPreview({ project }: { project: Project }) {
+  if (project.previewImage) {
+    return (
+      <div className="project-preview-image-wrap">
+        <Image
+          src={project.previewImage.src}
+          alt={project.previewImage.alt}
+          fill
+          sizes="(max-width: 900px) 100vw, (max-width: 1280px) 50vw, 33vw"
+          className="project-preview-image"
+        />
+      </div>
+    )
+  }
+
   if (project.previewType === 'quest') return <PreviewQuest />
   if (project.previewType === 'score') return <PreviewScore />
   return <PreviewPixel />
