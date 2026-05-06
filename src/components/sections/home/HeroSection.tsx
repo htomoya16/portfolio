@@ -105,25 +105,13 @@ export default function HeroSection() {
           {/* label — plain text, was 100%% bug */}
           <span className="hero-label-100" aria-hidden="true">{heroCopy.visualPercent}</span>
 
-          {/* main controller */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/controller.png"
-            alt="pixel controller"
-            className="px-controller"
-          />
-
-          {/* floating sprites */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/alien.png" alt="" className="px-sprite s-invader" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/heart.png" alt="" className="px-sprite s-heart" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/trophy.png" alt="" className="px-sprite s-coin" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/gem.png" alt="" className="px-sprite s-gem" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/sword.png" alt="" className="px-sprite s-sword" />
+          <div className="hero-visual-shell" aria-hidden="true">
+            <div className="hero-visual-grid" />
+            <div className="hero-visual-panel hero-visual-panel-main" />
+            <div className="hero-visual-panel hero-visual-panel-sub" />
+            <div className="hero-visual-line hero-visual-line-top" />
+            <div className="hero-visual-line hero-visual-line-bottom" />
+          </div>
         </div>
       </div>
 
