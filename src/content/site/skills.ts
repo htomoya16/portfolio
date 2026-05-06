@@ -49,9 +49,9 @@ export const skillCategories: SkillCategory[] = [
     tiles: [
       { name: 'Echo', level: 3.6, iconSrc: '/assets/icons/skills/echo.png' },
       { name: 'FastAPI', level: 3.4, iconSrc: '/assets/icons/skills/fast-api.svg' },
-      { name: 'React', level: 3, iconSrc: '/assets/icons/skills/reactjs.svg' },
-      { name: 'Next.js', level: 3, iconSrc: '/assets/icons/skills/nextjs.svg' },
-      { name: 'Tailwind CSS', level: 3, iconSrc: '/assets/icons/skills/tailwindcss.svg' },
+      { name: 'React', level: 2.5, iconSrc: '/assets/icons/skills/reactjs.svg' },
+      { name: 'Next.js', level: 2.5, iconSrc: '/assets/icons/skills/nextjs.svg' },
+      { name: 'Tailwind CSS', level: 2.5, iconSrc: '/assets/icons/skills/tailwindcss.svg' },
     ],
   },
   {

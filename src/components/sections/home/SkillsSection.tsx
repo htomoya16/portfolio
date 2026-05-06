@@ -48,7 +48,7 @@ function SkillCard({ tile }: { tile: SkillTile }) {
           <span className="sk-tile-top">
             <span className="sk-tile-name">{tile.name}</span>
             <span className="sk-tile-score" aria-label={`Level ${formatLevel(tile.level)} out of 5`}>
-              {formatLevel(tile.level)}
+              Lv.{formatLevel(tile.level)}
             </span>
           </span>
           <span className="sk-level-track" aria-hidden="true">
@@ -84,7 +84,10 @@ export default function SkillsSection() {
                 </div>
               ))}
             </div>
-            <p className="skills-note">{skillsCopy.note}</p>
+            <p className="skills-note">
+              <Image className="skills-note-icon" src="/assets/icons/misc/info-circle.svg" alt="" width={16} height={16} aria-hidden="true" />
+              <span>{skillsCopy.note}</span>
+            </p>
           </div>
         </div>
 

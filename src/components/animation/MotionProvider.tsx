@@ -396,12 +396,9 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       if (!title) return
       const text = title.textContent?.trim() || ''
       const onEnter = () => scrambleEl(title, text, { pattern: 'title' })
-      const onLeave = () => cancelScramble(title, text)
       head.addEventListener('pointerenter', onEnter)
-      head.addEventListener('pointerleave', onLeave)
       cleaners.push(() => {
         head.removeEventListener('pointerenter', onEnter)
-        head.removeEventListener('pointerleave', onLeave)
       })
     })
 
@@ -409,15 +406,27 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     // ScrambleText は replayOnHover=false なので二重発火しない
     root.querySelectorAll<HTMLElement>('.sk-tile').forEach((tile) => {
       const name = tile.querySelector<HTMLElement>('.sk-tile-name')
+      const fill = tile.querySelector<HTMLElement>('.sk-level-fill')
       if (!name) return
       const text = name.textContent?.trim() || ''
-      const onEnter = () => scrambleEl(name, text, { pattern: 'soft', revealRate: 48, settleDuration: 280 })
-      const onLeave = () => cancelScramble(name, text)
+      const replayLevelFill = () => {
+        if (!fill) return
+        tile.classList.remove('is-level-animating')
+        void fill.offsetWidth
+        tile.classList.add('is-level-animating')
+      }
+      const onEnter = () => {
+        scrambleEl(name, text, { pattern: 'soft', revealRate: 48, settleDuration: 280 })
+        replayLevelFill()
+      }
+      const onLevelAnimationEnd = (event: AnimationEvent) => {
+        if (event.target === fill) tile.classList.remove('is-level-animating')
+      }
       tile.addEventListener('pointerenter', onEnter)
-      tile.addEventListener('pointerleave', onLeave)
+      fill?.addEventListener('animationend', onLevelAnimationEnd)
       cleaners.push(() => {
         tile.removeEventListener('pointerenter', onEnter)
-        tile.removeEventListener('pointerleave', onLeave)
+        fill?.removeEventListener('animationend', onLevelAnimationEnd)
       })
     })
 
