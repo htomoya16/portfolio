@@ -1,16 +1,15 @@
 export const contactCopy = {
   sectionNumber: '// 05',
   sectionTitle: 'CONTACT',
-  statusLabel: 'Status: available',
-  statusText: 'AVAILABLE',
+  statusLabel: 'Status: open to internship',
+  statusText: 'OPEN',
   leadLines: [
-    'お仕事・インターン・勉強会など、',
-    'お気軽にご連絡ください。',
+    'インターンシップ・採用に関するご連絡、',
+    'ポートフォリオへのフィードバックなど、お気軽にご連絡ください。',
   ],
   bodyLines: [
-    '現在はアルバイト・インターンでのご依頼、',
-    '勉強会への登壇依頼などを受け付けています。',
-    'まずはお気軽にどうぞ。',
+    'バックエンド開発を中心に学習・個人開発を進めており、',
+    '今後はインターンシップを通じて実務経験を積みたいと考えています。',
   ],
   prompt: '> SEND MESSAGE',
 } as const
@@ -23,16 +22,17 @@ export const contactStats = [
 
 export const contactLinks = [
   {
-    type: 'pinterest',
-    label: 'PINTEREST',
-    handle: '@htomoya16',
-    href: '#',
-  },
-  {
     type: 'github',
     label: 'GITHUB',
     handle: '@htomoya16',
     href: 'https://github.com/htomoya16',
+  },
+  {
+    type: 'protopedia',
+    label: 'PROTOPEDIA',
+    handle: '@htomoya16',
+    href: 'https://protopedia.net/prototyper/htomoya16',
+    icon: '/assets/icons/contact/protopedia.png',
   },
   {
     type: 'mail',
@@ -44,6 +44,7 @@ export const contactLinks = [
     type: 'qiita',
     label: 'QIITA',
     handle: '@htomoya16',
-    href: '#',
+    href: 'https://qiita.com/htomoya16',
+    icon: '/assets/icons/contact/qiita-icon.png',
   },
 ]

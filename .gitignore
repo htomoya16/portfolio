@@ -52,3 +52,5 @@ __pycache__/
 .claire/
 
 .playwright-mcp/
+
+docs/personal-data/
