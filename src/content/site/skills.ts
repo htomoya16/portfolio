@@ -1,6 +1,7 @@
 export interface SkillTile {
   name: string
   level: number
+  iconSrc?: string
 }
 
 export interface SkillCategory {
@@ -20,49 +21,49 @@ export const skillCategories: SkillCategory[] = [
   {
     title: 'Languages',
     tiles: [
-      { name: 'Go', level: 3.5 },
-      { name: 'Python', level: 3.2 },
-      { name: 'C#', level: 3 },
-      { name: 'C', level: 1 },
-      { name: 'Java', level: 1 },
-      { name: 'PHP', level: 0.5 },
-      { name: 'HTML', level: 3 },
-      { name: 'CSS', level: 3 },
+      { name: 'Go', level: 3.6, iconSrc: '/assets/icons/skills/go.svg' },
+      { name: 'Python', level: 3.5, iconSrc: '/assets/icons/skills/python.svg' },
+      { name: 'C#', level: 3.3, iconSrc: '/assets/icons/skills/c-sharp.svg' },
+      { name: 'C', level: 2, iconSrc: '/assets/icons/skills/c.svg' },
+      { name: 'Java', level: 1.3, iconSrc: '/assets/icons/skills/java.svg' },
+      { name: 'PHP', level: 0.5, iconSrc: '/assets/icons/skills/php.svg' },
+      { name: 'HTML', level: 3, iconSrc: '/assets/icons/skills/html5.svg' },
+      { name: 'CSS', level: 3, iconSrc: '/assets/icons/skills/css3.svg' },
     ],
   },
   {
     title: 'Framework / Library',
     tiles: [
-      { name: 'Echo', level: 3.5 },
-      { name: 'FastAPI', level: 3.2 },
-      { name: 'React', level: 3 },
-      { name: 'Next.js', level: 3 },
-      { name: 'Tailwind CSS', level: 3 },
+      { name: 'Echo', level: 3.6, iconSrc: '/assets/icons/skills/echo.png' },
+      { name: 'FastAPI', level: 3.4, iconSrc: '/assets/icons/skills/fast-api.svg' },
+      { name: 'React', level: 3, iconSrc: '/assets/icons/skills/reactjs.svg' },
+      { name: 'Next.js', level: 3, iconSrc: '/assets/icons/skills/nextjs.svg' },
+      { name: 'Tailwind CSS', level: 3, iconSrc: '/assets/icons/skills/tailwindcss.svg' },
     ],
   },
   {
     title: 'Database',
     tiles: [
-      { name: 'PostgreSQL', level: 3.4 },
-      { name: 'MySQL', level: 3.3 },
-      { name: 'SQLite', level: 3.1 },
+      { name: 'PostgreSQL', level: 3.4, iconSrc: '/assets/icons/skills/postgresql.svg' },
+      { name: 'MySQL', level: 3.3, iconSrc: '/assets/icons/skills/mysql.svg' },
+      { name: 'SQLite', level: 3.1, iconSrc: '/assets/icons/skills/SQLite.svg' },
     ],
   },
   {
     title: 'Tools / DevOps / Others',
     tiles: [
-      { name: 'Git', level: 3.6 },
-      { name: 'GitHub', level: 3.6 },
-      { name: 'GitHub Actions', level: 3.3 },
-      { name: 'Docker', level: 3.2 },
-      { name: 'nginx', level: 3 },
-      { name: 'Vercel', level: 3 },
-      { name: 'Vite', level: 3 },
-      { name: 'Figma', level: 3.2 },
-      { name: 'Unity', level: 3.5 },
-      { name: 'Raspberry Pi', level: 3.5 },
-      { name: 'Codex', level: 3.4 },
-      { name: 'Claude Code', level: 3 },
+      { name: 'Git', level: 3.6, iconSrc: '/assets/icons/skills/git.svg' },
+      { name: 'GitHub', level: 3.6, iconSrc: '/assets/icons/skills/github-dark.svg' },
+      { name: 'GitHub Actions', level: 3.4, iconSrc: '/assets/icons/skills/GitHub%20Actions.svg' },
+      { name: 'Docker', level: 3.4, iconSrc: '/assets/icons/skills/docker.svg' },
+      { name: 'nginx', level: 3, iconSrc: '/assets/icons/skills/nginx.svg' },
+      { name: 'Vercel', level: 3, iconSrc: '/assets/icons/skills/vercel-dark.svg' },
+      { name: 'Vite', level: 3, iconSrc: '/assets/icons/skills/vitejs.svg' },
+      { name: 'Figma', level: 3.2, iconSrc: '/assets/icons/skills/figma.svg' },
+      { name: 'Unity', level: 3.5, iconSrc: '/assets/icons/skills/unity-svgrepo-com.svg' },
+      { name: 'Raspberry Pi', level: 3.6, iconSrc: '/assets/icons/skills/raspberry-pi.svg' },
+      { name: 'Codex', level: 3.4, iconSrc: '/assets/icons/skills/codex.svg' },
+      { name: 'Claude Code', level: 3, iconSrc: '/assets/icons/skills/claude-code.svg' },
     ],
   },
 ]

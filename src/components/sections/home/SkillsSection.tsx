@@ -1,4 +1,5 @@
 // Server component
+import Image from 'next/image'
 import type { CSSProperties } from 'react'
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
@@ -20,19 +21,40 @@ function levelTone(level: number) {
   return 'low'
 }
 
+function getInitials(name: string) {
+  return name
+    .split(/\s+|\//)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
+}
+
 function SkillCard({ tile }: { tile: SkillTile }) {
   const style: SkillLevelStyle = { '--skill-level': tile.level }
 
   return (
     <div className={`sk-tile sk-level-${levelTone(tile.level)}`} style={style} data-level={tile.level}>
-      <div className="sk-tile-top">
-        <span className="sk-tile-name">{tile.name}</span>
-        <span className="sk-tile-score" aria-label={`Level ${formatLevel(tile.level)} out of 5`}>
-          {formatLevel(tile.level)}
+      <div className="sk-tile-main">
+        <span className="sk-tile-icon" aria-hidden="true">
+          {tile.iconSrc ? (
+            <Image className="sk-tile-icon-img" src={tile.iconSrc} alt="" width={32} height={32} />
+          ) : (
+            <span className="sk-tile-icon-fallback">{getInitials(tile.name)}</span>
+          )}
         </span>
-      </div>
-      <div className="sk-level-track" aria-hidden="true">
-        <span className="sk-level-fill" />
+        <span className="sk-tile-body">
+          <span className="sk-tile-top">
+            <span className="sk-tile-name">{tile.name}</span>
+            <span className="sk-tile-score" aria-label={`Level ${formatLevel(tile.level)} out of 5`}>
+              {formatLevel(tile.level)}
+            </span>
+          </span>
+          <span className="sk-level-track" aria-hidden="true">
+            <span className="sk-level-fill" />
+          </span>
+        </span>
       </div>
     </div>
   )
