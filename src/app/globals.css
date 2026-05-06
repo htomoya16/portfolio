@@ -528,7 +528,7 @@ a { color: inherit; text-decoration: none; }
   margin: -12px 0 42px;
 }
 .skills-overview,
-.skills-level-guide {
+.skills-level-column {
   position: relative;
   border: 1px solid rgba(67,103,255,0.16);
   background: rgba(255,255,255,0.7);
@@ -537,6 +537,7 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 16px 40px rgba(31,42,68,0.06);
 }
 .skills-overview { padding: 24px 28px 26px; }
+.skills-level-column { display: flex; flex-direction: column; }
 .skills-overview::before,
 .skills-overview::after {
   content: '';
@@ -564,8 +565,8 @@ a { color: inherit; text-decoration: none; }
   margin: 0;
 }
 .skills-note {
-  margin-top: 16px;
-  padding-top: 14px;
+  margin: 0;
+  padding: 14px 20px 16px;
   border-top: 1px dashed rgba(122,134,154,0.34);
   font-size: 12px;
   line-height: 1.8;
@@ -578,6 +579,7 @@ a { color: inherit; text-decoration: none; }
   gap: 0;
   padding: 18px 20px 20px;
   align-self: stretch;
+  flex: 1;
 }
 .sk-guide-item {
   display: flex;

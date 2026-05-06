@@ -72,17 +72,19 @@ export default function SkillsSection() {
           <div className="skills-overview">
             <p className="skills-kicker">{skillsCopy.kicker}</p>
             <p className="skills-lead">{skillsCopy.lead}</p>
-            <p className="skills-note">{skillsCopy.note}</p>
           </div>
 
-          <div className="skills-level-guide" aria-label={skillsCopy.levelGuideLabel}>
-            {skillLevelDefinitions.map((item) => (
-              <div key={item.level} className={`sk-guide-item sk-guide-lv${item.level}`}>
-                <span className="sk-guide-level">Lv.{item.level}</span>
-                <span className="sk-guide-label">{item.label}</span>
-                <span className="sk-guide-line" aria-hidden="true" />
-              </div>
-            ))}
+          <div className="skills-level-column">
+            <div className="skills-level-guide" aria-label={skillsCopy.levelGuideLabel}>
+              {skillLevelDefinitions.map((item) => (
+                <div key={item.level} className={`sk-guide-item sk-guide-lv${item.level}`}>
+                  <span className="sk-guide-level">Lv.{item.level}</span>
+                  <span className="sk-guide-label">{item.label}</span>
+                  <span className="sk-guide-line" aria-hidden="true" />
+                </div>
+              ))}
+            </div>
+            <p className="skills-note">{skillsCopy.note}</p>
           </div>
         </div>
 
