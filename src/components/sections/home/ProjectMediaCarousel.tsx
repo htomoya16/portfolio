@@ -23,16 +23,22 @@ interface ProjectMediaCarouselProps {
   project: Project
 }
 
+function getOrientationClass(item: ProjectMedia) {
+  return item.orientation ? ` is-${item.orientation}` : ''
+}
+
 function MediaFrame({ item, videoRef, priority = false }: {
   item: ProjectMedia
   videoRef?: (node: HTMLVideoElement | null) => void
   priority?: boolean
 }) {
+  const className = `pm-media-el${getOrientationClass(item)}`
+
   if (item.type === 'video') {
     return (
       <video
         ref={videoRef}
-        className="pm-media-el"
+        className={className}
         src={item.src}
         poster={item.poster}
         controls
@@ -44,7 +50,7 @@ function MediaFrame({ item, videoRef, priority = false }: {
 
   return (
     <Image
-      className="pm-media-el"
+      className={className}
       src={item.src}
       alt={item.alt}
       fill
@@ -56,22 +62,41 @@ function MediaFrame({ item, videoRef, priority = false }: {
 }
 
 function ThumbFrame({ item }: { item: ProjectMedia }) {
+  if (item.type === 'video' && item.poster) {
+    return (
+      <>
+        <Image
+          className={`pm-thumb-el${getOrientationClass(item)}`}
+          src={item.poster}
+          alt=""
+          fill
+          sizes="120px"
+          draggable={false}
+          aria-hidden="true"
+        />
+        <span className="pm-thumb-play" aria-hidden="true" />
+      </>
+    )
+  }
+
   if (item.type === 'video') {
     return (
-      <video
-        className="pm-thumb-el"
-        src={item.src}
-        poster={item.poster}
-        preload="metadata"
-        muted
-        aria-hidden="true"
-      />
+      <>
+        <video
+          className={`pm-thumb-el${getOrientationClass(item)}`}
+          src={item.src}
+          preload="metadata"
+          muted
+          aria-hidden="true"
+        />
+        <span className="pm-thumb-play" aria-hidden="true" />
+      </>
     )
   }
 
   return (
     <Image
-      className="pm-thumb-el"
+      className={`pm-thumb-el${getOrientationClass(item)}`}
       src={item.src}
       alt=""
       fill
@@ -89,6 +114,8 @@ function ProjectMediaCarousel({ project }, ref) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
   const rootRef = useRef<HTMLDivElement | null>(null)
+  const thumbStripRef = useRef<HTMLDivElement | null>(null)
+  const thumbRefs = useRef<Array<HTMLButtonElement | null>>([])
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([])
   const expanded = expandedIndex === null ? null : media[expandedIndex]
 
@@ -107,6 +134,18 @@ function ProjectMediaCarousel({ project }, ref) {
       video.pause()
     })
   }, [])
+
+  useEffect(() => {
+    const strip = thumbStripRef.current
+    const selectedThumb = thumbRefs.current[selectedIndex]
+    if (!strip || !selectedThumb) return
+
+    const targetLeft = selectedThumb.offsetLeft - (strip.clientWidth - selectedThumb.clientWidth) / 2
+    strip.scrollTo({
+      left: Math.max(0, targetLeft),
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    })
+  }, [selectedIndex])
 
   useEffect(() => {
     if (!api) return
@@ -182,7 +221,7 @@ function ProjectMediaCarousel({ project }, ref) {
           {media.map((item, index) => (
             <CarouselItem key={`${item.src}-${index}`} className="pm-carousel-item">
               <figure className="pm-media-card">
-                <div className="pm-media-stage">
+                <div className={`pm-media-stage${getOrientationClass(item)}`}>
                   <div className="pm-media-screen">
                     {item.type === 'image' ? (
                       <button
@@ -224,7 +263,7 @@ function ProjectMediaCarousel({ project }, ref) {
       </Carousel>
 
       {media.length > 1 && (
-        <div className="pm-thumb-strip" aria-label="Media thumbnails">
+        <div className="pm-thumb-strip" aria-label="Media thumbnails" ref={thumbStripRef}>
           {media.map((item, index) => (
             <button
               type="button"
@@ -232,9 +271,10 @@ function ProjectMediaCarousel({ project }, ref) {
               className="pm-thumb-btn"
               aria-current={selectedIndex === index ? 'true' : undefined}
               aria-label={`Show media ${index + 1}: ${item.alt}`}
+              ref={(node) => { thumbRefs.current[index] = node }}
               onClick={() => api?.scrollTo(index)}
             >
-              <span className="pm-thumb-frame">
+              <span className={`pm-thumb-frame${getOrientationClass(item)}`}>
                 <ThumbFrame item={item} />
               </span>
               <span className="pm-thumb-num">{String(index + 1).padStart(2, '0')}</span>
@@ -264,8 +304,8 @@ function ProjectMediaCarousel({ project }, ref) {
               className="pm-media-lightbox-img"
               src={expanded.src}
               alt={expanded.alt}
-              width={1280}
-              height={720}
+              width={expanded.orientation === 'portrait' ? 720 : 1280}
+              height={expanded.orientation === 'portrait' ? 1280 : 720}
               draggable={false}
             />
             {expanded.caption ? (

@@ -75,7 +75,13 @@ const TECH_ICON_MAP: Record<string, string> = {
   SQLite: '/assets/icons/skills/SQLite.svg',
   Git: '/assets/icons/skills/git.svg',
   GitHub: '/assets/icons/skills/github-dark.svg',
+  'GitHub Actions': '/assets/icons/skills/GitHub%20Actions.svg',
   Vite: '/assets/icons/skills/vitejs.svg',
+  nginx: '/assets/icons/skills/nginx.svg',
+  Heroku: '/assets/icons/skills/heroku.svg',
+  Unity: '/assets/icons/skills/unity-svgrepo-com.svg',
+  'C#': '/assets/icons/skills/c-sharp.svg',
+  'Raspberry Pi': '/assets/icons/skills/raspberry-pi.svg',
 }
 
 function ProjectIcon({ src, className = 'pm-section-icon-img' }: { src: string; className?: string }) {
@@ -380,33 +386,62 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                   delay={220}
                   replayOnHover={false}
                 />
-                {project.repoUrl && (
-                  <a
-                    href={project.repoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="pm-github-link"
-                    aria-label={`${projectModalCopy.githubAriaPrefix} ${project.title} ${projectModalCopy.githubAriaSuffix}`}
-                  >
-                    <Image
-                      src="/assets/icons/skills/github-dark.svg"
-                      alt=""
-                      width={18}
-                      height={18}
-                      aria-hidden="true"
-                      className="pm-github-icon"
-                    />
-                    {projectModalCopy.githubLabel}
-                    <Image
-                      src={`${PROJECT_ICON_BASE}/link-external.svg`}
-                      alt=""
-                      width={14}
-                      height={14}
-                      aria-hidden="true"
-                      className="pm-external-icon"
-                    />
-                  </a>
-                )}
+                <div className="pm-title-actions">
+                  {project.repoUrl && (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pm-github-link"
+                      aria-label={`${projectModalCopy.githubAriaPrefix} ${project.title} ${projectModalCopy.githubAriaSuffix}`}
+                    >
+                      <Image
+                        src="/assets/icons/skills/github-dark.svg"
+                        alt=""
+                        width={18}
+                        height={18}
+                        aria-hidden="true"
+                        className="pm-github-icon"
+                      />
+                      {projectModalCopy.githubLabel}
+                      <Image
+                        src={`${PROJECT_ICON_BASE}/link-external.svg`}
+                        alt=""
+                        width={14}
+                        height={14}
+                        aria-hidden="true"
+                        className="pm-external-icon"
+                      />
+                    </a>
+                  )}
+                  {project.demoUrl && (
+                    <a
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pm-github-link pm-demo-link"
+                      aria-label={`Open demo video for ${project.title}`}
+                    >
+                      <Image
+                        src={`${PROJECT_ICON_BASE}/youtube.svg`}
+                        alt=""
+                        width={18}
+                        height={18}
+                        aria-hidden="true"
+                        className="pm-youtube-icon"
+                      />
+                      {project.demoLabel ?? 'YouTube'}
+                      <Image
+                        src={`${PROJECT_ICON_BASE}/link-external.svg`}
+                        alt=""
+                        width={14}
+                        height={14}
+                        aria-hidden="true"
+                        className="pm-external-icon"
+                      />
+                    </a>
+                  )}
+                </div>
               </div>
               <p className="pm-summary">{project.desc}</p>
             </div>

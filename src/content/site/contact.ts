@@ -16,7 +16,7 @@ export const contactCopy = {
 
 export const contactStats = [
   { label: 'RESPONSE', pct: 95, display: '95%' },
-  { label: 'COMMITS', pct: 80, display: '1,200+' },
+  { label: 'COMMITS', pct: 80, display: '500+' },
   { label: 'PROJECTS', pct: 60, display: '8 WORKS' },
 ]
 
