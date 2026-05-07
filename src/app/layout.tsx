@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Inter, JetBrains_Mono, Noto_Sans_JP, Press_Start_2P } from 'next/font/google'
 import { siteMetadata } from '@/content/site/meta'
 import './globals.css'
@@ -42,7 +44,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="ja"
       className={`${inter.variable} ${notoSansJp.variable} ${jetBrainsMono.variable} ${pressStart2P.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   )
 }

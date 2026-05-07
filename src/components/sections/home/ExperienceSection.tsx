@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import ScrambleText from '@/components/animation/ScrambleText'
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
@@ -61,6 +62,29 @@ export default function ExperienceSection() {
                 </div>
                 <ScrambleText as="h3" className="exp-title" text={exp.title} revealRate={28} settleDuration={520} replayOnHover={true} />
                 <p className="exp-desc">{exp.desc}</p>
+                {exp.links && exp.links.length > 0 && (
+                  <div className="exp-links" aria-label={`${exp.title} related links`}>
+                    {exp.links.map((link) => (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="exp-link"
+                      >
+                        {link.label}
+                        <Image
+                          src="/assets/icons/projects/link-external.svg"
+                          alt=""
+                          width={13}
+                          height={13}
+                          aria-hidden="true"
+                          className="exp-link-icon"
+                        />
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ))}
