@@ -2,8 +2,22 @@
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { contactCopy, contactLinks, contactStats } from '@/content/site/contact'
+import Image from 'next/image'
 
-function ContactIcon({ type }: { type: string }) {
+function ContactIcon({ type, icon }: { type: string; icon?: string }) {
+  if (icon) {
+    return (
+      <Image
+        className={`ct-card-icon-img is-${type}`}
+        src={icon}
+        width={36}
+        height={36}
+        alt=""
+        aria-hidden="true"
+      />
+    )
+  }
+
   if (type === 'pinterest') {
     return (
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
@@ -97,14 +111,20 @@ export default function ContactSection() {
         {/* right */}
         <div className="contact-cards">
           {contactLinks.map((card) => (
-            <a key={card.label} href={card.href} className="ct-card">
+            <a
+              key={card.label}
+              href={card.href}
+              className="ct-card"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <span className="ct-cb tl" />
               <span className="ct-cb tr" />
               <span className="ct-cb bl" />
               <span className="ct-cb br" />
               <div className="ct-card-dot" aria-hidden="true" />
               <div className="ct-card-icon">
-                <ContactIcon type={card.type} />
+                <ContactIcon type={card.type} icon={'icon' in card ? card.icon : undefined} />
               </div>
               <div>
                 {/* plain text — MotionProvider scrambles on ct-card hover */}

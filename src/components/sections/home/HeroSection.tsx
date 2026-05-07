@@ -23,7 +23,22 @@ export default function HeroSection() {
       <SideRails />
 
       {/* right background panel */}
-      <div className="hero-right-bg" aria-hidden="true" />
+      <div className="hero-right-bg" aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/assets/hero/generated/blackhole-pixel.webp"
+          alt=""
+          className="hero-blackhole-art hero-blackhole-art-motion"
+          draggable={false}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/assets/hero/generated/blackhole-pixel-poster.png"
+          alt=""
+          className="hero-blackhole-art hero-blackhole-art-poster"
+          draggable={false}
+        />
+      </div>
 
       {/* Hero SVG decorations — マージン帯のみ（コンテンツと重ならない） */}
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
@@ -88,43 +103,6 @@ export default function HeroSection() {
             <line x1="1" y1="7" x2="18" y2="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </button>
-      </div>
-
-      {/* hero visual */}
-      <div className="hero-visual">
-        <div className="controller-scene">
-          {/* HP bar — hover effects handled by MotionProvider */}
-          <div className="hero-hp" aria-label={heroCopy.hpAriaLabel}>
-            <span className="hp-label">{heroCopy.hpLabel}</span>
-            <div className="hp-bar">
-              <div className="hp-fill" />
-            </div>
-            <span className="hp-num">{heroCopy.hpValue}</span>
-          </div>
-
-          {/* label — plain text, was 100%% bug */}
-          <span className="hero-label-100" aria-hidden="true">{heroCopy.visualPercent}</span>
-
-          {/* main controller */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/controller.png"
-            alt="pixel controller"
-            className="px-controller"
-          />
-
-          {/* floating sprites */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/alien.png" alt="" className="px-sprite s-invader" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/heart.png" alt="" className="px-sprite s-heart" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/trophy.png" alt="" className="px-sprite s-coin" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/gem.png" alt="" className="px-sprite s-gem" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/sword.png" alt="" className="px-sprite s-sword" />
-        </div>
       </div>
 
       {/* play button — plain label */}

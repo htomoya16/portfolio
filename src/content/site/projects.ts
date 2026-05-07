@@ -11,6 +11,7 @@ export type ProjectMedia = {
   type: 'image' | 'video'
   src: string
   poster?: string
+  orientation?: 'landscape' | 'portrait' | 'square'
   alt: string
   caption?: string
 }
@@ -18,6 +19,7 @@ export type ProjectMedia = {
 export type ProjectPreviewImage = {
   src: string
   alt: string
+  fit?: 'cover' | 'contain'
 }
 
 export interface Project {
@@ -26,7 +28,6 @@ export interface Project {
   desc: string
   longDesc?: string
   tags: string[]
-  previewType: 'quest' | 'score' | 'pixel'
   previewImage?: ProjectPreviewImage
   media?: ProjectMedia[]
   role?: string
@@ -37,6 +38,8 @@ export interface Project {
   features?: string[]
   repoUrl?: string
   liveUrl?: string
+  demoUrl?: string
+  demoLabel?: string
   // Detail sections
   background?: string
   devContent?: string
@@ -67,225 +70,308 @@ export const projectModalCopy = {
 export const projects: Project[] = [
   {
     num: '01',
-    title: 'QuestHub',
-    desc: 'ゲーマー向けのイベント・コミュニティプラットフォーム',
+    title: 'Wake-on-Lan Dashboard',
+    desc: '外出先からVPN経由で自宅PCを安全に起動・管理するWebダッシュボード',
     longDesc:
-      'ゲーマーが集まり、イベントを企画・参加できるコミュニティプラットフォーム。リアルタイムチャット、イベントスケジュール管理、ゲーム実績の共有機能を備えた本格的なWebアプリ。',
-    tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Prisma', 'WebSocket'],
-    previewType: 'quest',
+      'Raspberry Piを自宅LAN内の管理サーバーとして使い、外出先からVPN経由でPCの起動、状態確認、操作履歴、稼働時間を確認できるようにした個人開発プロジェクト。',
+    tags: ['Python', 'FastAPI', 'React', 'Vite', 'Docker', 'nginx', 'Raspberry Pi', 'GitHub Actions'],
     previewImage: {
-      src: '/assets/projects/questhub/overview.png',
-      alt: 'QuestHub main dashboard preview',
+      src: '/assets/projects/raspi-vpn-wol/raspi-vpn-wol-preview.jpg',
+      alt: 'Raspberry Pi Wake-on-LAN dashboard preview',
     },
     media: [
       {
-        type: 'image',
-        src: '/assets/projects/questhub/overview.png',
-        alt: 'QuestHub event discovery dashboard mockup',
-        caption: 'イベント一覧、Party Finder、コミュニティ状況をまとめたメイン画面',
+        type: 'video',
+        src: '/assets/projects/raspi-vpn-wol/raspi-vpn-wol-video.mp4',
+        poster: '/assets/projects/raspi-vpn-wol/raspi-vpn-wol1.jpg',
+        orientation: 'portrait',
+        alt: 'Raspberry Pi Wake-on-LAN dashboard operation video',
+        caption: 'PCの登録、状態確認、遠隔起動を行うダッシュボードの操作デモ',
       },
-      {
-        type: 'image',
-        src: '/assets/projects/questhub/events.png',
-        alt: 'QuestHub event cards and party finder mockup',
-        caption: 'イベントカードと Party Finder の導線を見せる画面',
-      },
-      {
-        type: 'image',
-        src: '/assets/projects/questhub/detail.png',
-        alt: 'QuestHub event detail and community stats mockup',
-        caption: 'イベント詳細とコミュニティ統計を確認する画面',
-      },
-      {
-        type: 'image',
-        src: '/assets/projects/questhub/detail.png',
-        alt: 'QuestHub event detail and community stats mockup',
-        caption: 'イベント詳細とコミュニティ統計を確認する画面',
-      },
+      ...Array.from({ length: 13 }, (_, index) => ({
+        type: 'image' as const,
+        src: `/assets/projects/raspi-vpn-wol/raspi-vpn-wol${index + 2}.jpg`,
+        orientation: index + 2 <= 10 ? 'portrait' as const : 'landscape' as const,
+        alt: `Raspberry Pi Wake-on-LAN dashboard screenshot ${index + 2}`,
+        caption: `Raspberry Pi Wake-on-LAN Dashboard 画面 ${String(index + 1).padStart(2, '0')}`,
+      })),
     ],
-    role: 'Full-Stack Engineer',
-    period: '2024.02 — 2024.05',
+    role: 'Full-Stack / Infrastructure',
+    period: '2026.2 - 2026.3',
     projectType: '個人開発',
-    duration: '約3ヶ月',
-    status: 'SHIPPED',
+    duration: '約1ヶ月',
+    status: 'IN OPERATION',
     features: [
-      'リアルタイムイベント通知システム',
-      'ゲーム実績トラッカー & バッジ統合',
-      'コミュニティランキングボード',
+      'PC一覧の登録・更新・削除とWake-on-LANによる遠隔起動',
+      '起動状態の定期確認、操作ログ、稼働時間の可視化',
+      'APIトークン認証、権限制御、VPN前提の安全な運用構成',
+      'GitHub Actionsによる自動テスト・自動デプロイとバックアップ運用',
     ],
-    repoUrl: 'https://github.com',
+    repoUrl: 'https://github.com/htomoya16/raspi-vpn-wol',
+    demoUrl: 'https://youtu.be/xwnNt2OvFIQ?si=WyRLkUFFW5G9jHf4',
+    demoLabel: 'YouTube',
     background:
-      'ゲームコミュニティに特化したプラットフォームが国内では少なく、Discord等の汎用ツールに頼らざるを得ない状況に課題を感じた。イベント告知・参加管理・スコア共有をワンストップで行えるサービスを作ることで、ゲーマー同士のつながりをより豊かにしたいと考えた。',
+      '外出先から自宅PCを使いたいとき、PCの電源が落ちているとリモートデスクトップへ接続できない不便がありました。そこで、単にPCを起動するだけでなく、起動状況の確認、操作履歴、稼働時間、長期運用まで含めて、安心して自宅PCを管理できる仕組みを作ることを目的に開発しました。',
     devContent:
-      'Next.js App Router + TypeScript で構成し、リアルタイム通知は WebSocket で実装。認証には NextAuth.js を採用し、イベント管理ロジックをサーバーサイドに集約した。データ永続化は Prisma + PostgreSQL で行い、型安全なデータアクセスを徹底した。',
+      '自宅のRaspberry Pi上でサーバーを運用し、スマートフォンやPCから利用できるWebダッシュボードを実装しました。バックエンドではPC管理、Wake-on-LAN、状態確認、操作ログ、稼働時間集計、APIトークン認証を担当し、フロントエンドでは管理画面を構築しました。運用面ではnginx、Docker、GitHub Actions、自動バックアップ、ヘルスチェックを組み合わせ、Raspberry Pi側の負荷を抑えながら継続的に改善できる構成にしました。',
     highlights: [
-      'App Router の Server Components と Client Components を設計段階から明確に分離し、バンドルサイズを最小化',
-      'Zustand で軽量なグローバル状態管理を実現し、Props drilling を完全に排除',
-      'カスタム hooks で API ロジックを完全分離して再利用性を確保しコードの見通しを大幅に改善',
+      '管理画面や起動処理を直接インターネットに公開せず、VPN経由でRaspberry PiからLAN内PCへ起動信号を送る構成にした',
+      '通常利用用と管理用でAPIトークンの権限を分け、個人開発でも安全性を意識した認証・権限制御を実装した',
+      'CI/CD、バックアップ、ログ、ヘルスチェック、キャッシュを整備し、作って終わりではなく運用しながら改善できる形にした',
     ],
     challenges: [
       {
         problem:
-          'WebSocket の接続管理がコンポーネント再マウント時に重複接続を引き起こし、メモリリークが発生した',
+          '初めてのフルスタック開発で、画面、API、データ保存、認証、ネットワーク、デプロイ、運用をまとめて設計する必要があった',
         solution:
-          'useEffect のクリーンアップ関数で確実にリソース解放し、接続の一元管理を Context で行うことで解消',
+          'まずPC登録、遠隔起動、起動状態確認の最小構成に分解して実装し、その後ログ、稼働時間、権限制御、バックアップ、CI/CD、キャッシュを段階的に追加した',
       },
       {
         problem:
-          'Server Components から Client Components へのデータ受け渡しでシリアライズエラーが頻発した',
+          'Raspberry Pi上でビルドや重いテストまで行うと、運用端末への負荷が大きくなる懸念があった',
         solution:
-          'Date オブジェクトを ISO 文字列に変換する共通ユーティリティを作成してエッジを統一し、型レベルで防止した',
+          '負荷の大きいテストやフロントエンドビルドはGitHub Actions側で実行し、Raspberry Pi側は反映処理を中心にする構成へ整理した',
       },
     ],
     learnings: [
-      'App Router のレンダリング戦略を意識した設計の重要性と境界の引き方',
-      'リアルタイム機能設計における接続ライフサイクル管理パターン',
-      'TypeScript + Zod による入力バリデーションの組み込みと型安全の徹底',
+      'Linuxを用いた自宅サーバー構築・運用の基礎',
+      'APIトークン認証、権限制御、VPN前提のネットワーク構成',
+      'バックアップ、ログ、ヘルスチェックを含む運用設計',
+      'キャッシュを用いた応答速度改善と表示鮮度のバランス',
     ],
   },
   {
     num: '02',
-    title: 'ScoreBoard',
-    desc: 'ゲーム大会のスコアをリアルタイムで共有するWebアプリ',
+    title: 'Lovender',
+    desc: '推し活情報を自動で整理・管理するカレンダーアプリ',
     longDesc:
-      'ゲーム大会のスコアをリアルタイムで記録・共有するWebアプリ。Firebase Realtime Database を活用したライブ更新と、直感的なスコア入力UIを実装。',
-    tags: ['React', 'Firebase', 'Tailwind CSS', 'TypeScript'],
-    previewType: 'score',
+      'SNS上に散らばるライブ、イベント、グッズ、配信などの情報を取得し、カレンダーへ反映することで推し活の予定管理を支援するハッカソン開発プロジェクト。',
+    tags: ['Go', 'Echo', 'MySQL', 'Docker'],
     previewImage: {
-      src: '/assets/projects/scoreboard/overview.png',
-      alt: 'ScoreBoard live match dashboard preview',
+      src: '/assets/projects/Lovender/pages/lovender-page-01.png',
+      alt: 'Lovender slide deck cover preview',
     },
-    media: [
-      {
-        type: 'image',
-        src: '/assets/projects/scoreboard/overview.png',
-        alt: 'ScoreBoard live tournament scoring dashboard mockup',
-        caption: 'ライブスコア、対戦カード、ブラケットを一画面で確認できる運営画面',
-      },
-      {
-        type: 'image',
-        src: '/assets/projects/scoreboard/live-match.png',
-        alt: 'ScoreBoard live match score input mockup',
-        caption: '試合中のスコア入力とリアルタイム反映を想定した画面',
-      },
-      {
-        type: 'image',
-        src: '/assets/projects/scoreboard/bracket.png',
-        alt: 'ScoreBoard tournament bracket mockup',
-        caption: 'トーナメント表と順位変動を確認する画面',
-      },
-    ],
-    role: 'Frontend Engineer',
-    period: '2024.06 — 2024.08',
-    projectType: '授業制作',
-    duration: '約2ヶ月',
-    status: 'SHIPPED',
+    media: Array.from({ length: 14 }, (_, index) => ({
+      type: 'image' as const,
+      src: `/assets/projects/Lovender/pages/lovender-page-${String(index + 1).padStart(2, '0')}.png`,
+      alt: `Lovender presentation page ${index + 1}`,
+      caption: `Lovender 発表資料 ${String(index + 1).padStart(2, '0')}`,
+    })),
+    role: 'Backend Engineer',
+    period: '2025.09 - 2025.10',
+    projectType: 'ハッカソン',
+    duration: '約2週間',
+    status: 'AWARD',
     features: [
-      'Firebase Realtime Database 連携',
-      'ライブスコア更新 (WebSocket)',
-      'トーナメントブラケット自動生成',
+      '推しの登録情報をもとにイベント情報を返すAPIを実装',
+      'Go / Echoを用いたバックエンド処理の実装',
+      '5名チームで短期間に企画、実装、発表まで実施',
+      'Hack U 東京電機大学 2025で東京電機大学賞を受賞',
     ],
-    repoUrl: 'https://github.com',
-    liveUrl: 'https://example.com',
+    repoUrl: 'https://github.com/HijiriSato88/lovender_backend',
     background:
-      'ゲーム大会の運営において、紙や Excel でのスコア管理が非効率で観戦者へのリアルタイム共有もできない課題があった。Firebase の Realtime Database でスコアの瞬時配信を実現し、大会運営と観戦体験の両方を改善したいと考えた。',
+      '複数の推しを応援する中で、ライブ、イベント、グッズ、雑誌、配信などの情報がSNS上に散らばり、見逃しや手動でのカレンダー登録が負担になる課題がありました。SNS上の情報収集からカレンダー反映までを自動化し、推し活に必要な予定を効率的に管理できるようにすることを目的に開発しました。',
     devContent:
-      'React で UI を構築し Firebase Realtime Database と Hosting で構成した SPA。スコア入力 UI は直感性を優先し、キーボードショートカットと楽観的 UI 更新でオペレーターの作業効率を高めた。トーナメントブラケットは再帰的なコンポーネント設計で任意の参加人数に対応した。',
+      '5名チームのハッカソンで、私はバックエンド担当として、アプリに必要な情報を取得し、推しに関連するイベント情報を返すAPI実装を担当しました。Goやバックエンド開発の経験が浅い中で、データの扱い方や処理の流れを整理し、チームメンバーのコードも参考にしながら実装と動作確認を進めました。',
     highlights: [
-      'Firebase の楽観的更新でスコア入力時の UI ラグをゼロに近づけ、操作感を大幅に改善',
-      'カスタム hook で Firebase の subscribe / unsubscribe を完全に抽象化し、コンポーネントから副作用を分離',
-      'CSS Grid + CSS Animations でリアルタイムスコア変動時のアニメーションを軽量かつ滑らかに実現',
+      '事前のユーザー調査に基づいて課題を設定し、推し活に特化した予定管理体験として機能を整理した',
+      'バックエンド担当として、必要な処理を分解しながらAPIを実装し、プロダクト完成と受賞に貢献した',
+      '短期間のチーム開発の中で、自分の担当範囲を明確にしながら他メンバーと連携した',
     ],
     challenges: [
       {
         problem:
-          'Firebase Realtime Database の複数リスナーによるメモリリークが発生し、長時間利用でパフォーマンスが低下した',
+          'Goやバックエンド開発の経験が浅く、データの扱い方や処理の流れを理解しながら実装する必要があった',
         solution:
-          'useEffect 内で onValue の戻り値（unsubscribe 関数）を確実にコールし、コンポーネントアンマウント時に全リスナーを解除するパターンを徹底した',
-      },
-      {
-        problem:
-          '複数の審判が同時にスコアを入力した際に競合が発生し、データの整合性が崩れた',
-        solution:
-          'Firebase のトランザクション処理を使用して原子性を保証し、楽観的ロックで UI 側の整合性も維持した',
+          '必要な処理を小さく分解し、自分で調べることとチームメンバーのコードを読むことを並行しながら、実装と動作確認を一つずつ進めた',
       },
     ],
     learnings: [
-      'Firebase Realtime Database と React のライフサイクル統合における副作用管理パターン',
-      '楽観的 UI 更新と実際のデータ同期のバランス設計と rollback 戦略',
-      'SPA でのパフォーマンス最適化（React.memo・useMemo・code splitting）の実践',
+      'Goを用いたAPI実装の基礎',
+      'バックエンド機能を処理単位に分解して実装する進め方',
+      '役割分担のあるチーム開発で担当機能を形にする経験',
+      'ユーザーに価値を届ける機能の裏側を支えるバックエンド開発の面白さ',
     ],
   },
   {
     num: '03',
-    title: 'Pixel Diary',
-    desc: 'ドット絵で記録するライフログアプリ',
+    title: 'Haptic Piano',
+    desc: '仮想空間でピアノの鍵盤を押す感覚を再現するXR・ハプティック研究',
     longDesc:
-      'ドット絵スタイルのカレンダーに毎日の気分・出来事を記録するライフログアプリ。Prisma + PostgreSQL で堅牢なデータ管理を実現し、統計ダッシュボードで自己分析を可能にする。',
-    tags: ['Next.js', 'Prisma', 'PostgreSQL', 'Tailwind CSS', 'Canvas API'],
-    previewType: 'pixel',
+      'グローブ型デバイス、仮想空間アプリケーション、通信処理を組み合わせ、仮想ピアノ演奏で鍵盤を押し込む感覚を再現する研究プロジェクト。',
+    tags: ['C#', 'Unity'],
     previewImage: {
-      src: '/assets/projects/pixel-diary/overview.png',
-      alt: 'Pixel Diary overview screen preview',
+      src: '/assets/projects/hapticpiano/hapticpiano-preview.jpg',
+      alt: 'Haptic Piano glove device and virtual piano preview',
     },
     media: [
       {
-        type: 'image',
-        src: '/assets/projects/pixel-diary/overview.png',
-        alt: 'Pixel Diary calendar and pixel editor mockup',
-        caption: '月間カレンダー、ドット絵エディタ、気分統計を並べた記録画面',
+        type: 'video',
+        src: '/assets/projects/hapticpiano/hapticpiano1.mp4',
+        poster: '/assets/projects/hapticpiano/hapticpiano3.png',
+        orientation: 'portrait',
+        alt: 'Haptic Piano demonstration video 1',
+        caption: '仮想空間上のピアノ演奏とグローブ型デバイスの動作デモ',
+      },
+      {
+        type: 'video',
+        src: '/assets/projects/hapticpiano/hapticpiano2.mp4',
+        poster: '/assets/projects/hapticpiano/hapticpiano4.png',
+        orientation: 'landscape',
+        alt: 'Haptic Piano demonstration video 2',
+        caption: '触覚提示と手モデルの動作を確認するデモ',
       },
       {
         type: 'image',
-        src: '/assets/projects/pixel-diary/calendar.png',
-        alt: 'Pixel Diary monthly calendar mockup',
-        caption: '日々の記録をドット絵で一覧できるカレンダー画面',
-      },
-      {
-        type: 'image',
-        src: '/assets/projects/pixel-diary/editor.png',
-        alt: 'Pixel Diary pixel editor and mood stats mockup',
-        caption: 'ドット絵編集と気分統計を並べた入力画面',
+        src: '/assets/projects/hapticpiano/hapticpiano5.png',
+        alt: 'Haptic Piano evaluation image',
+        caption: '評価実験・調整に関する画面',
       },
     ],
-    role: 'Full-Stack Engineer',
-    period: '2024.09 — 現在',
-    projectType: '個人開発',
-    duration: '約20ヶ月',
-    status: 'IN DEV',
+    role: 'Research / Device & Software',
+    period: '2025.04 - 2026.03',
+    projectType: '研究',
+    duration: '約1年',
+    status: 'RESEARCH',
     features: [
-      'ドット絵カレンダービュー',
-      'Prisma ORM + PostgreSQL',
-      '気分トラッカー & 統計ダッシュボード',
+      'センサとマイコンを用いたグローブ型デバイスの設計・実装',
+      '仮想空間上で動作するピアノ演奏アプリケーションの開発',
+      '指の動きと触覚提示を連携させる通信・制御処理',
+      '被験者評価による演奏感・操作感の検証',
     ],
-    repoUrl: 'https://github.com',
+    repoUrl: 'https://github.com/htomoya16/hapticpiano',
     background:
-      '日記を続けられないという問題の解決策を探す中で、ドット絵というゲーム的なビジュアルで記録をゲーミフィケーションするアイデアを着想した。毎日の達成感と振り返りの可視化でハビットトラッキングを楽しくする体験を作りたかった。',
+      '既存の仮想ピアノ演奏では、音や映像は再現できても、鍵盤に触れた感覚や押し込んだ感覚が十分に再現されず、実際に弾いているような操作感を得にくい課題がありました。そこで、指の動きに応じて触覚を返す仕組みを設計し、より自然な演奏体験を実現することを目指しました。',
     devContent:
-      'Next.js 14 App Router + Prisma + PostgreSQL でフルスタック実装。ドット絵エディタは Canvas API をベースにゼロから自作し、カレンダービューはカスタムコンポーネントとして設計した。Server Actions によるシームレスなデータミューテーションを採用し、API ルートを最小化した。',
+      'センサやマイコンを用いたグローブ型デバイス、Unity上で動作する仮想空間アプリケーション、両者を連携させる通信処理を組み合わせ、ハード・ソフト・通信を統合したシステムとして設計・実装しました。課題設定、提案手法の設計、実装、評価実験まで一貫して担当しました。',
     highlights: [
-      'Canvas API を使ったドット絵エディタをゼロから実装し、ピクセル単位の精密な描画制御を実現',
-      'Prisma のリレーション設計でデータモデルの正規化を徹底し、将来の機能拡張を考慮したスキーマ設計',
-      'Server Actions によるシームレスなデータミューテーション体験でクライアントの状態管理コストを大幅削減',
+      'グローブから取得した指の情報をアプリケーション側で直接扱える構成へ見直し、手モデルの動きを自ら調整した',
+      '指の曲がり具合や鍵盤との接触状態に応じて触覚が変化する仕組みを設計した',
+      '装着状態や指の動きの個人差に対応するため、キャリブレーション処理を導入した',
     ],
     challenges: [
       {
         problem:
-          'Canvas 上でのドット絵編集と React の状態管理が競合し、描画タイミングのずれでちらつきが発生した',
+          '取得した指の動きが仮想空間上の手モデルへ自然に反映されず、実際の指の動きと表示にずれが生じていた',
         solution:
-          'Canvas は useRef で直接操作し、編集完了時のみ toDataURL() で React 状態に同期する設計に変更することで完全に解消',
+          '入力値がどの経路で手モデルに反映されるかを分解して確認し、グローブからの指情報をアプリケーション側で直接扱う構成へ見直した',
       },
       {
         problem:
-          'Prisma スキーマ変更時のマイグレーション管理が複雑になり、既存データとの整合性維持が困難だった',
+          '一定の反応を返すだけでは、鍵盤を押し込む感覚を十分に再現できなかった',
         solution:
-          '開発環境では prisma db push で高速イテレーション、本番では prisma migrate deploy を使い分け、シードデータで整合性を検証する運用を確立',
+          '指の曲がり具合と鍵盤との接触状態に応じて触覚を変化させ、実装と検証を繰り返しながら調整した',
       },
     ],
     learnings: [
-      'Canvas API と React の共存パターンと、命令的 API と宣言的 UI の境界の引き方',
-      'Prisma ORM によるデータモデリングのベストプラクティスとマイグレーション戦略',
-      'Server Actions と Client Components のユースケース選択基準と適切な責務分離',
+      '既存技術を活用しつつ、処理経路を理解して課題を切り分ける力',
+      'ハードウェア、ソフトウェア、通信を統合したシステム設計',
+      '触覚提示の制御方法を仮説検証しながら改善する進め方',
+      '評価実験を通じて操作感の改善を確認する研究開発の流れ',
     ],
+  },
+  {
+    num: '04',
+    title: 'Chatclub',
+    desc: 'Discordコマンドから対戦成績を集計・確認できるDiscord Bot',
+    longDesc:
+      '対戦型ゲームの履歴を外部サービスから取得し、Discord上で相手別の勝率や直近成績を確認できるようにした個人開発プロジェクト。',
+    tags: ['Go', 'Echo', 'PostgreSQL', 'Docker', 'Heroku'],
+    previewImage: {
+      src: '/assets/projects/chatclub/chatclub-preview.jpg',
+      alt: 'Chatclub Discord bot preview',
+    },
+    media: [
+      {
+        type: 'video',
+        src: '/assets/projects/chatclub/chatclub1.mp4',
+        poster: '/assets/projects/chatclub/chatclub2.png',
+        orientation: 'landscape',
+        alt: 'Chatclub Discord bot operation video',
+        caption: 'Discordコマンドから戦績を確認する操作デモ',
+      },
+      ...Array.from({ length: 6 }, (_, index) => ({
+        type: 'image' as const,
+        src: `/assets/projects/chatclub/chatclub${index + 3}.png`,
+        orientation: index >= 4 ? 'portrait' as const : 'landscape' as const,
+        alt: `Chatclub screenshot ${index + 3}`,
+        caption: `Chatclub 画面 ${String(index + 1).padStart(2, '0')}`,
+      })),
+    ],
+    role: 'Backend Engineer',
+    period: '2026.01 - 2026.02',
+    projectType: '個人開発',
+    duration: '約1ヶ月',
+    status: 'IN OPERATION',
+    features: [
+      'Discordコマンドによるユーザー登録・戦績確認',
+      '外部サービスの対戦履歴取得と相手別勝率の集計',
+      'Cookieを用いたログイン済みセッション管理',
+      'Dockerを用いた開発環境とクラウド上の常時稼働構成',
+    ],
+    repoUrl: 'https://github.com/htomoya16/Chatclub',
+    background:
+      'Discordサーバー内で対戦型ゲームを遊ぶ中で、公式サイトだけでは特定の相手との勝率や直近成績、条件別の傾向を簡単に振り返れない不便がありました。外部サービス上の対戦結果を取得・集計し、Discord上で必要な戦績をすぐ確認できる仕組みを作ることで、対戦結果の振り返りや交流を支援したいと考えました。',
+    devContent:
+      'ユーザーが自身のゲームアカウントや対戦相手を登録すると、外部サービス上の対戦履歴を取得し、Discordコマンドから戦績を確認できるBotを実装しました。取得したデータは一覧表示に留めず、相手別の対戦数、勝敗、勝率、直近成績など、利用者がDiscord上で知りたい単位に加工して表示しました。',
+    highlights: [
+      '外部サービスの通信フローを調査し、Cookieを用いたセッション管理とリダイレクト処理を実装した',
+      '公式サイトだけでは振り返りにくい情報を、Discordコマンドから確認しやすい形へ変換した',
+      'DockerでBot本体とデータベースをまとめて管理し、環境差異を抑えた開発環境を構築した',
+    ],
+    challenges: [
+      {
+        problem:
+          '外部サービスの対戦履歴を取得するにはログイン済みユーザーとしてアクセスする必要があり、単純なHTTPリクエストだけでは必要なデータを取得できなかった',
+        solution:
+          'ブラウザログイン時の通信フローを調査し、Cookieを用いたセッション管理やリダイレクト処理を実装して、ログイン状態を維持したまま取得できるようにした',
+      },
+      {
+        problem:
+          '取得した対戦履歴をそのまま表示しても、利用者が知りたい相手別勝率や直近成績としては分かりにくかった',
+        solution:
+          '対戦数、勝敗、勝率、直近成績などの単位で集計し、Discord上で短いコマンドから確認できる形に整理した',
+      },
+    ],
+    learnings: [
+      '外部サービス連携を含むバックエンド設計・実装',
+      'HTTP通信とCookieを用いたセッション管理',
+      '履歴データの保存、加工、集計処理',
+      '利用者が必要とする情報を整理して提供する設計力',
+    ],
+  },
+  {
+    num: '05',
+    title: 'Project Preparing',
+    desc: '次の開発プロジェクトを準備中です',
+    longDesc:
+      '実データ、画像、技術スタックが揃い次第、採用担当者・エンジニア面接官が確認しやすい形で詳細を追加します。',
+    tags: [],
+    role: 'Preparing',
+    period: 'TBD',
+    projectType: '準備中',
+    duration: 'TBD',
+    status: 'COMING SOON',
+    background:
+      '現在、掲載するプロジェクトの情報を整理しています。実装内容、担当範囲、使用技術、学びが明確になった段階で追加します。',
+    devContent:
+      '今後、画像・動画・GitHubリポジトリ・開発背景を揃えて更新予定です。',
+  },
+  {
+    num: '06',
+    title: 'Project Preparing',
+    desc: '追加掲載するプロジェクトを準備中です',
+    longDesc:
+      'ポートフォリオ全体の流れに合わせて、バックエンド中心の学習・個人開発が伝わる内容として追加予定です。',
+    tags: [],
+    role: 'Preparing',
+    period: 'TBD',
+    projectType: '準備中',
+    duration: 'TBD',
+    status: 'COMING SOON',
+    background:
+      '現在、掲載候補のプロジェクト内容を整理しています。採用担当者が短時間で概要を把握でき、エンジニア面接官が実装内容を確認しやすい構成で追加します。',
+    devContent:
+      '今後、技術スタック、担当範囲、工夫した点、苦労した点と解決を追記予定です。',
   },
 ]

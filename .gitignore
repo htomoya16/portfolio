@@ -40,8 +40,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# python / uv tooling
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
 .codex/
 .claude/
 .claire/
 
 .playwright-mcp/
+
+docs/personal-data/
