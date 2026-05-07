@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 70 70" fill="none">
+  <title>decor_small_cross_navy</title>
+  <g shape-rendering="geometricPrecision">
+
+    <line x1="35" y1="27" x2="35" y2="43" stroke="#07122E" stroke-width="2"/>
+    <line x1="27" y1="35" x2="43" y2="35" stroke="#07122E" stroke-width="2"/>
+
+  </g>
+</svg>

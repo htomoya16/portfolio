@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" fill="none">
+  <title>decor_corner_brackets_square</title>
+  <g shape-rendering="geometricPrecision">
+
+    <path d="M42 58V42H58" stroke="#4367FF" stroke-width="2"/>
+    <path d="M92 42H108V58" stroke="#4367FF" stroke-width="2"/>
+    <path d="M108 92V108H92" stroke="#4367FF" stroke-width="2"/>
+    <path d="M58 108H42V92" stroke="#4367FF" stroke-width="2"/>
+
+  </g>
+</svg>
