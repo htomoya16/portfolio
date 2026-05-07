@@ -1,6 +1,6 @@
 # Portfolio Docs
 
-最終更新: 2026-05-01
+最終更新: 2026-05-07
 
 ## Plans
 
@@ -17,45 +17,54 @@
 - [Development Setup](./development.md)
   - Node.js / pnpm / Codex / Browser Use のローカル開発手順をまとめる。
 
+## Content / Assets
+
+- [Content and Assets](./content-and-assets.md)
+  - `src/content/site` のデータ管理、Project メディア、アイコン、Hero 生成素材の更新ルールをまとめる。
+
 ## 現在の構成
 
 - `docs/README.md`: docs の入口
 - `docs/development.md`: 開発環境と検証コマンド
 - `docs/libraries.md`: 使用ライブラリの採用理由と注意点
+- `docs/content-and-assets.md`: コンテンツと画像・動画・アイコン素材の管理ルール
 - `docs/plans/`: 実装前の計画や再設計方針
 
 存在しない docs ディレクトリは前提にしない。必要になった時点で追加する。
 
 ## プロフィール
 - 名前: 堀田智哉
-- 専門領域: VR/Haptics, Web Backend, 研究開発（触覚・デバイス制御・アニメーション生成）
+- 専門領域: Web Backend, VR/Haptics, 研究開発（触覚・デバイス制御）
 - 資格: 基本情報技術者
 
 ## 専門スキル
-- VR / Haptics: Unity, SteamVR, ESP32, サーボ制御, センサ処理
-- Web Backend: Go (Echo), Docker, SQL (MySQL/PostgreSQL), Atlas Migration
-- 研究開発: ピアノ触覚提示、デバイス制御、手モデル・アニメーション生成
+- Web Backend: Go, Python, Echo, FastAPI, Docker, SQL (PostgreSQL/MySQL/SQLite), nginx
+- Frontend: React, Next.js, Tailwind CSS, Vite
+- VR / Haptics: Unity, C#, Raspberry Pi, デバイス制御, センサ処理
+- Dev / Tools: Git, GitHub Actions, Vercel, Figma, Codex, Claude Code
 
 ## 主なプロジェクト
-1. グローブ型リアルハプティックデバイスによる仮想空間ピアノ体験（卒研）
-   - 内容: Unity + SteamVR と ESP32 ベースのハプティックグローブを組み合わせた VR ピアノ触覚提示システム。
-   - 進捗: ピアノ演奏に同期したサーボ力覚提示、ポテンショメータによる指屈曲センシング、低遅延通信、手モデル屈曲生成を実装中。
-   - 役割: 設計・実装・デバイス制御・UX 調整。
+1. Wake-on-Lan Dashboard
+   - 内容: VPN 経由で自宅 PC を安全に起動・管理する Web ダッシュボード。
+   - 技術: Python, FastAPI, React, Vite, Docker, nginx, Raspberry Pi, GitHub Actions。
 
-2. SleepFromHistory
-   - 内容: Chrome 履歴から睡眠時間を推定する Web アプリ。
-   - 技術: Go (Echo), Docker, MySQL, Atlas Migration, Chrome 拡張機能。
-   - 役割: バックエンド/API、データ処理、インフラ構成。
+2. Lovender
+   - 内容: 推し活情報を整理・管理するカレンダーアプリ。Hack U 東京電機大学 2025 受賞。
+   - 技術: Go, Echo, MySQL, Docker。
 
-3. YasaiRap
-   - 内容: Discord Bot + VRChat 管理ツール。ホワイトリスト管理、イベント運営、自動化処理などを提供。
-   - 技術: Go (Echo), Docker, Heroku/PostgreSQL, Atlas Migration。
-   - 役割: サーバーサイド、Bot 実装、運用自動化。
+3. Haptic Piano
+   - 内容: 仮想空間でピアノの鍵盤を押す感覚を再現する XR / ハプティック研究。
+   - 技術: C#, Unity。
+
+4. Chatclub
+   - 内容: Discord コマンドから対戦成績を集計・確認できる Discord Bot。
+   - 技術: Go, Echo, PostgreSQL, Docker, Heroku。
 
 ## リサーチ / 活動領域
 - ピアノ触覚提示・VR ハプティクス
 - デバイス制御・リアルタイム通信
 - Web アプリケーション・バックエンド設計
+- 個人開発の運用改善、CI/CD、軽量な自宅サーバー運用
 
 ## リンク
 - GitHub: https://github.com/htomoya16
@@ -63,4 +72,5 @@
 - Protopedia: https://protopedia.net/settings/prototypes
 
 ## メモ
-- プロフィールやリンク、役割は必要に応じて更新してください。
+- プロフィールやリンク、役割は `src/content/site/` を更新する。
+- Project 画像・動画・PDFは `public/assets/projects/` に置き、`src/content/site/projects.ts` から参照する。
