@@ -1,4 +1,4 @@
 export const siteMetadata = {
-  title: 'htomoya16 — Web Engineer Portfolio',
-  description: 'コードで、アイデアをカタチにして、ユーザーの体験をアップデートする。',
+  title: 'htomoya16 — Portfolio',
+  description: '学び続け、作り続け、成長し続ける。',
 } as const
