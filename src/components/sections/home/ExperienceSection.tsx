@@ -57,34 +57,34 @@ export default function ExperienceSection() {
                 <span className="ex-cb br" />
                 {/* plain text — MotionProvider adds scramble on exp-card hover */}
                 <div className="exp-card-head">
-                  <span className="exp-date mono">{exp.date}</span>
                   <span className={`exp-badge t-${exp.tone}`}>{exp.badge}</span>
+                  {exp.links && exp.links.length > 0 && (
+                    <div className="exp-links" aria-label={`${exp.title} related links`}>
+                      {exp.links.map((link) => (
+                        <a
+                          key={link.href}
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="exp-link"
+                        >
+                          {link.label}
+                          <Image
+                            src="/assets/icons/projects/link-external.svg"
+                            alt=""
+                            width={13}
+                            height={13}
+                            aria-hidden="true"
+                            className="exp-link-icon"
+                          />
+                        </a>
+                      ))}
+                    </div>
+                  )}
                 </div>
+                <span className="exp-date mono">{exp.date}</span>
                 <ScrambleText as="h3" className="exp-title" text={exp.title} revealRate={28} settleDuration={520} replayOnHover={true} />
                 <p className="exp-desc">{exp.desc}</p>
-                {exp.links && exp.links.length > 0 && (
-                  <div className="exp-links" aria-label={`${exp.title} related links`}>
-                    {exp.links.map((link) => (
-                      <a
-                        key={link.href}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="exp-link"
-                      >
-                        {link.label}
-                        <Image
-                          src="/assets/icons/projects/link-external.svg"
-                          alt=""
-                          width={13}
-                          height={13}
-                          aria-hidden="true"
-                          className="exp-link-icon"
-                        />
-                      </a>
-                    ))}
-                  </div>
-                )}
               </div>
             </div>
           ))}
