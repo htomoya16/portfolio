@@ -1,5 +1,6 @@
 'use client'
 
+import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import { useEffect, useRef } from 'react'
 
 export default function CursorFollower() {
@@ -11,8 +12,7 @@ export default function CursorFollower() {
     const visual = visualRef.current
     if (!el || !visual) return
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReducedMotion) return
+    if (getPrefersReducedMotion()) return
 
     // Disable on touch devices
     if (window.matchMedia('(pointer: coarse)').matches) return

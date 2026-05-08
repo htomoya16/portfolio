@@ -18,6 +18,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import type { Project, ProjectMedia } from '@/content/site/projects'
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 
 interface ProjectMediaCarouselProps {
   project: Project
@@ -110,6 +111,7 @@ function ThumbFrame({ item }: { item: ProjectMedia }) {
 const ProjectMediaCarousel = forwardRef<HTMLDivElement, ProjectMediaCarouselProps>(
 function ProjectMediaCarousel({ project }, ref) {
   const media = project.media ?? []
+  const prefersReducedMotion = usePrefersReducedMotion()
   const [api, setApi] = useState<CarouselApi>()
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
@@ -143,9 +145,9 @@ function ProjectMediaCarousel({ project }, ref) {
     const targetLeft = selectedThumb.offsetLeft - (strip.clientWidth - selectedThumb.clientWidth) / 2
     strip.scrollTo({
       left: Math.max(0, targetLeft),
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
     })
-  }, [selectedIndex])
+  }, [prefersReducedMotion, selectedIndex])
 
   useEffect(() => {
     if (!api) return

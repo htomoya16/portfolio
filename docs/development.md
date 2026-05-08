@@ -1,6 +1,6 @@
 # Development Setup
 
-最終更新: 2026-05-07
+最終更新: 2026-05-09
 
 このプロジェクトでは、ローカル開発と Codex からの検証を安定させるために Node.js と pnpm を repo 側で固定する。
 
@@ -37,10 +37,14 @@ uv sync
 ```bash
 pnpm dev
 pnpm lint
+pnpm typecheck
+pnpm check
 pnpm build
 ```
 
-Codex から実行する場合も、まずこの3つを基準にする。
+`pnpm check` は `lint` と `typecheck` の軽量確認用。
+本番相当の確認は `pnpm build` を分けて実行する。
+Codex から実行する場合も、まずこのコマンド群を基準にする。
 Turbopack / Next.js の build が sandbox の port bind 制限で失敗する場合は、同じ `pnpm build` を通常権限で再実行する。
 
 Hero 用ブラックホール素材を再生成する場合:

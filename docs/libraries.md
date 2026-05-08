@@ -1,6 +1,6 @@
 # Libraries
 
-最終更新: 2026-05-07
+最終更新: 2026-05-09
 
 このドキュメントは、ポートフォリオ刷新で使うライブラリの役割と使い分けをまとめる場所です。
 実装時は「何でも入れる」のではなく、表現したい体験に対して最小限の組み合わせを選びます。
@@ -10,6 +10,7 @@
 ```bash
 pnpm add @base-ui/react @gsap/react animejs embla-carousel-react gsap lenis lucide-react shadcn
 pnpm add class-variance-authority clsx tailwind-merge tw-animate-css
+pnpm add -D eslint-plugin-unused-imports
 ```
 
 Python 側の生成ツールは `uv` と `pyproject.toml` で管理する。
@@ -102,6 +103,14 @@ uv run python tools/generate_hero_blackhole.py
 - 方針: 生成スクリプトは `tools/generate_hero_blackhole.py` に置き、出力は `public/assets/hero/generated/` に置く
 - 注意: 生成物は表示に必要なため commit 対象。`.venv/` は commit しない
 
+### ESLint unused imports
+
+- Package: `eslint-plugin-unused-imports`
+- 用途: 未使用 import の検出
+- 現状: `eslint.config.mjs` で `unused-imports/no-unused-imports` を error にする
+- 方針: Next.js 標準の lint 構成を維持し、明確な品質ルールだけを最小追加する
+- 注意: import order や format の厳格化は別タスクで判断する
+
 ### pretext
 
 - Repo: https://github.com/chenglou/pretext
@@ -120,6 +129,7 @@ uv run python tools/generate_hero_blackhole.py
 - Modal primitive: Base UI Dialog
 - Project media carousel: shadcn style carousel + Embla
 - Generated hero assets: Pillow
+- Unused import cleanup: `eslint-plugin-unused-imports`
 - Dynamic text measurement experiment: pretext（未導入）
 
 複数ライブラリを同じ場所に重ねる場合は、担当する property と lifecycle を明確に分けます。

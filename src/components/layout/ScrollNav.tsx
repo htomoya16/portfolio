@@ -1,16 +1,22 @@
 'use client'
 
 import { scrollNavCopy, scrollNavLinks } from '@/content/site/navigation'
+import { useActiveSection } from '@/hooks/use-active-section'
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import gsap from 'gsap'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 type SectionId = (typeof scrollNavLinks)[number]['id']
+const sectionIds = scrollNavLinks.map(({ id }) => id)
 
 export default function ScrollNav() {
-  const [active, setActive] = useState<SectionId>('hero')
+  const active = useActiveSection<SectionId>(sectionIds, 'hero')
+  const prefersReducedMotion = usePrefersReducedMotion()
   const dotsRef = useRef<Record<string, HTMLSpanElement | null>>({})
 
   useEffect(() => {
+    if (prefersReducedMotion) return
+
     const el = dotsRef.current[active]
     if (!el) return
     gsap.fromTo(
@@ -18,32 +24,12 @@ export default function ScrollNav() {
       { scale: 1 },
       { scale: 1.7, duration: 0.18, ease: 'power2.out', yoyo: true, repeat: 1 }
     )
-  }, [active])
-
-  useEffect(() => {
-    const update = () => {
-      const mid = window.scrollY + window.innerHeight * 0.5
-      let best: SectionId = scrollNavLinks[0].id
-      let minDist = Infinity
-
-      for (const { id } of scrollNavLinks) {
-        const el = document.getElementById(id)
-        if (!el) continue
-        const top = window.scrollY + el.getBoundingClientRect().top
-        const dist = Math.abs(top + el.offsetHeight * 0.5 - mid)
-        if (dist < minDist) { minDist = dist; best = id }
-      }
-
-      setActive(best)
-    }
-
-    update()
-    window.addEventListener('scroll', update, { passive: true })
-    return () => window.removeEventListener('scroll', update)
-  }, [])
+  }, [active, prefersReducedMotion])
 
   const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    document.getElementById(id)?.scrollIntoView({
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+    })
   }
 
   return (
