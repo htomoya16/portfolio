@@ -1,7 +1,8 @@
 // Server component
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
-import { contactCopy, contactLinks, contactStats } from '@/content/site/contact'
+import { contactCopy, contactLinks } from '@/content/site/contact'
+import { getGitHubStats } from '@/lib/github-stats'
 import Image from 'next/image'
 
 function ContactIcon({ type, icon }: { type: string; icon?: string }) {
@@ -57,7 +58,27 @@ function ContactIcon({ type, icon }: { type: string; icon?: string }) {
   )
 }
 
-export default function ContactSection() {
+export default async function ContactSection() {
+  const gh = await getGitHubStats()
+
+  const stats = [
+    {
+      label: 'COMMITS',
+      pct: gh ? Math.min(Math.round(gh.totalContributions / 15), 100) : 80,
+      display: gh ? String(gh.totalContributions) : '500+',
+    },
+    {
+      label: 'REPOS',
+      pct: gh ? Math.min(gh.publicRepos * 5, 100) : 60,
+      display: gh ? String(gh.publicRepos) : '8',
+    },
+    {
+      label: 'STREAK',
+      pct: gh ? Math.min(gh.longestStreak, 100) : 40,
+      display: gh ? `${gh.longestStreak}d` : '—',
+    },
+  ]
+
   return (
     <section className="contact" id="contact">
       <Atmo variant="e" tone="warm" />
@@ -91,7 +112,7 @@ export default function ContactSection() {
 
           {/* stats — plain text, bar starts at 0 width, MotionProvider animates on hover */}
           <div className="ct-stats">
-            {contactStats.map((stat) => (
+            {stats.map((stat) => (
               <div key={stat.label} className="ct-stat-row" data-pct={stat.pct} data-display={stat.display}>
                 <span className="ct-stat-label mono">{stat.label}</span>
                 <span className="ct-stat-bar">
