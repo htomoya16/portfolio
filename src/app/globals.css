@@ -1717,7 +1717,7 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr) 34px;
-  align-items: start;
+  align-items: center;
   gap: 8px;
   margin-top: auto;
   padding-bottom: 18px;
@@ -1740,7 +1740,7 @@ a { color: inherit; text-decoration: none; }
   opacity: 0.38;
 }
 .pm-thumb-nav .pm-carousel-btn {
-  margin-top: 23px;
+  margin-top: 0;
 }
 .pm-carousel-index {
   position: absolute;
