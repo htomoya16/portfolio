@@ -1393,10 +1393,11 @@ a { color: inherit; text-decoration: none; }
 }
 .pm-title-actions {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
   flex: 0 0 auto;
+  min-width: 120px;
 }
 .pm-title {
   flex: 1; min-width: 0;
@@ -1916,7 +1917,7 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 14px;
 }
 .pm-title-row {
-  align-items: center;
+  align-items: flex-start;
   gap: 22px;
   margin-bottom: 12px;
 }
