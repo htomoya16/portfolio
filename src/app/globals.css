@@ -1025,8 +1025,9 @@ a { color: inherit; text-decoration: none; }
 .ex-cb.tr { top: 6px; right: 6px; border-top: 1.6px solid var(--blue); border-right: 1.6px solid var(--blue); }
 .ex-cb.bl { bottom: 6px; left: 6px; border-bottom: 1.6px solid var(--blue); border-left: 1.6px solid var(--blue); }
 .ex-cb.br { bottom: 6px; right: 6px; border-bottom: 1.6px solid var(--blue); border-right: 1.6px solid var(--blue); }
-.exp-card-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 10px; }
-.exp-date { display: block; font-size: 11px; color: var(--blue); letter-spacing: 0.22em; font-weight: 500; min-width: 0; margin-bottom: 10px; }
+.exp-card-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 14px; }
+.exp-card-head-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.exp-date { font-size: 11px; color: var(--blue); letter-spacing: 0.22em; font-weight: 500; min-width: 0; white-space: nowrap; }
 .exp-badge { font-family: var(--font-press-start-2p), monospace; font-size: 9px; color: #fff; padding: 7px 10px; letter-spacing: 0.08em; line-height: 1; display: inline-flex; align-items: center; justify-content: center; min-height: 24px; flex: 0 0 auto; }
 .exp-badge.t-blue { background: var(--blue); }
 .exp-badge.t-lime { background: #FFC933; color: var(--ink); }
