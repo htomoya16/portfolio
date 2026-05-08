@@ -254,36 +254,33 @@ function ProjectMediaCarousel({ project }, ref) {
           ))}
         </CarouselContent>
         {media.length > 1 && (
-          <div className="pm-carousel-controls">
+          <div className="pm-thumb-nav">
             <CarouselPrevious className="pm-carousel-btn pm-carousel-prev" aria-label="Previous media" />
+            <div className="pm-thumb-strip" aria-label="Media thumbnails" ref={thumbStripRef}>
+              {media.map((item, index) => (
+                <button
+                  type="button"
+                  key={`${item.src}-thumb-${index}`}
+                  className="pm-thumb-btn"
+                  aria-current={selectedIndex === index ? 'true' : undefined}
+                  aria-label={`Show media ${index + 1}: ${item.alt}`}
+                  ref={(node) => { thumbRefs.current[index] = node }}
+                  onClick={() => api?.scrollTo(index)}
+                >
+                  <span className={`pm-thumb-frame${getOrientationClass(item)}`}>
+                    <ThumbFrame item={item} />
+                  </span>
+                  <span className="pm-thumb-num">{String(index + 1).padStart(2, '0')}</span>
+                </button>
+              ))}
+            </div>
+            <CarouselNext className="pm-carousel-btn pm-carousel-next" aria-label="Next media" />
             <span className="pm-carousel-index" aria-live="polite">
               {String(selectedIndex + 1).padStart(2, '0')} / {String(media.length).padStart(2, '0')}
             </span>
-            <CarouselNext className="pm-carousel-btn pm-carousel-next" aria-label="Next media" />
           </div>
         )}
       </Carousel>
-
-      {media.length > 1 && (
-        <div className="pm-thumb-strip" aria-label="Media thumbnails" ref={thumbStripRef}>
-          {media.map((item, index) => (
-            <button
-              type="button"
-              key={`${item.src}-thumb-${index}`}
-              className="pm-thumb-btn"
-              aria-current={selectedIndex === index ? 'true' : undefined}
-              aria-label={`Show media ${index + 1}: ${item.alt}`}
-              ref={(node) => { thumbRefs.current[index] = node }}
-              onClick={() => api?.scrollTo(index)}
-            >
-              <span className={`pm-thumb-frame${getOrientationClass(item)}`}>
-                <ThumbFrame item={item} />
-              </span>
-              <span className="pm-thumb-num">{String(index + 1).padStart(2, '0')}</span>
-            </button>
-          ))}
-        </div>
-      )}
 
       {expanded && expanded.type === 'image' && createPortal(
         <div
