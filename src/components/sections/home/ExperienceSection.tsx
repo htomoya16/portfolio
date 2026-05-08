@@ -57,10 +57,8 @@ export default function ExperienceSection() {
                 <span className="ex-cb br" />
                 {/* plain text — MotionProvider adds scramble on exp-card hover */}
                 <div className="exp-card-head">
-                  <div className="exp-card-head-left">
-                    <span className={`exp-badge t-${exp.tone}`}>{exp.badge}</span>
-                    <span className="exp-date mono">{exp.date}</span>
-                  </div>
+                  <span className={`exp-badge t-${exp.tone}`}>{exp.badge}</span>
+                  <span className="exp-date mono">{exp.date}</span>
                   {exp.links && exp.links.length > 0 && (
                     <div className="exp-links" aria-label={`${exp.title} related links`}>
                       {exp.links.map((link) => (
