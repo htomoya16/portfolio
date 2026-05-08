@@ -1648,8 +1648,12 @@ a { color: inherit; text-decoration: none; }
 }
 .pm-carousel-item {
   padding-left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .pm-media-card {
+  width: 100%;
   filter: none;
   transform: none;
 }
