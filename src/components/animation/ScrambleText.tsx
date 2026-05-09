@@ -1,5 +1,6 @@
 'use client'
 
+import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import { animate, scrambleText } from 'animejs'
 import { type ComponentPropsWithoutRef, type ElementType, useEffect, useRef } from 'react'
 
@@ -55,8 +56,7 @@ export default function ScrambleText<T extends ElementType = 'span'>({
     const el = ref.current
     if (!el) return
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReducedMotion) {
+    if (getPrefersReducedMotion()) {
       el.textContent = text
       return
     }

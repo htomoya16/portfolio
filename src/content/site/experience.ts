@@ -77,11 +77,11 @@ export const experiences: ExperienceItem[] = [
     desc: '学業や研究と並行しながら、4か月で両試験に一発合格。試験日から逆算して学習計画を立て、Hack Uと重なる時期も優先順位を調整しながら取り組んだ。',
     links: [
       {
-        label: '基本情報',
+        label: 'Qiita 基本情報',
         href: 'https://qiita.com/htomoya16/items/0c69735a988c0e341db0',
       },
       {
-        label: '応用情報',
+        label: 'Qiita 応用情報',
         href: 'https://qiita.com/htomoya16/items/2f4fb2588bc03c519ce7',
       },
     ],

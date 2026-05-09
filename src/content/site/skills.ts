@@ -1,8 +1,8 @@
 export const skillsCopy = {
   sectionNumber: '// 02',
   sectionTitle: 'SKILLS',
-  kicker: 'BACKEND-CENTERED LEARNING MAP',
-  lead: 'バックエンドを中心に学習と個人開発を進めています。全体的に経験がまだ浅く、実務経験もないため、実務レベルの設計・運用・改善判断はこれから積み上げる領域だと認識しています。特にバックエンド領域で経験を重ね、信頼できる実装力へ伸ばしていきたいです。',
+  kicker: 'BACKEND-CENTERED GROWTH',
+  lead: '個人開発では、バックエンドを中心にWebアプリケーションを支える仕組みを学んできました。授業や卒業研究では、Unityを用いたVRアプリケーション実装やマイコン制御に取り組み、ソフトウェアとハードウェアの両面からものづくりを経験しました。この経験を強みとして、今後はバックエンドの実務経験を重ね、設計・運用・改善まで見据えた専門性を高めていきたいです。',
   note: 'レベルは上記基準に基づく自己評価です。実務経験を示すものではなく、現時点での学習・個人開発・研究での使用感を整理しています。',
   levelGuideLabel: 'Skill level definitions',
   countSuffix: 'SKILLS',
@@ -40,8 +40,8 @@ export const skillCategories: SkillCategory[] = [
       { name: 'C', level: 2, iconSrc: '/assets/icons/skills/c.svg' },
       { name: 'Java', level: 1.3, iconSrc: '/assets/icons/skills/java.svg' },
       { name: 'PHP', level: 0.5, iconSrc: '/assets/icons/skills/php.svg' },
-      { name: 'HTML', level: 3, iconSrc: '/assets/icons/skills/html5.svg' },
-      { name: 'CSS', level: 3, iconSrc: '/assets/icons/skills/css3.svg' },
+      { name: 'HTML', level: 2.6, iconSrc: '/assets/icons/skills/html5.svg' },
+      { name: 'CSS', level: 2.6, iconSrc: '/assets/icons/skills/css3.svg' },
     ],
   },
   {
@@ -81,7 +81,7 @@ export const skillCategories: SkillCategory[] = [
       { name: 'Unity', level: 3.5, iconSrc: '/assets/icons/skills/unity-svgrepo-com.svg' },
       { name: 'Raspberry Pi', level: 3.6, iconSrc: '/assets/icons/skills/raspberry-pi.svg' },
       { name: 'Codex', level: 3.4, iconSrc: '/assets/icons/skills/codex.svg' },
-      { name: 'Claude Code', level: 3, iconSrc: '/assets/icons/skills/claude-code.svg' },
+      { name: 'Claude Code', level: 3.2, iconSrc: '/assets/icons/skills/claude-code.svg' },
     ],
   },
 ]

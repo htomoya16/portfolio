@@ -18,6 +18,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import type { Project, ProjectMedia } from '@/content/site/projects'
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 
 interface ProjectMediaCarouselProps {
   project: Project
@@ -110,6 +111,7 @@ function ThumbFrame({ item }: { item: ProjectMedia }) {
 const ProjectMediaCarousel = forwardRef<HTMLDivElement, ProjectMediaCarouselProps>(
 function ProjectMediaCarousel({ project }, ref) {
   const media = project.media ?? []
+  const prefersReducedMotion = usePrefersReducedMotion()
   const [api, setApi] = useState<CarouselApi>()
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
@@ -143,9 +145,9 @@ function ProjectMediaCarousel({ project }, ref) {
     const targetLeft = selectedThumb.offsetLeft - (strip.clientWidth - selectedThumb.clientWidth) / 2
     strip.scrollTo({
       left: Math.max(0, targetLeft),
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
     })
-  }, [selectedIndex])
+  }, [prefersReducedMotion, selectedIndex])
 
   useEffect(() => {
     if (!api) return
@@ -252,36 +254,33 @@ function ProjectMediaCarousel({ project }, ref) {
           ))}
         </CarouselContent>
         {media.length > 1 && (
-          <div className="pm-carousel-controls">
+          <div className="pm-thumb-nav">
             <CarouselPrevious className="pm-carousel-btn pm-carousel-prev" aria-label="Previous media" />
+            <div className="pm-thumb-strip" aria-label="Media thumbnails" ref={thumbStripRef}>
+              {media.map((item, index) => (
+                <button
+                  type="button"
+                  key={`${item.src}-thumb-${index}`}
+                  className="pm-thumb-btn"
+                  aria-current={selectedIndex === index ? 'true' : undefined}
+                  aria-label={`Show media ${index + 1}: ${item.alt}`}
+                  ref={(node) => { thumbRefs.current[index] = node }}
+                  onClick={() => api?.scrollTo(index)}
+                >
+                  <span className={`pm-thumb-frame${getOrientationClass(item)}`}>
+                    <ThumbFrame item={item} />
+                  </span>
+                  <span className="pm-thumb-num">{String(index + 1).padStart(2, '0')}</span>
+                </button>
+              ))}
+            </div>
+            <CarouselNext className="pm-carousel-btn pm-carousel-next" aria-label="Next media" />
             <span className="pm-carousel-index" aria-live="polite">
               {String(selectedIndex + 1).padStart(2, '0')} / {String(media.length).padStart(2, '0')}
             </span>
-            <CarouselNext className="pm-carousel-btn pm-carousel-next" aria-label="Next media" />
           </div>
         )}
       </Carousel>
-
-      {media.length > 1 && (
-        <div className="pm-thumb-strip" aria-label="Media thumbnails" ref={thumbStripRef}>
-          {media.map((item, index) => (
-            <button
-              type="button"
-              key={`${item.src}-thumb-${index}`}
-              className="pm-thumb-btn"
-              aria-current={selectedIndex === index ? 'true' : undefined}
-              aria-label={`Show media ${index + 1}: ${item.alt}`}
-              ref={(node) => { thumbRefs.current[index] = node }}
-              onClick={() => api?.scrollTo(index)}
-            >
-              <span className={`pm-thumb-frame${getOrientationClass(item)}`}>
-                <ThumbFrame item={item} />
-              </span>
-              <span className="pm-thumb-num">{String(index + 1).padStart(2, '0')}</span>
-            </button>
-          ))}
-        </div>
-      )}
 
       {expanded && expanded.type === 'image' && createPortal(
         <div

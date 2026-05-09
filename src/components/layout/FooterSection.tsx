@@ -12,7 +12,7 @@ export default function FooterSection() {
       <span className="footer-left">© {currentYear} htomoya16</span>
       <div className="footer-mid">
         <span className="bullet">■</span>
-        CRAFTED WITH CODE &amp; PIXEL
+        KEEP LEVELING UP
       </div>
       <button className="back-top" onClick={handleBackToTop} type="button" aria-label="Scroll back to top">
         <span className="arrow-box" aria-hidden="true">↑</span>

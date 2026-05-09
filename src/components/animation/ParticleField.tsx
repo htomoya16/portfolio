@@ -1,5 +1,6 @@
 'use client'
 
+import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import gsap from 'gsap'
 import { useEffect, useRef, useState } from 'react'
 
@@ -58,8 +59,7 @@ export default function ParticleField({ count = 12 }: ParticleFieldProps) {
     const root = containerRef.current
     if (!root || particles.length === 0) return
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReducedMotion) return
+    if (getPrefersReducedMotion()) return
 
     const els = root.querySelectorAll<HTMLElement>('.particle')
     const tweens: gsap.core.Tween[] = []
