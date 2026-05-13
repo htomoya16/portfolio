@@ -86,27 +86,27 @@ export const projects: Project[] = [
     techReasons: [
       {
         name: 'Python / FastAPI',
-        reason: 'Wake-on-LAN、PC管理、操作ログ、稼働時間集計などのAPIを短期間で実装するために採用しました。',
+        reason: '開発スピードを重視し、APIを素早く実装するため。',
       },
       {
         name: 'React / Vite',
-        reason: 'スマートフォンやPCから利用できる管理画面を軽量に構築し、状態確認や操作ログを見やすく表示するために採用しました。',
+        reason: 'フロントエンド開発を学習しながら、管理画面を構築するため。',
       },
       {
         name: 'SQLite',
-        reason: '個人利用のデータ量に対して十分で、Raspberry Pi上でも軽量に扱えるために採用しました。',
+        reason: '個人利用のデータ量に適しており、軽量に扱えるため。',
       },
       {
         name: 'Raspberry Pi',
-        reason: '自宅LAN内で常時稼働できる低消費電力サーバーとして使うために採用しました。',
+        reason: '自宅LAN内で常時稼働できる低消費電力サーバーとして使うため。',
       },
       {
         name: 'nginx',
-        reason: '画面配信とAPI連携を安定して行い、VPN経由の利用でも扱いやすい構成にするために採用しました。',
+        reason: '画面配信とAPI連携を安定して行うため。',
       },
       {
         name: 'GitHub Actions',
-        reason: 'テスト・ビルド・デプロイを自動化し、Raspberry Pi側の負荷を抑えながら継続運用するために採用しました。',
+        reason: 'テスト・ビルド・デプロイを自動化するため。',
       },
     ],
     previewImage: {
@@ -192,20 +192,6 @@ export const projects: Project[] = [
     longDesc:
       'SNS上に散らばるライブ、イベント、グッズ、配信などの情報を取得し、カレンダーへ反映することで推し活の予定管理を支援するハッカソン開発プロジェクト。',
     tags: ['Go', 'Echo', 'MySQL', 'Docker'],
-    techReasons: [
-      {
-        name: 'Go / Echo',
-        reason: 'ハッカソン内でAPIをシンプルに実装し、Handler、Service、Repositoryの流れを理解しながらバックエンドを構築するために採用しました。',
-      },
-      {
-        name: 'MySQL',
-        reason: '推し、イベント、カテゴリなどの関連データを扱い、JOINでカレンダー表示に必要な情報をまとめて取得するために採用しました。',
-      },
-      {
-        name: 'Docker',
-        reason: 'チーム開発で環境差異を減らし、短期間でもバックエンドとデータベースを扱いやすくするために採用しました。',
-      },
-    ],
     previewImage: {
       src: '/assets/projects/Lovender/pages/lovender-page-01.png',
       alt: 'Lovender slide deck cover preview',
@@ -270,23 +256,23 @@ export const projects: Project[] = [
     techReasons: [
       {
         name: 'Unity / C#',
-        reason: '仮想空間の手モデル、ピアノ、鍵盤との接触判定、触覚制御を一体として実装するために採用しました。',
+        reason: '仮想空間の手モデル・ピアノ・触覚制御を実装するため。',
       },
       {
         name: 'ESP32',
-        reason: 'グローブ型デバイスに組み込みやすい小型マイコンとして、センサ入力とモータ制御を扱うために採用しました。',
+        reason: '小型でグローブ型デバイスに組み込みやすいため。',
       },
       {
         name: 'ポテンショメータ',
-        reason: '指の曲がり具合を取得し、仮想空間上の手モデルや触覚提示に反映するために採用しました。',
+        reason: '指の曲がり具合を取得するため。',
       },
       {
         name: 'サーボモータ',
-        reason: '鍵盤を押し込む感覚に近い反応を指先へ返し、一定ではない触覚提示を行うために採用しました。',
+        reason: '鍵盤を押し込む感覚を指先へ返すため。',
       },
       {
         name: '3Dプリンタ',
-        reason: 'グローブ型デバイスの部品を試作し、装着状態や指の動きに合わせて調整するために採用しました。',
+        reason: 'グローブ型デバイスの部品を作成するため。',
       },
     ],
     previewImage: {
@@ -313,7 +299,7 @@ export const projects: Project[] = [
       {
         type: 'image',
         src: '/assets/projects/hapticpiano/hapticpiano3.png',
-        orientation: 'portrait',
+        orientation: 'landscape',
         alt: 'Haptic Piano glove device image 1',
         caption: 'グローブ型デバイスと仮想ピアノの構成',
       },
@@ -390,19 +376,23 @@ export const projects: Project[] = [
     techReasons: [
       {
         name: 'Go / Echo',
-        reason: 'Discord Botと連携するバックエンド処理、API、対戦履歴の取得・集計処理をシンプルに実装するために採用しました。',
+        reason: 'バックエンド開発を学習しながら、APIとデータ集計処理を実装するため。',
+      },
+      {
+        name: 'Echo',
+        reason: 'GoでAPIやルーティングをシンプルに実装し、Discord Botの処理と連携しやすくするため。',
       },
       {
         name: 'PostgreSQL',
-        reason: '取得した対戦履歴を保存し、相手別勝率や直近成績として再利用・集計しやすくするために採用しました。',
+        reason: 'Heroku Postgresと連携しやすいため。',
       },
       {
         name: 'Docker',
-        reason: 'Bot本体とデータベースをまとめて管理し、ローカル開発時の環境差異を減らすために採用しました。',
+        reason: 'Bot本体とデータベースをまとめて管理し、開発環境の差異を減らすため。',
       },
       {
         name: 'Heroku',
-        reason: '環境変数やデータベース接続を管理しながら、Discordサーバー上で継続的に利用できるようにするために採用しました。',
+        reason: 'クラウド環境へのデプロイや環境変数管理を学習し、個人開発でも低コストで運用しやすくするため。',
       },
     ],
     previewImage: {
