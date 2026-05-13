@@ -73,6 +73,10 @@ const TECH_ICON_MAP: Record<string, string> = {
   Echo: '/assets/icons/skills/echo.png',
   MySQL: '/assets/icons/skills/mysql.svg',
   SQLite: '/assets/icons/skills/SQLite.svg',
+  ESP32: '/assets/icons/misc/esp32.svg',
+  ポテンショメータ: '/assets/icons/misc/sensor.svg',
+  サーボモータ: '/assets/icons/misc/servo.svg',
+  '3Dプリンタ': '/assets/icons/misc/3d-print.svg',
   Git: '/assets/icons/skills/git.svg',
   GitHub: '/assets/icons/skills/github-dark.svg',
   'GitHub Actions': '/assets/icons/skills/GitHub%20Actions.svg',
@@ -82,6 +86,18 @@ const TECH_ICON_MAP: Record<string, string> = {
   Unity: '/assets/icons/skills/unity-svgrepo-com.svg',
   'C#': '/assets/icons/skills/c-sharp.svg',
   'Raspberry Pi': '/assets/icons/skills/raspberry-pi.svg',
+}
+
+function ParagraphText({ text, className }: { text: string; className: string }) {
+  const paragraphs = text.split(/\n+/).map((paragraph) => paragraph.trim()).filter(Boolean)
+
+  return (
+    <div className={`${className} pm-text-block`}>
+      {paragraphs.map((paragraph, index) => (
+        <p key={index}>{paragraph}</p>
+      ))}
+    </div>
+  )
 }
 
 function ProjectIcon({ src, className = 'pm-section-icon-img' }: { src: string; className?: string }) {
@@ -414,6 +430,25 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                       />
                     </a>
                   )}
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pm-github-link pm-resource-link"
+                      aria-label={`Open related page for ${project.title}`}
+                    >
+                      {project.liveLabel ?? 'Link'}
+                      <Image
+                        src={`${PROJECT_ICON_BASE}/link-external.svg`}
+                        alt=""
+                        width={14}
+                        height={14}
+                        aria-hidden="true"
+                        className="pm-external-icon"
+                      />
+                    </a>
+                  )}
                   {project.demoUrl && (
                     <a
                       href={project.demoUrl}
@@ -455,7 +490,7 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                   <ProjectIcon src={PROJECT_SECTION_ICONS.background} />
                   {projectModalCopy.sections.background}
                 </h3>
-                <p className="pm-section-body">{project.background}</p>
+                <ParagraphText className="pm-section-body" text={project.background} />
               </div>
             )}
 
@@ -466,7 +501,7 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                   <ProjectIcon src={PROJECT_SECTION_ICONS.devContent} />
                   {projectModalCopy.sections.devContent}
                 </h3>
-                <p className="pm-section-body">{project.devContent}</p>
+                <ParagraphText className="pm-section-body" text={project.devContent} />
               </div>
             )}
 
@@ -498,6 +533,19 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                   )
                 })}
               </div>
+              {project.techReasons && project.techReasons.length > 0 && (
+                <div className="pm-tech-reasons">
+                  <h4 className="pm-tech-reasons-title">{projectModalCopy.sections.techReasons}</h4>
+                  <ul className="pm-tech-reasons-list">
+                    {project.techReasons.map((item) => (
+                      <li key={item.name} className="pm-tech-reason-item">
+                        <span className="pm-tech-reason-name">{item.name}</span>
+                        <span className="pm-tech-reason-text">{item.reason}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             {/* ── 工夫した点 ── */}
@@ -533,14 +581,14 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                           <ProjectIcon src={`${PROJECT_ICON_BASE}/Issue.svg`} className="pm-challenge-icon" />
                           {projectModalCopy.challengeLabels.problem}
                         </span>
-                        {c.problem}
+                        <ParagraphText className="pm-challenge-copy" text={c.problem} />
                       </div>
                       <div className="pm-challenge-solution">
                         <span className="pm-challenge-label pm-challenge-label-sol">
                           <ProjectIcon src={`${PROJECT_ICON_BASE}/solution.svg`} className="pm-challenge-icon" />
                           {projectModalCopy.challengeLabels.solution}
                         </span>
-                        {c.solution}
+                        <ParagraphText className="pm-challenge-copy" text={c.solution} />
                       </div>
                     </div>
                   ))}
