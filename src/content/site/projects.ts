@@ -82,7 +82,7 @@ export const projects: Project[] = [
     desc: '外出先からVPN経由で自宅PCを安全に起動・管理するWebダッシュボード',
     longDesc:
       'Raspberry Piを自宅LAN内の管理サーバーとして使い、外出先からVPN経由でPCの起動、状態確認、操作履歴、稼働時間を確認できるようにした個人開発プロジェクト。',
-    tags: ['Python', 'FastAPI', 'React', 'Vite', 'SQLite', 'Raspberry Pi', 'nginx', 'GitHub Actions'],
+    tags: ['Python', 'FastAPI', 'React', 'Vite', 'SQLite', 'Raspberry Pi', 'Wake-on-LAN', 'nginx', 'GitHub Actions'],
     techReasons: [
       {
         name: 'Python / FastAPI',
@@ -175,7 +175,7 @@ export const projects: Project[] = [
     ],
     learnings: [
       'フロントエンド、バックエンド、データベース、認証、デプロイ、運用まで含めたフルスタック開発の流れ。',
-      'CRUDを意識したAPI設計、データベース設計、API仕様・ER図などの設計ドキュメント作成。',
+      'CRUDを意識したAPI設計、データベース設計、API仕様・ER図などの設計ドキュメント作成の重要性。',
       'Linuxを用いた自宅サーバー構築・運用の基礎。',
       'APIトークン認証、権限制御、VPN前提のネットワーク構成。',
       'GitHub Actionsを用いたCI/CDと、Hosted runner / self-hosted runnerの役割分担。',
@@ -252,7 +252,7 @@ export const projects: Project[] = [
     desc: '仮想空間でピアノの鍵盤を押す感覚を再現するXR・ハプティック卒業研究',
     longDesc:
       'グローブ型デバイス、仮想空間アプリケーション、通信処理を組み合わせ、仮想ピアノ演奏で鍵盤を押し込む感覚を再現する研究プロジェクト。',
-    tags: ['Unity', 'C#', 'ESP32', 'ポテンショメータ', 'サーボモータ', '3Dプリンタ'],
+    tags: ['Unity', 'C#', 'Meta Quest 2', 'ESP32', 'ポテンショメータ', 'サーボモータ', '3Dプリンタ'],
     techReasons: [
       {
         name: 'Unity / C#',
@@ -367,7 +367,7 @@ export const projects: Project[] = [
     learnings: [
       '既存技術を活用しつつ、処理経路を理解して課題を切り分ける力。',
       'ハードウェア、ソフトウェア、通信を統合したシステム設計。',
-      '触覚提示の制御方法を仮説検証しながら改善する進め方。',
+      '通りに動かない原因を処理経路ごとに分解し、実装と検証を繰り返しながら改善する力。',
       '3Dプリンタ、センサ、サーボモータ、ESP32を用いたデバイス構築。',
       'Unityを用いたXRアプリケーション実装と外部デバイス連携。',
       '評価実験を通じて操作感の改善を確認する研究開発の流れ。',
