@@ -73,6 +73,8 @@ const TECH_ICON_MAP: Record<string, string> = {
   Echo: '/assets/icons/skills/echo.png',
   MySQL: '/assets/icons/skills/mysql.svg',
   SQLite: '/assets/icons/skills/SQLite.svg',
+  'Wake-on-LAN': '/assets/icons/misc/power.svg',
+  'Meta Quest 2': '/assets/icons/misc/vr.svg',
   ESP32: '/assets/icons/misc/esp32.svg',
   ポテンショメータ: '/assets/icons/misc/sensor.svg',
   サーボモータ: '/assets/icons/misc/servo.svg',

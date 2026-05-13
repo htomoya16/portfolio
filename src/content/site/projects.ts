@@ -82,7 +82,7 @@ export const projects: Project[] = [
     desc: '外出先からVPN経由で自宅PCを安全に起動・管理するWebダッシュボード',
     longDesc:
       'Raspberry Piを自宅LAN内の管理サーバーとして使い、外出先からVPN経由でPCの起動、状態確認、操作履歴、稼働時間を確認できるようにした個人開発プロジェクト。',
-    tags: ['Python', 'FastAPI', 'React', 'Vite', 'SQLite', 'Raspberry Pi', 'nginx', 'GitHub Actions'],
+    tags: ['Python', 'FastAPI', 'React', 'Vite', 'SQLite', 'Raspberry Pi', 'Wake-on-LAN', 'nginx', 'GitHub Actions'],
     techReasons: [
       {
         name: 'Python / FastAPI',
@@ -252,7 +252,7 @@ export const projects: Project[] = [
     desc: '仮想空間でピアノの鍵盤を押す感覚を再現するXR・ハプティック卒業研究',
     longDesc:
       'グローブ型デバイス、仮想空間アプリケーション、通信処理を組み合わせ、仮想ピアノ演奏で鍵盤を押し込む感覚を再現する研究プロジェクト。',
-    tags: ['Unity', 'C#', 'ESP32', 'ポテンショメータ', 'サーボモータ', '3Dプリンタ'],
+    tags: ['Unity', 'C#', 'Meta Quest 2', 'ESP32', 'ポテンショメータ', 'サーボモータ', '3Dプリンタ'],
     techReasons: [
       {
         name: 'Unity / C#',
