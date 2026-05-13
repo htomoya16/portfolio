@@ -298,6 +298,13 @@ export const projects: Project[] = [
       },
       {
         type: 'image',
+        src: '/assets/projects/hapticpiano/hapticpiano-preview.jpg',
+        orientation: 'landscape',
+        alt: 'Haptic Piano glove device preview',
+        caption: 'グローブ型デバイスの外観',
+      },
+      {
+        type: 'image',
         src: '/assets/projects/hapticpiano/hapticpiano3.png',
         orientation: 'landscape',
         alt: 'Haptic Piano glove device image 1',
