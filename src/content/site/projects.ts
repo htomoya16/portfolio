@@ -386,10 +386,6 @@ export const projects: Project[] = [
         reason: 'バックエンド開発を学習しながら、APIとデータ集計処理を実装するため。',
       },
       {
-        name: 'Echo',
-        reason: 'GoでAPIやルーティングをシンプルに実装し、Discord Botの処理と連携しやすくするため。',
-      },
-      {
         name: 'PostgreSQL',
         reason: 'Heroku Postgresと連携しやすいため。',
       },
