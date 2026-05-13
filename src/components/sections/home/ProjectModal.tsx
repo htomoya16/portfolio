@@ -73,10 +73,10 @@ const TECH_ICON_MAP: Record<string, string> = {
   Echo: '/assets/icons/skills/echo.png',
   MySQL: '/assets/icons/skills/mysql.svg',
   SQLite: '/assets/icons/skills/SQLite.svg',
-  ESP32: '/assets/icons/skills/tools-devops-others.svg',
-  ポテンショメータ: '/assets/icons/skills/tools-devops-others.svg',
-  サーボモータ: '/assets/icons/skills/tools-devops-others.svg',
-  '3Dプリンタ': '/assets/icons/skills/tools-devops-others.svg',
+  ESP32: '/assets/icons/misc/esp32.svg',
+  ポテンショメータ: '/assets/icons/misc/sensor.svg',
+  サーボモータ: '/assets/icons/misc/servo.svg',
+  '3Dプリンタ': '/assets/icons/misc/3d-print.svg',
   Git: '/assets/icons/skills/git.svg',
   GitHub: '/assets/icons/skills/github-dark.svg',
   'GitHub Actions': '/assets/icons/skills/GitHub%20Actions.svg',
@@ -438,14 +438,6 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                       className="pm-github-link pm-resource-link"
                       aria-label={`Open related page for ${project.title}`}
                     >
-                      <Image
-                        src={`${PROJECT_ICON_BASE}/link-external.svg`}
-                        alt=""
-                        width={18}
-                        height={18}
-                        aria-hidden="true"
-                        className="pm-resource-icon"
-                      />
                       {project.liveLabel ?? 'Link'}
                       <Image
                         src={`${PROJECT_ICON_BASE}/link-external.svg`}
@@ -541,6 +533,19 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                   )
                 })}
               </div>
+              {project.techReasons && project.techReasons.length > 0 && (
+                <div className="pm-tech-reasons">
+                  <h4 className="pm-tech-reasons-title">{projectModalCopy.sections.techReasons}</h4>
+                  <ul className="pm-tech-reasons-list">
+                    {project.techReasons.map((item) => (
+                      <li key={item.name} className="pm-tech-reason-item">
+                        <span className="pm-tech-reason-name">{item.name}</span>
+                        <span className="pm-tech-reason-text">{item.reason}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             {/* ── 工夫した点 ── */}

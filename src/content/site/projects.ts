@@ -22,12 +22,18 @@ export type ProjectPreviewImage = {
   fit?: 'cover' | 'contain'
 }
 
+export type ProjectTechReason = {
+  name: string
+  reason: string
+}
+
 export interface Project {
   num: string
   title: string
   desc: string
   longDesc?: string
   tags: string[]
+  techReasons?: ProjectTechReason[]
   previewImage?: ProjectPreviewImage
   media?: ProjectMedia[]
   role?: string
@@ -58,6 +64,7 @@ export const projectModalCopy = {
     background: '開発背景',
     devContent: '開発内容',
     techStack: '技術スタック',
+    techReasons: '技術選定の理由',
     highlights: '工夫した点',
     challenges: '苦労した点と解決',
     learnings: '学び',
@@ -76,6 +83,32 @@ export const projects: Project[] = [
     longDesc:
       'Raspberry Piを自宅LAN内の管理サーバーとして使い、外出先からVPN経由でPCの起動、状態確認、操作履歴、稼働時間を確認できるようにした個人開発プロジェクト。',
     tags: ['Python', 'FastAPI', 'React', 'Vite', 'SQLite', 'Raspberry Pi', 'nginx', 'GitHub Actions'],
+    techReasons: [
+      {
+        name: 'Python / FastAPI',
+        reason: 'Wake-on-LAN、PC管理、操作ログ、稼働時間集計などのAPIを短期間で実装するために採用しました。',
+      },
+      {
+        name: 'React / Vite',
+        reason: 'スマートフォンやPCから利用できる管理画面を軽量に構築し、状態確認や操作ログを見やすく表示するために採用しました。',
+      },
+      {
+        name: 'SQLite',
+        reason: '個人利用のデータ量に対して十分で、Raspberry Pi上でも軽量に扱えるために採用しました。',
+      },
+      {
+        name: 'Raspberry Pi',
+        reason: '自宅LAN内で常時稼働できる低消費電力サーバーとして使うために採用しました。',
+      },
+      {
+        name: 'nginx',
+        reason: '画面配信とAPI連携を安定して行い、VPN経由の利用でも扱いやすい構成にするために採用しました。',
+      },
+      {
+        name: 'GitHub Actions',
+        reason: 'テスト・ビルド・デプロイを自動化し、Raspberry Pi側の負荷を抑えながら継続運用するために採用しました。',
+      },
+    ],
     previewImage: {
       src: '/assets/projects/raspi-vpn-wol/raspi-vpn-wol-preview.jpg',
       alt: 'Raspberry Pi Wake-on-LAN dashboard preview',
@@ -159,6 +192,20 @@ export const projects: Project[] = [
     longDesc:
       'SNS上に散らばるライブ、イベント、グッズ、配信などの情報を取得し、カレンダーへ反映することで推し活の予定管理を支援するハッカソン開発プロジェクト。',
     tags: ['Go', 'Echo', 'MySQL', 'Docker'],
+    techReasons: [
+      {
+        name: 'Go / Echo',
+        reason: 'ハッカソン内でAPIをシンプルに実装し、Handler、Service、Repositoryの流れを理解しながらバックエンドを構築するために採用しました。',
+      },
+      {
+        name: 'MySQL',
+        reason: '推し、イベント、カテゴリなどの関連データを扱い、JOINでカレンダー表示に必要な情報をまとめて取得するために採用しました。',
+      },
+      {
+        name: 'Docker',
+        reason: 'チーム開発で環境差異を減らし、短期間でもバックエンドとデータベースを扱いやすくするために採用しました。',
+      },
+    ],
     previewImage: {
       src: '/assets/projects/Lovender/pages/lovender-page-01.png',
       alt: 'Lovender slide deck cover preview',
@@ -220,6 +267,28 @@ export const projects: Project[] = [
     longDesc:
       'グローブ型デバイス、仮想空間アプリケーション、通信処理を組み合わせ、仮想ピアノ演奏で鍵盤を押し込む感覚を再現する研究プロジェクト。',
     tags: ['Unity', 'C#', 'ESP32', 'ポテンショメータ', 'サーボモータ', '3Dプリンタ'],
+    techReasons: [
+      {
+        name: 'Unity / C#',
+        reason: '仮想空間の手モデル、ピアノ、鍵盤との接触判定、触覚制御を一体として実装するために採用しました。',
+      },
+      {
+        name: 'ESP32',
+        reason: 'グローブ型デバイスに組み込みやすい小型マイコンとして、センサ入力とモータ制御を扱うために採用しました。',
+      },
+      {
+        name: 'ポテンショメータ',
+        reason: '指の曲がり具合を取得し、仮想空間上の手モデルや触覚提示に反映するために採用しました。',
+      },
+      {
+        name: 'サーボモータ',
+        reason: '鍵盤を押し込む感覚に近い反応を指先へ返し、一定ではない触覚提示を行うために採用しました。',
+      },
+      {
+        name: '3Dプリンタ',
+        reason: 'グローブ型デバイスの部品を試作し、装着状態や指の動きに合わせて調整するために採用しました。',
+      },
+    ],
     previewImage: {
       src: '/assets/projects/hapticpiano/hapticpiano-preview.jpg',
       alt: 'Haptic Piano glove device and virtual piano preview',
@@ -240,6 +309,20 @@ export const projects: Project[] = [
         orientation: 'landscape',
         alt: 'Haptic Piano demonstration video 2',
         caption: '触覚提示と手モデルの動作を確認するデモ',
+      },
+      {
+        type: 'image',
+        src: '/assets/projects/hapticpiano/hapticpiano3.png',
+        orientation: 'portrait',
+        alt: 'Haptic Piano glove device image 1',
+        caption: 'グローブ型デバイスと仮想ピアノの構成',
+      },
+      {
+        type: 'image',
+        src: '/assets/projects/hapticpiano/hapticpiano4.png',
+        orientation: 'landscape',
+        alt: 'Haptic Piano glove device image 2',
+        caption: '触覚提示と手モデルの動作確認',
       },
       {
         type: 'image',
@@ -304,6 +387,24 @@ export const projects: Project[] = [
     longDesc:
       'ストリートファイター6の対戦履歴を取得・集計し、Discord上で特定の相手との勝率、キャラクター別の勝率、直近成績を確認できるBot。',
     tags: ['Go', 'Echo', 'PostgreSQL', 'Docker', 'Heroku'],
+    techReasons: [
+      {
+        name: 'Go / Echo',
+        reason: 'Discord Botと連携するバックエンド処理、API、対戦履歴の取得・集計処理をシンプルに実装するために採用しました。',
+      },
+      {
+        name: 'PostgreSQL',
+        reason: '取得した対戦履歴を保存し、相手別勝率や直近成績として再利用・集計しやすくするために採用しました。',
+      },
+      {
+        name: 'Docker',
+        reason: 'Bot本体とデータベースをまとめて管理し、ローカル開発時の環境差異を減らすために採用しました。',
+      },
+      {
+        name: 'Heroku',
+        reason: '環境変数やデータベース接続を管理しながら、Discordサーバー上で継続的に利用できるようにするために採用しました。',
+      },
+    ],
     previewImage: {
       src: '/assets/projects/chatclub/chatclub-preview.jpg',
       alt: 'Chatclub Discord bot preview',
