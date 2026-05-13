@@ -2129,6 +2129,9 @@ a { color: inherit; text-decoration: none; }
     linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,251,255,0.86));
   box-shadow: 0 10px 22px rgba(67,103,255,0.05);
 }
+.pm-challenge-item:only-child {
+  grid-column: 1 / -1;
+}
 .pm-challenge-problem,
 .pm-challenge-solution {
   display: flex;
