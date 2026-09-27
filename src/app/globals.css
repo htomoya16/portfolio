@@ -390,7 +390,9 @@ a { color: inherit; text-decoration: none; }
 .about > .section-head { display: flex; max-width: 1280px; width: 100%; margin-left: auto; margin-right: auto; }
 .about-grid {
   display: grid; grid-template-columns: minmax(420px, 560px) 32px 1fr;
-  gap: 48px; position: relative; align-items: start;
+  /* 左の本文と右のマイルストーンは、背の高い方に対して互いに縦中央で揃える。
+     中央の区切り線だけは align-self: stretch で全高を保つ。 */
+  gap: 48px; position: relative; align-items: center;
   max-width: 1280px; margin: 0 auto; width: 100%; z-index: 2;
 }
 .about-tagline {
