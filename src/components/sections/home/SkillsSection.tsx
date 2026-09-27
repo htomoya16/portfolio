@@ -15,6 +15,8 @@ function formatLevel(level: number) {
 }
 
 function levelTone(level: number) {
+  if (level >= 4.5) return 'max'
+  if (level >= 4) return 'pro'
   if (level >= 3.5) return 'high'
   if (level >= 3) return 'mid'
   if (level >= 2) return 'base'
@@ -70,8 +72,11 @@ export default function SkillsSection() {
 
         <div className="skills-intro-grid">
           <div className="skills-overview">
-            <p className="skills-kicker">{skillsCopy.kicker}</p>
-            <p className="skills-lead">{skillsCopy.lead}</p>
+            {skillsCopy.leadParagraphs.map((text) => (
+              <p className="skills-lead" key={text}>
+                {text}
+              </p>
+            ))}
           </div>
 
           <div className="skills-level-column">

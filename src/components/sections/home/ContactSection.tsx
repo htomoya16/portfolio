@@ -93,23 +93,6 @@ export default async function ContactSection() {
 
           <SectionHeading number={contactCopy.sectionNumber} title={contactCopy.sectionTitle} blink />
 
-          <p className="contact-lead">
-            {contactCopy.leadLines.map((line, index) => (
-              <span key={line}>
-                {line}
-                {index < contactCopy.leadLines.length - 1 && <br />}
-              </span>
-            ))}
-          </p>
-          <p className="contact-body">
-            {contactCopy.bodyLines.map((line, index) => (
-              <span key={line}>
-                {line}
-                {index < contactCopy.bodyLines.length - 1 && <br />}
-              </span>
-            ))}
-          </p>
-
           {/* stats — plain text, bar starts at 0 width, MotionProvider animates on hover */}
           <div className="ct-stats">
             {stats.map((stat) => (

@@ -1,6 +1,6 @@
 export const experienceCopy = {
-  sectionNumber: '// 04',
-  sectionTitle: 'EXPERIENCE',
+  sectionNumber: '# 04',
+  sectionTitle: '## EXPERIENCE',
 } as const
 
 export interface ExperienceItem {

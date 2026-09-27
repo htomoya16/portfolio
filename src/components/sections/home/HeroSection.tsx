@@ -101,14 +101,6 @@ export default function HeroSection() {
             </span>
           ))}
         </h1>
-        <p className="hero-sub">
-          {heroCopy.subtitleLines.map((line, index) => (
-            <span key={line}>
-              {line}
-              {index < heroCopy.subtitleLines.length - 1 && <br />}
-            </span>
-          ))}
-        </p>
         {/* btn-primary: plain text, no scramble */}
         <button className="btn-primary" onClick={handleScrollToProjects} type="button">
           {heroCopy.primaryCta}

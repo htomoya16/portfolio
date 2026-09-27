@@ -83,6 +83,7 @@ export default function ProjectsGrid({ projects }: Props) {
             }}
             aria-label={`${projectsCopy.viewDetailsAriaPrefix} ${project.title}`}
           >
+            <span className="project-card-sheen" aria-hidden="true" />
             {project.previewImage && (
               <div className="project-preview">
                 <span className="project-num-badge mono">{project.num}</span>

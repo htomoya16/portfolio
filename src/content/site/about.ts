@@ -1,6 +1,6 @@
 export const aboutCopy = {
-  sectionNumber: '// 01',
-  sectionTitle: 'ABOUT',
+  sectionNumber: '# 01',
+  sectionTitle: '## ABOUT',
   taglineLines: [
     '学び続け、',
     '作り続け、',

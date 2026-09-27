@@ -1,8 +1,10 @@
 export const skillsCopy = {
-  sectionNumber: '// 02',
-  sectionTitle: 'SKILLS',
-  kicker: 'BACKEND-CENTERED GROWTH',
-  lead: '個人開発では、バックエンドを中心にWebアプリケーションを支える仕組みを学んできました。授業や卒業研究では、Unityを用いたVRアプリケーション実装やマイコン制御に取り組み、ソフトウェアとハードウェアの両面からものづくりを経験しました。この経験を強みとして、今後はバックエンドの実務経験を重ね、設計・運用・改善まで見据えた専門性を高めていきたいです。',
+  sectionNumber: '# 02',
+  sectionTitle: '## SKILLS',
+  leadParagraphs: [
+    '個人開発では、バックエンドを中心にWebアプリケーションを支える仕組みを学んできました。授業や卒業研究では、Unityを用いたVRアプリケーション実装やマイコン制御に取り組み、ソフトウェアとハードウェアの両面からものづくりを経験しました。',
+    'この経験を強みとして、今後はバックエンドの実務経験を重ね、設計・運用・改善まで見据えた専門性を高めていきたいです。',
+  ],
   note: 'レベルは上記基準に基づく自己評価です。実務経験を示すものではなく、現時点での学習・個人開発・研究での使用感を整理しています。',
   levelGuideLabel: 'Skill level definitions',
   countSuffix: 'SKILLS',

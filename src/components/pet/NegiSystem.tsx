@@ -9,6 +9,8 @@ export const PET_LAYER_ID = 'negi-layer'
 
 const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const
 const CMD_SECTIONS = ['about', 'skills', 'projects', 'experience', 'contact']
+/** NavBar のロゴ連打から届く、ターミナルテーマ切り替えの合図。 */
+export const TERMINAL_TOGGLE_EVENT = 'negi:toggle-terminal'
 /** このセクションを見ている間は、ネギが画面左下から覗く。 */
 const PEEK_LEFT_SECTIONS = ['about', 'projects', 'contact']
 const KONAMI =
@@ -217,7 +219,7 @@ export default class NegiSystem extends React.Component<Props, State> {
     document.documentElement.style.filter = f.join(' ')
   }
 
-  toggleTerm() {
+  toggleTerm = () => {
     this.fx.term = !this.fx.term
     this.applyFx()
   }
@@ -542,6 +544,7 @@ export default class NegiSystem extends React.Component<Props, State> {
   componentDidMount() {
     this.setState({ mounted: true, w: window.innerWidth })
     window.addEventListener('keydown', this.onKey)
+    window.addEventListener(TERMINAL_TOGGLE_EVENT, this.toggleTerm)
     window.addEventListener('scroll', this.onScroll, { passive: true })
     window.addEventListener('resize', this.onResize)
     this.scrollBound = true
@@ -575,6 +578,7 @@ export default class NegiSystem extends React.Component<Props, State> {
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.onKey)
+    window.removeEventListener(TERMINAL_TOGGLE_EVENT, this.toggleTerm)
     if (this.scrollBound) {
       window.removeEventListener('scroll', this.onScroll)
       window.removeEventListener('resize', this.onResize)
