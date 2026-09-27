@@ -2,20 +2,13 @@
 
 堀田智哉（Hotta Tomoya）のポートフォリオサイトです。
 
-
-- 本番: https://htomoya16.dev/
-- ソース: repository root
+https://htomoya16.dev/
 
 ## Stack
 
-- Next.js App Router / React / TypeScript
-- Tailwind CSS v4
-- Base UI + shadcn style components
-- GSAP / Anime.js / Lenis
-- Embla Carousel
-- Python + Pillow for generated hero assets
+Next.js (App Router) / React / TypeScript / Tailwind CSS v4 / GSAP / Anime.js / Lenis
 
-## Local Development
+## Development
 
 ```bash
 nvm use
@@ -24,30 +17,9 @@ pnpm install
 pnpm dev
 ```
 
-主な確認コマンド:
+`pnpm check` で lint と型チェック、`pnpm build` で本番ビルドを確認できます。
 
-```bash
-pnpm lint
-pnpm build
-```
+## Structure
 
-## Site Sections
-
-1. Hero
-2. About
-3. Skills
-4. Projects
-5. Experience
-6. Contact
-7. Footer
-
-## Content
-
-表示文言や実データは `src/content/site/` を正とします。
-Project の画像・動画・PDF・アイコンは `public/assets/` 配下で管理します。
-
-詳しい開発環境と更新ルール:
-
-- [docs/development.md](./docs/development.md)
-- [docs/content-and-assets.md](./docs/content-and-assets.md)
-- [docs/libraries.md](./docs/libraries.md)
+- `src/content/site/` — 表示する文言とデータ
+- `public/assets/` — 画像・動画・アイコン

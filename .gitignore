@@ -53,4 +53,5 @@ __pycache__/
 
 .playwright-mcp/
 
-docs/personal-data/
+docs/
+AGENTS.md
