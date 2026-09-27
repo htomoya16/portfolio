@@ -103,7 +103,7 @@ export default function SkillsSection() {
                 <div className="sk-cat-marker" aria-hidden="true">
                   <Image className="sk-cat-marker-img" src={cat.iconSrc} alt="" width={24} height={24} />
                 </div>
-                <span className="sk-cat-title">{cat.title}</span>
+                <span className="sk-cat-title">{`### ${cat.title}`}</span>
                 <div className="sk-cat-rule" />
                 <span className="sk-cat-count">{String(cat.tiles.length).padStart(2, '0')} {skillsCopy.countSuffix}</span>
               </div>

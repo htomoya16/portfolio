@@ -15,8 +15,8 @@ export default function FooterSection({ version }: { version: string }) {
         ver. {version}
       </div>
       <button className="back-top" onClick={handleBackToTop} type="button" aria-label="Scroll back to top">
-        <span className="arrow-box" aria-hidden="true">↑</span>
         BACK TO TOP
+        <span className="arrow" aria-hidden="true">↑</span>
       </button>
     </footer>
   )
