@@ -153,11 +153,14 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       })
 
       // Project card clip-path reveal
+      // クリップにもカードと同じ角丸を付け、終わったら外す。長方形のクリップを
+      // 残すと、角丸の外に出るガラスの影（box-shadow）が切り取られてしまう。
       gsap.fromTo(
         '.project-card',
-        { autoAlpha: 0, y: 60, clipPath: 'inset(100% 0 0 0)' },
-        { autoAlpha: 1, y: 0, clipPath: 'inset(0% 0 0 0)', duration: 0.85, ease: 'power3.out',
-          stagger: 0.14, scrollTrigger: { trigger: '.projects-grid', start: 'top 75%', once: true } }
+        { autoAlpha: 0, y: 60, clipPath: 'inset(100% 0% 0% 0% round 22px)' },
+        { autoAlpha: 1, y: 0, clipPath: 'inset(0% 0% 0% 0% round 22px)', duration: 0.85, ease: 'power3.out',
+          stagger: 0.14, clearProps: 'clipPath',
+          scrollTrigger: { trigger: '.projects-grid', start: 'top 75%', once: true } }
       )
 
       // Experience node + card reveal

@@ -823,13 +823,17 @@ a { color: inherit; text-decoration: none; }
     box-shadow .3s ease,
     background .3s ease;
 }
-/* 上部のスペキュラハイライト（ガラスの映り込み）。 */
+/* 上部のスペキュラハイライト（ガラスの映り込み）。
+   左右と下端を楕円グラデーションで溶かし、角が立たないようにする。 */
 .project-card-sheen {
   position: absolute;
-  top: 0; left: 10%; right: 10%;
-  height: 40%;
-  border-radius: 0 0 50% 50% / 0 0 100% 100%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0));
+  top: 0; left: 0; right: 0;
+  height: 45%;
+  border-radius: 22px 22px 0 0;
+  background: radial-gradient(ellipse 70% 100% at 50% 0%,
+    rgba(255,255,255,0.45) 0%,
+    rgba(255,255,255,0.18) 45%,
+    rgba(255,255,255,0) 72%);
   pointer-events: none;
   z-index: 2;
   mix-blend-mode: soft-light;
