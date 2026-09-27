@@ -118,3 +118,25 @@ export async function getGitHubStats(): Promise<GitHubStats | null> {
     return null
   }
 }
+
+/**
+ * main ブランチ最新コミットの日付を `YYYY.MM.DD` で返す。
+ * フッターの `ver.` 表示に使う。取得できなければ null。
+ */
+export async function getLatestCommitDate(): Promise<string | null> {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_USERNAME}/portfolio/commits/main`,
+      { next: { revalidate: 3600 } },
+    )
+    if (!res.ok) return null
+    const json = await res.json()
+    const date = json?.commit?.committer?.date
+    if (!date) return null
+    const t = new Date(date)
+    const p = (n: number) => String(n).padStart(2, '0')
+    return `${t.getFullYear()}.${p(t.getMonth() + 1)}.${p(t.getDate())}`
+  } catch {
+    return null
+  }
+}

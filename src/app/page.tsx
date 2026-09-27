@@ -9,8 +9,19 @@ import ExperienceSection from '@/components/sections/home/ExperienceSection'
 import HeroSection from '@/components/sections/home/HeroSection'
 import ProjectsSection from '@/components/sections/home/ProjectsSection'
 import SkillsSection from '@/components/sections/home/SkillsSection'
+import { getLatestCommitDate } from '@/lib/github-stats'
 
-export default function Home() {
+/** GitHub から取得できなかったときはビルド日を版として出す。 */
+function buildDateVersion() {
+  const t = new Date()
+  const p = (n: number) => String(n).padStart(2, '0')
+  return `${t.getFullYear()}.${p(t.getMonth() + 1)}.${p(t.getDate())}`
+}
+
+
+export default async function Home() {
+  const version = (await getLatestCommitDate()) ?? buildDateVersion()
+
   return (
     <MotionProvider>
       <NavBar />
@@ -21,7 +32,7 @@ export default function Home() {
       <ProjectsSection />
       <ExperienceSection />
       <ContactSection />
-      <FooterSection />
+      <FooterSection version={version} />
       <NegiSystem />
     </MotionProvider>
   )

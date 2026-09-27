@@ -120,4 +120,11 @@ export const experiences: ExperienceItem[] = [
     ],
     current: true,
   },
+  {
+    date: '2026.08 - 2026.09',
+    badge: 'INTERN',
+    tone: 'orange',
+    title: 'LINEヤフー株式会社',
+    desc: '「Yahoo!ショッピング」で6週間バックエンド開発を行った。',
+  },
 ]

@@ -31,6 +31,10 @@ export const heroBackgrounds = [
 /** 直前に表示した背景を覚えておく localStorage キー。 */
 export const HERO_BG_STORAGE_KEY = 'htomoya-hero-bg'
 
+/**
+ * ティッカー本体。この並びの末尾にイースターエッグのヒントを挟んだものを
+ * 1 単位として 2 回繰り返す（CSS 側が translateX(-50%) でループするため）。
+ */
 export const heroTickerItems = [
   { label: 'WEB ENGINEER', accent: false },
   { label: '// SERVER SIDE', accent: true },
@@ -43,3 +47,20 @@ export const heroTickerItems = [
   { label: 'DATABASE', accent: false },
   { label: '// LEVEL UP', accent: true },
 ]
+
+/** コナミコマンドと `/` キーのヒント。ティッカーに紛れ込ませる。 */
+export const heroTickerHints = [
+  { label: '↑↑↓↓←→←→BA', accent: true },
+  { label: 'PRESS "/"', accent: true },
+] as const
+
+/** 実際に描画する並び。half を 2 回繰り返して -50% のループに合わせる。 */
+export const heroTickerSequence = (() => {
+  const half = [
+    ...heroTickerItems,
+    heroTickerHints[0],
+    ...heroTickerItems,
+    heroTickerHints[1],
+  ]
+  return [...half, ...half]
+})()

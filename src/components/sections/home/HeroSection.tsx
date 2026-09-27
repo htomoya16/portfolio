@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 import ScrambleText from '@/components/animation/ScrambleText'
 import SideRails from '@/components/layout/SideRails'
 import { PET_LAYER_ID } from '@/components/pet/NegiSystem'
-import { HERO_BG_STORAGE_KEY, heroBackgrounds, heroCopy, heroTickerItems } from '@/content/site/hero'
+import { HERO_BG_STORAGE_KEY, heroBackgrounds, heroCopy, heroTickerSequence } from '@/content/site/hero'
 
 export default function HeroSection() {
   const panelRef = useRef<HTMLDivElement>(null)
@@ -42,8 +42,8 @@ export default function HeroSection() {
     if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
-  // Duplicate 4× for seamless loop with no cutoff
-  const tickerItems = [...heroTickerItems, ...heroTickerItems, ...heroTickerItems, ...heroTickerItems]
+  // heroTickerSequence は half を 2 回繰り返した並び。CSS の -50% ループと対応する。
+  const tickerItems = heroTickerSequence
 
   return (
     <section className="hero" id="hero">

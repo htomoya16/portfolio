@@ -1017,6 +1017,7 @@ a { color: inherit; text-decoration: none; }
 .exp-badge.t-violet { background: #8C5CFF; }
 .exp-badge.t-green { background: #34C759; }
 .exp-badge.t-dark { background: var(--ink); }
+.exp-badge.t-orange { background: #FF5A1F; }
 .exp-title { font-family: var(--font-inter), var(--font-noto-sans-jp), sans-serif; font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 9px; letter-spacing: 0.02em; }
 .exp-desc { font-family: var(--font-inter), var(--font-noto-sans-jp), sans-serif; font-size: 13px; color: var(--muted-2); line-height: 1.85; letter-spacing: 0.02em; }
 .exp-links {
@@ -2426,4 +2427,14 @@ a { color: inherit; text-decoration: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .negi-loader { transition: none; }
+}
+
+/* Hero 右パネルの斜めエッジを About まで白く延長する（下端に向けてフェード）。 */
+.hero-wedge-ext {
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  background: #fff;
+  display: none;
+  mask-image: linear-gradient(180deg, #000 0%, #000 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 70%, transparent 100%);
 }

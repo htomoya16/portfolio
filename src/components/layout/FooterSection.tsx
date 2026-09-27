@@ -1,6 +1,6 @@
 'use client'
 
-export default function FooterSection() {
+export default function FooterSection({ version }: { version: string }) {
   const currentYear = new Date().getFullYear()
 
   const handleBackToTop = () => {
@@ -12,7 +12,7 @@ export default function FooterSection() {
       <span className="footer-left">© {currentYear} htomoya16</span>
       <div className="footer-mid">
         <span className="bullet">■</span>
-        KEEP LEVELING UP
+        ver. {version}
       </div>
       <button className="back-top" onClick={handleBackToTop} type="button" aria-label="Scroll back to top">
         <span className="arrow-box" aria-hidden="true">↑</span>

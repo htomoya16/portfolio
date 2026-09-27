@@ -9,6 +9,8 @@ export const PET_LAYER_ID = 'negi-layer'
 
 const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const
 const CMD_SECTIONS = ['about', 'skills', 'projects', 'experience', 'contact']
+/** このセクションを見ている間は、ネギが画面左下から覗く。 */
+const PEEK_LEFT_SECTIONS = ['about', 'projects', 'contact']
 const KONAMI =
   'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,b,a'
 
@@ -613,7 +615,8 @@ export default class NegiSystem extends React.Component<Props, State> {
   render() {
     const showLoader = this.props.showLoader ?? true
     const showPeek = this.state.negiAway && this.state.active !== 'hero'
-    const peekLeftSide = this.state.w > 0 && this.state.w <= 900
+    // 覗き込む側は表示中のセクションで決まる（本文と重ならない方に出す）。
+    const peekLeftSide = PEEK_LEFT_SECTIONS.includes(this.state.active)
     const layerHost = this.state.mounted ? document.getElementById(PET_LAYER_ID) : null
 
     return (
