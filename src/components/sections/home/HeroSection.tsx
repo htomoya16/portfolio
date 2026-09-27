@@ -1,10 +1,37 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
+
 import ScrambleText from '@/components/animation/ScrambleText'
 import SideRails from '@/components/layout/SideRails'
-import { heroCopy, heroTickerItems } from '@/content/site/hero'
+import { PET_LAYER_ID } from '@/components/pet/NegiSystem'
+import { HERO_BG_STORAGE_KEY, heroBackgrounds, heroCopy, heroTickerItems } from '@/content/site/hero'
 
 export default function HeroSection() {
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  // 背景画像はマウント後に決める。SSR 時に確定させるとハイドレーション不一致になるため。
+  useEffect(() => {
+    const el = panelRef.current
+    if (!el) return
+    let last = -1
+    try {
+      last = Number.parseInt(localStorage.getItem(HERO_BG_STORAGE_KEY) ?? '-1', 10)
+    } catch {
+      // localStorage が使えない環境ではランダムのみで決める
+    }
+    let i = Math.floor(Math.random() * heroBackgrounds.length)
+    if (i === last) {
+      i = (i + 1 + Math.floor(Math.random() * (heroBackgrounds.length - 1))) % heroBackgrounds.length
+    }
+    try {
+      localStorage.setItem(HERO_BG_STORAGE_KEY, String(i))
+    } catch {
+      // 保存できなくても表示自体には影響しない
+    }
+    el.style.setProperty('--hero-bg-image', `url(${heroBackgrounds[i]})`)
+  }, [])
+
   const handleScrollToAbout = () => {
     const el = document.getElementById('about')
     if (el) el.scrollIntoView({ behavior: 'smooth' })
@@ -23,21 +50,8 @@ export default function HeroSection() {
       <SideRails />
 
       {/* right background panel */}
-      <div className="hero-right-bg" aria-hidden="true">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/assets/hero/generated/blackhole-pixel.webp"
-          alt=""
-          className="hero-blackhole-art hero-blackhole-art-motion"
-          draggable={false}
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/assets/hero/generated/blackhole-pixel-poster.png"
-          alt=""
-          className="hero-blackhole-art hero-blackhole-art-poster"
-          draggable={false}
-        />
+      <div className="hero-right-bg" aria-hidden="true" ref={panelRef}>
+        <div className="hero-right-veil" />
       </div>
 
       {/* Hero SVG decorations — マージン帯のみ（コンテンツと重ならない） */}
@@ -104,6 +118,9 @@ export default function HeroSection() {
           </svg>
         </button>
       </div>
+
+      {/* ピクセルペット「ネギ」の走査領域。中身は NegiSystem が portal で流し込む。 */}
+      <div className="negi-layer" id={PET_LAYER_ID} aria-hidden="true" />
 
       {/* play button — plain label */}
       <button

@@ -19,6 +19,18 @@ export const heroCopy = {
   visualPercent: '100%',
 } as const
 
+/**
+ * Hero 右パネルの背景画像。訪問ごとにランダムで 1 枚選ぶ（直前と同じものは避ける）。
+ */
+export const heroBackgrounds = [
+  '/assets/hero/hero-right.png',
+  '/assets/hero/hero-right2.png',
+  '/assets/hero/hero-right3.png',
+] as const
+
+/** 直前に表示した背景を覚えておく localStorage キー。 */
+export const HERO_BG_STORAGE_KEY = 'htomoya-hero-bg'
+
 export const heroTickerItems = [
   { label: 'WEB ENGINEER', accent: false },
   { label: '// SERVER SIDE', accent: true },

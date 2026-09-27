@@ -111,11 +111,11 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
 
       // Hero entrance
       gsap.set('.hero-content, .hero-play-center, .hero-ticker', { autoAlpha: 0, y: 28 })
-      gsap.set('.hero-blackhole-art', { autoAlpha: 0, scale: 0.94, x: 28 })
+      gsap.set('.hero-right-bg', { autoAlpha: 0, x: 28 })
 
       gsap.timeline({ defaults: { ease: 'power3.out' } })
         .to('.hero-content', { autoAlpha: 1, y: 0, duration: 0.8 })
-        .to('.hero-blackhole-art', { autoAlpha: 1, scale: 1, x: 0, duration: 0.75 }, '-=0.45')
+        .to('.hero-right-bg', { autoAlpha: 1, x: 0, duration: 0.75 }, '-=0.45')
         .to('.hero-play-center, .hero-ticker', { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08 }, '-=0.15')
 
       // Section reveals
@@ -201,12 +201,6 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       gsap.to('.hero-ticker-inner', {
         x: '-=200',
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 },
-      })
-
-      // Hero blackhole scroll parallax
-      gsap.to('.hero-blackhole-art', {
-        y: -42, rotate: -2.8,
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.4 },
       })
 
       // Skill counter-up
