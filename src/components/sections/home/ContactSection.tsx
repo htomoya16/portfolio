@@ -83,6 +83,11 @@ export default async function ContactSection() {
     <section className="contact" id="contact">
       <Atmo variant="e" tone="warm" />
 
+      {/* 見出しは他セクションと同じくセクション上部の左に置く */}
+      <div className="contact-head">
+        <SectionHeading number={contactCopy.sectionNumber} title={contactCopy.sectionTitle} blink />
+      </div>
+
       <div className="contact-grid">
         {/* left */}
         <div className="contact-left">
@@ -90,25 +95,6 @@ export default async function ContactSection() {
             <span className="dot" />
             {contactCopy.statusText}
           </div>
-
-          <SectionHeading number={contactCopy.sectionNumber} title={contactCopy.sectionTitle} blink />
-
-          <p className="contact-lead">
-            {contactCopy.leadLines.map((line, index) => (
-              <span key={line}>
-                {line}
-                {index < contactCopy.leadLines.length - 1 && <br />}
-              </span>
-            ))}
-          </p>
-          <p className="contact-body">
-            {contactCopy.bodyLines.map((line, index) => (
-              <span key={line}>
-                {line}
-                {index < contactCopy.bodyLines.length - 1 && <br />}
-              </span>
-            ))}
-          </p>
 
           {/* stats — plain text, bar starts at 0 width, MotionProvider animates on hover */}
           <div className="ct-stats">

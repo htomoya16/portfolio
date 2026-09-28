@@ -2,6 +2,7 @@ import MotionProvider from '@/components/animation/MotionProvider'
 import FooterSection from '@/components/layout/FooterSection'
 import NavBar from '@/components/layout/NavBar'
 import ScrollNav from '@/components/layout/ScrollNav'
+import NegiSystem from '@/components/pet/NegiSystem'
 import AboutSection from '@/components/sections/home/AboutSection'
 import ContactSection from '@/components/sections/home/ContactSection'
 import ExperienceSection from '@/components/sections/home/ExperienceSection'
@@ -21,6 +22,7 @@ export default function Home() {
       <ExperienceSection />
       <ContactSection />
       <FooterSection />
+      <NegiSystem />
     </MotionProvider>
   )
 }

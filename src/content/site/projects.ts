@@ -1,6 +1,6 @@
 export const projectsCopy = {
-  sectionNumber: '// 03',
-  sectionTitle: 'PROJECTS',
+  sectionNumber: '# 03',
+  sectionTitle: '## PROJECTS',
   countSuffix: 'WORKS',
   viewHint: 'VIEW DETAILS',
   itemLabelPrefix: 'PROJECT',

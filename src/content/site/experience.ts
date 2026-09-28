@@ -1,6 +1,6 @@
 export const experienceCopy = {
-  sectionNumber: '// 04',
-  sectionTitle: 'EXPERIENCE',
+  sectionNumber: '# 04',
+  sectionTitle: '## EXPERIENCE',
 } as const
 
 export interface ExperienceItem {
@@ -119,5 +119,12 @@ export const experiences: ExperienceItem[] = [
       },
     ],
     current: true,
+  },
+  {
+    date: '2026.08 - 2026.09',
+    badge: 'INTERN',
+    tone: 'orange',
+    title: 'LINEヤフー株式会社',
+    desc: '「Yahoo!ショッピング」で6週間バックエンド開発を行った。',
   },
 ]

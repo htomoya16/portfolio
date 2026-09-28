@@ -15,6 +15,8 @@ function formatLevel(level: number) {
 }
 
 function levelTone(level: number) {
+  if (level >= 4.5) return 'max'
+  if (level >= 4) return 'pro'
   if (level >= 3.5) return 'high'
   if (level >= 3) return 'mid'
   if (level >= 2) return 'base'
@@ -70,8 +72,11 @@ export default function SkillsSection() {
 
         <div className="skills-intro-grid">
           <div className="skills-overview">
-            <p className="skills-kicker">{skillsCopy.kicker}</p>
-            <p className="skills-lead">{skillsCopy.lead}</p>
+            {skillsCopy.leadParagraphs.map((text) => (
+              <p className="skills-lead" key={text}>
+                {text}
+              </p>
+            ))}
           </div>
 
           <div className="skills-level-column">
@@ -98,7 +103,7 @@ export default function SkillsSection() {
                 <div className="sk-cat-marker" aria-hidden="true">
                   <Image className="sk-cat-marker-img" src={cat.iconSrc} alt="" width={24} height={24} />
                 </div>
-                <span className="sk-cat-title">{cat.title}</span>
+                <span className="sk-cat-title">{`### ${cat.title}`}</span>
                 <div className="sk-cat-rule" />
                 <span className="sk-cat-count">{String(cat.tiles.length).padStart(2, '0')} {skillsCopy.countSuffix}</span>
               </div>

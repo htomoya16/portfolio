@@ -111,11 +111,11 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
 
       // Hero entrance
       gsap.set('.hero-content, .hero-play-center, .hero-ticker', { autoAlpha: 0, y: 28 })
-      gsap.set('.hero-blackhole-art', { autoAlpha: 0, scale: 0.94, x: 28 })
+      gsap.set('.hero-right-bg', { autoAlpha: 0, x: 28 })
 
       gsap.timeline({ defaults: { ease: 'power3.out' } })
         .to('.hero-content', { autoAlpha: 1, y: 0, duration: 0.8 })
-        .to('.hero-blackhole-art', { autoAlpha: 1, scale: 1, x: 0, duration: 0.75 }, '-=0.45')
+        .to('.hero-right-bg', { autoAlpha: 1, x: 0, duration: 0.75 }, '-=0.45')
         .to('.hero-play-center, .hero-ticker', { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08 }, '-=0.15')
 
       // Section reveals
@@ -153,11 +153,14 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       })
 
       // Project card clip-path reveal
+      // クリップにもカードと同じ角丸を付け、終わったら外す。長方形のクリップを
+      // 残すと、角丸の外に出るガラスの影（box-shadow）が切り取られてしまう。
       gsap.fromTo(
         '.project-card',
-        { autoAlpha: 0, y: 60, clipPath: 'inset(100% 0 0 0)' },
-        { autoAlpha: 1, y: 0, clipPath: 'inset(0% 0 0 0)', duration: 0.85, ease: 'power3.out',
-          stagger: 0.14, scrollTrigger: { trigger: '.projects-grid', start: 'top 75%', once: true } }
+        { autoAlpha: 0, y: 60, clipPath: 'inset(100% 0% 0% 0% round 22px)' },
+        { autoAlpha: 1, y: 0, clipPath: 'inset(0% 0% 0% 0% round 22px)', duration: 0.85, ease: 'power3.out',
+          stagger: 0.14, clearProps: 'clipPath',
+          scrollTrigger: { trigger: '.projects-grid', start: 'top 75%', once: true } }
       )
 
       // Experience node + card reveal
@@ -201,12 +204,6 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       gsap.to('.hero-ticker-inner', {
         x: '-=200',
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 },
-      })
-
-      // Hero blackhole scroll parallax
-      gsap.to('.hero-blackhole-art', {
-        y: -42, rotate: -2.8,
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.4 },
       })
 
       // Skill counter-up

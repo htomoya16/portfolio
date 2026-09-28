@@ -6,12 +6,63 @@ import SectionHeading from '@/components/ui/SectionHeading'
 import { aboutCopy, aboutMilestones } from '@/content/site/about'
 import gsap from 'gsap'
 import Image from 'next/image'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
+
+/**
+ * Hero 右パネルの斜めのエッジを About セクションまで白く延長する。
+ * 傾きは Hero の clip-path (12%) と実測した高さから求めるので、
+ * ウィンドウ幅や各セクションの高さが変わるたびに測り直す。
+ */
+function useHeroWedge(ref: React.RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    const measure = () => {
+      const hero = document.getElementById('hero')
+      const about = document.getElementById('about')
+      if (!hero || !about) return
+
+      const w = window.innerWidth
+      if (w <= 900) {
+        el.style.display = 'none'
+        return
+      }
+      el.style.display = 'block'
+
+      const heroH = hero.offsetHeight
+      if (!heroH) return
+      const base = hero.offsetTop + heroH
+      const top = about.offsetTop - base
+      const h = about.offsetHeight
+
+      const panelW = w <= 1280 ? 0.44 : 0.5
+      const x0 = w * (1 - panelW)
+      const slope = (0.12 * panelW * w) / heroH
+      const a = x0 - slope * top
+      const b = x0 - slope * (top + h)
+      el.style.clipPath = `polygon(0 0, ${a.toFixed(1)}px 0, ${b.toFixed(1)}px 100%, 0 100%)`
+    }
+
+    measure()
+    const t1 = setTimeout(measure, 300)
+    const t2 = setTimeout(measure, 1200)
+    window.addEventListener('resize', measure)
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+      window.removeEventListener('resize', measure)
+    }
+  }, [ref])
+}
 
 export default function AboutSection() {
   const indicatorRef = useRef<HTMLDivElement | null>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
   const dividerRef = useRef<HTMLDivElement | null>(null)
+  const wedgeRef = useRef<HTMLDivElement | null>(null)
+
+  useHeroWedge(wedgeRef)
 
   const handleCardEnter = (i: number) => {
     const indicator = indicatorRef.current
@@ -35,6 +86,7 @@ export default function AboutSection() {
 
   return (
     <section className="about" id="about">
+      <div className="hero-wedge-ext" ref={wedgeRef} aria-hidden="true" />
       <Atmo variant="a" tone="cool" />
 
       <SectionHeading number={aboutCopy.sectionNumber} title={aboutCopy.sectionTitle} blink />
