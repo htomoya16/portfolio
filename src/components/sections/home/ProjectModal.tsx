@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import gsap from 'gsap'
 import ScrambleText from '@/components/animation/ScrambleText'
-import { projectModalCopy, type Project } from '@/content/site/projects'
+import { projectModalCopy, type Project, type ProjectDevFeature } from '@/content/site/projects'
 import ProjectMediaCarousel from './ProjectMediaCarousel'
 import {
   Dialog,
@@ -88,6 +88,15 @@ const TECH_ICON_MAP: Record<string, string> = {
   Unity: '/assets/icons/skills/unity-svgrepo-com.svg',
   'C#': '/assets/icons/skills/c-sharp.svg',
   'Raspberry Pi': '/assets/icons/skills/raspberry-pi.svg',
+  Ollama: '/assets/icons/skills/ollama.svg',
+  LiteLLM: '/assets/icons/skills/litellm.svg',
+  SearXNG: '/assets/icons/skills/searxng.svg',
+  MCP: '/assets/icons/skills/mcp.svg',
+  JupyterHub: '/assets/icons/skills/jupyter.svg',
+  Slurm: '/assets/icons/skills/slurm.png',
+  Apptainer: '/assets/icons/skills/apptainer.svg',
+  Cloudflare: '/assets/icons/skills/cloudflare.svg',
+  Ansible: '/assets/icons/skills/ansible.svg',
 }
 
 function ParagraphText({ text, className }: { text: string; className: string }) {
@@ -98,6 +107,47 @@ function ParagraphText({ text, className }: { text: string; className: string })
       {paragraphs.map((paragraph, index) => (
         <p key={index}>{paragraph}</p>
       ))}
+    </div>
+  )
+}
+
+function DevFeatureTable({ features }: { features: ProjectDevFeature[] }) {
+  const labels = projectModalCopy.devFeatureLabels
+  const summaries = features.filter((feature) => feature.owner === 'self' && feature.summary)
+
+  return (
+    <div className="pm-dev-features">
+      <table className="pm-feature-table">
+        <thead>
+          <tr>
+            <th scope="col">{labels.feature}</th>
+            <th scope="col">{labels.owner}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {features.map((feature) => (
+            <tr key={feature.name} className={`is-${feature.owner}`}>
+              <th scope="row">{feature.name}</th>
+              <td>
+                <span className={`pm-owner-badge is-${feature.owner}`}>{labels[feature.owner]}</span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {summaries.length > 0 && (
+        <div className="pm-feature-summaries">
+          <h4 className="pm-feature-summaries-title">{labels.summaryTitle}</h4>
+          <dl className="pm-feature-summary-list">
+            {summaries.map((feature) => (
+              <div key={feature.name} className="pm-feature-summary-item">
+                <dt>{feature.name}</dt>
+                <dd>{feature.summary}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
     </div>
   )
 }
@@ -497,13 +547,18 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
             )}
 
             {/* ── 開発内容 ── */}
-            {project.devContent && (
+            {(project.devContent || (project.devFeatures && project.devFeatures.length > 0)) && (
               <div className="pm-reveal pm-section">
                 <h3 className="pm-section-title">
                   <ProjectIcon src={PROJECT_SECTION_ICONS.devContent} />
                   {projectModalCopy.sections.devContent}
                 </h3>
-                <ParagraphText className="pm-section-body" text={project.devContent} />
+                {project.devContent && (
+                  <ParagraphText className="pm-section-body" text={project.devContent} />
+                )}
+                {project.devFeatures && project.devFeatures.length > 0 && (
+                  <DevFeatureTable features={project.devFeatures} />
+                )}
               </div>
             )}
 
@@ -561,7 +616,7 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                   {project.highlights.map((h, i) => (
                     <li key={i} className="pm-bullet-item">
                       <ProjectIcon src={`${PROJECT_ICON_BASE}/check.svg`} className="pm-bullet-icon" />
-                      {h}
+                      <ParagraphText className="pm-bullet-text" text={h} />
                     </li>
                   ))}
                 </ul>
@@ -575,7 +630,7 @@ export default function ProjectModal({ project, open, onOpenChange }: Props) {
                   <ProjectIcon src={PROJECT_SECTION_ICONS.challenges} />
                   {projectModalCopy.sections.challenges}
                 </h3>
-                <div className="pm-challenges">
+                <div className={`pm-challenges${project.challengesLayout === 'stack' ? ' is-stack' : ''}`}>
                   {project.challenges.map((c, i) => (
                     <div key={i} className="pm-challenge-item">
                       <div className="pm-challenge-problem">

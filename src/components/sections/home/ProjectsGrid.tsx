@@ -29,6 +29,15 @@ const SKILL_ICON_MAP: Record<string, string> = {
   Heroku: '/assets/icons/skills/heroku.svg',
   'C#': '/assets/icons/skills/c-sharp.svg',
   Unity: '/assets/icons/skills/unity-svgrepo-com.svg',
+  Ollama: '/assets/icons/skills/ollama.svg',
+  LiteLLM: '/assets/icons/skills/litellm.svg',
+  SearXNG: '/assets/icons/skills/searxng.svg',
+  MCP: '/assets/icons/skills/mcp.svg',
+  JupyterHub: '/assets/icons/skills/jupyter.svg',
+  Slurm: '/assets/icons/skills/slurm.png',
+  Apptainer: '/assets/icons/skills/apptainer.svg',
+  Cloudflare: '/assets/icons/skills/cloudflare.svg',
+  Ansible: '/assets/icons/skills/ansible.svg',
 }
 
 function ProjectPreview({ project }: { project: Project }) {

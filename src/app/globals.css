@@ -2063,11 +2063,137 @@ a { color: inherit; text-decoration: none; }
   font-size: 14px;
   color: rgba(24,34,52,0.86);
 }
+
+/* Dev feature table (開発内容) */
+.pm-dev-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+.pm-feature-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid rgba(67,103,255,0.18);
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.88);
+  box-shadow: 0 10px 22px rgba(67,103,255,0.05);
+}
+.pm-feature-table thead th {
+  padding: 9px 16px;
+  background: rgba(67,103,255,0.06);
+  font-family: var(--font-jetbrains-mono), var(--font-noto-sans-jp), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  color: rgba(67,103,255,0.86);
+  text-align: left;
+}
+.pm-feature-table thead th:last-child,
+.pm-feature-table tbody td {
+  width: 1%;
+  white-space: nowrap;
+}
+.pm-feature-table tbody th,
+.pm-feature-table tbody td {
+  padding: 11px 16px;
+  border-top: 1px solid rgba(67,103,255,0.10);
+  vertical-align: middle;
+}
+.pm-feature-table tbody th {
+  font-family: var(--font-noto-sans-jp), var(--font-inter), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: rgba(17,27,45,0.92);
+  text-align: left;
+}
+.pm-feature-table tr.is-self th {
+  box-shadow: inset 3px 0 0 var(--blue);
+  background: rgba(67,103,255,0.035);
+}
+.pm-feature-table tr.is-self td {
+  background: rgba(67,103,255,0.035);
+}
+.pm-feature-table tr.is-teammate th {
+  font-weight: 500;
+  color: var(--muted-2);
+}
+.pm-owner-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 11px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-family: var(--font-noto-sans-jp), var(--font-inter), sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+.pm-owner-badge.is-self {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(67,103,255,0.22);
+}
+.pm-owner-badge.is-teammate {
+  border-color: rgba(122,134,154,0.42);
+  color: var(--muted);
+}
+.pm-feature-summaries {
+  padding: 16px 18px;
+  border: 1px solid rgba(67,103,255,0.12);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.72);
+  box-shadow: 0 10px 24px rgba(67,103,255,0.05);
+}
+.pm-feature-summaries-title {
+  margin: 0 0 10px;
+  font-family: var(--font-noto-sans-jp), var(--font-inter), sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  color: rgba(67,103,255,0.92);
+  letter-spacing: 0.04em;
+}
+.pm-feature-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0;
+}
+.pm-feature-summary-item {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.34fr) 1fr;
+  gap: 10px;
+  align-items: start;
+  font-family: var(--font-noto-sans-jp), var(--font-inter), sans-serif;
+  font-size: 14px;
+  line-height: 1.85;
+  color: rgba(24,34,52,0.86);
+}
+.pm-feature-summary-item dt {
+  font-family: var(--font-jetbrains-mono), var(--font-noto-sans-jp), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 2.1;
+  color: rgba(17,27,45,0.92);
+}
+.pm-feature-summary-item dd {
+  min-width: 0;
+  margin: 0;
+}
 .pm-bullet-list {
   gap: 10px;
 }
 .pm-bullet-item {
   gap: 12px;
+}
+/* 工夫した点などの本文（改行ごとに段落を分ける） */
+.pm-bullet-text {
+  flex: 1;
+  min-width: 0;
 }
 .pm-bullet-icon {
   width: 16px;
@@ -2092,6 +2218,9 @@ a { color: inherit; text-decoration: none; }
 }
 .pm-challenge-item:only-child {
   grid-column: 1 / -1;
+}
+.pm-challenges.is-stack {
+  grid-template-columns: 1fr;
 }
 .pm-challenge-problem,
 .pm-challenge-solution {
@@ -2202,6 +2331,22 @@ a { color: inherit; text-decoration: none; }
     font-size: 14px;
   }
   .pm-tech-reason-item {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    font-size: 13.5px;
+  }
+  /* Dev feature table (開発内容) */
+  .pm-feature-table tbody th,
+  .pm-feature-table tbody td {
+    padding: 10px 12px;
+  }
+  .pm-feature-table thead th {
+    padding: 8px 12px;
+  }
+  .pm-feature-table tbody th {
+    font-size: 13.5px;
+  }
+  .pm-feature-summary-item {
     grid-template-columns: 1fr;
     gap: 2px;
     font-size: 13.5px;
