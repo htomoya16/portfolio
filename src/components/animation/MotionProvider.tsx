@@ -8,7 +8,7 @@ import { type ReactNode, useEffect, useRef, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { onLoaderDone } from '@/lib/loaderSignal'
 import CursorFollower from './CursorFollower'
-import { SCRAMBLE_CHARS, type ScramblePattern, scrambleText } from './scramble'
+import { lockElSize, SCRAMBLE_CHARS, type ScramblePattern, scrambleText } from './scramble'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -30,30 +30,7 @@ function cancelScramble(el: HTMLElement | null | undefined, text: string) {
   }
 }
 
-/** Lock element dimensions before scrambling to prevent layout shift */
-function lockElSize(el: HTMLElement) {
-  if (el.dataset.sizeLocked) return
-  const rect = el.getBoundingClientRect()
-  if (rect.width > 0 && rect.height > 0) {
-    const computed = window.getComputedStyle(el).display
-    if (computed === 'inline') {
-      el.style.display = 'inline-block'
-      el.style.minWidth = `${rect.width}px`
-      el.style.minHeight = `${rect.height}px`
-    } else if (computed === 'inline-block' || computed === 'inline-flex') {
-      el.style.minWidth = `${rect.width}px`
-      el.style.minHeight = `${rect.height}px`
-    } else {
-      // Block elements already occupy their available inline size.
-      // Freezing min-width from getBoundingClientRect() inflates grid min-content
-      // and can shift sibling columns, especially in the contact card grid.
-      el.style.minHeight = `${rect.height}px`
-    }
-    el.dataset.sizeLocked = '1'
-  }
-}
-
-/** Scramble one element via GSAP ScrambleTextPlugin (used for hover effects) */
+/** Scramble one element (used for hover effects) */
 function scrambleEl(
   el: HTMLElement,
   text: string,

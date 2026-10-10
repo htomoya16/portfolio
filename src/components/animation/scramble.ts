@@ -10,6 +10,59 @@ export const SCRAMBLE_CHARS = {
 
 export type ScramblePattern = keyof typeof SCRAMBLE_CHARS
 
+/**
+ * transform の影響を受けない要素の大きさ（padding・border を含む）を返す。
+ * getBoundingClientRect は登場演出の回転・拡大などで変形した後の大きさを返すため、
+ * そのまま使うと膨らんだ幅で固定してしまう。offsetWidth / offsetHeight は変形の影響を
+ * 受けないが整数に丸められるので、差が 1px 未満（＝変形していない）なら小数の値を使う。
+ */
+function measureLayoutSize(el: HTMLElement) {
+  const rect = el.getBoundingClientRect()
+  const pick = (measured: number, layout: number) => (Math.abs(measured - layout) < 1 ? measured : layout)
+  return { width: pick(rect.width, el.offsetWidth), height: pick(rect.height, el.offsetHeight) }
+}
+
+/**
+ * かき混ぜ中に文字幅が変わっても周りがずれないよう、要素の今の大きさで固定する。
+ * getBoundingClientRect は padding・border を含む大きさを返すので、content-box の要素では
+ * その分を引いて設定する（このサイトは Tailwind の preflight でほぼ border-box）。
+ */
+export function lockElSize(el: HTMLElement) {
+  if (el.dataset.sizeLocked) return
+  const rect = measureLayoutSize(el)
+  if (rect.width <= 0 || rect.height <= 0) return
+
+  const style = window.getComputedStyle(el)
+  const px = (value: string) => Number.parseFloat(value) || 0
+  const extraX = px(style.paddingLeft) + px(style.paddingRight) + px(style.borderLeftWidth) + px(style.borderRightWidth)
+  const extraY = px(style.paddingTop) + px(style.paddingBottom) + px(style.borderTopWidth) + px(style.borderBottomWidth)
+  const isBorderBox = style.boxSizing === 'border-box'
+  const width = `${isBorderBox ? rect.width : rect.width - extraX}px`
+  const height = `${isBorderBox ? rect.height : rect.height - extraY}px`
+
+  if (style.display === 'inline') {
+    // inline のままでは幅を固定できないため inline-block にする。
+    // inline-block は中身を line-height（＋padding）の高さで並べるため、そのままだと要素が
+    // 高くなって文字が下にずれ、ナビなどの行も広がる。高さを今の値で固定し、line-height を
+    // inline のときの中身の高さ（padding・border を除いた高さ）にそろえる
+    el.style.display = 'inline-block'
+    el.style.minWidth = width
+    el.style.height = height
+    el.style.lineHeight = `${rect.height - extraY}px`
+  } else if (style.display === 'inline-block' || style.display === 'inline-flex') {
+    el.style.minWidth = width
+    el.style.minHeight = height
+  } else {
+    // flex の子は block でも幅が中身で決まる。固定しないと空の文字から始まるときに幅が 0 まで縮み、
+    // カーソルを置いたままでも pointerleave / pointerenter が起きて演出が再発火する（ナビのロゴ）
+    const parentDisplay = el.parentElement ? window.getComputedStyle(el.parentElement).display : ''
+    if (parentDisplay === 'flex' || parentDisplay === 'inline-flex') el.style.minWidth = width
+    // それ以外のブロック要素は幅が親で決まる。min-width を固定すると grid の列幅が広がることがあるため高さだけ固定する
+    el.style.minHeight = height
+  }
+  el.dataset.sizeLocked = '1'
+}
+
 /** 1秒あたりに記号を入れ替える回数（文字ごとに独立して入れ替える） */
 const REFRESH_PER_SECOND = 32
 /** 文字ごとの確定タイミングのばらつき（settleDuration に対する割合） */

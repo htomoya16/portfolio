@@ -3,7 +3,7 @@
 import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import { onLoaderDone } from '@/lib/loaderSignal'
 import { type ComponentPropsWithoutRef, type ElementType, useEffect, useRef } from 'react'
-import { SCRAMBLE_CHARS, type ScramblePattern, scrambleText } from './scramble'
+import { lockElSize, SCRAMBLE_CHARS, type ScramblePattern, scrambleText } from './scramble'
 
 type ScrambleTextProps<T extends ElementType> = {
   as?: T
@@ -49,18 +49,6 @@ export default function ScrambleText<T extends ElementType = 'span'>({
     // 再生中でもマウスを乗せ直せば最初からやり直す
     const RETRIGGER_GUARD = 150
 
-    // Lock element size BEFORE animation to prevent layout shift
-    const lockSize = () => {
-      if (el.dataset.sizeLocked) return
-      const rect = el.getBoundingClientRect()
-      if (rect.width > 0 && rect.height > 0) {
-        el.style.display = 'inline-block'
-        el.style.minWidth  = `${rect.width}px`
-        el.style.minHeight = `${rect.height}px`
-        el.dataset.sizeLocked = '1'
-      }
-    }
-
     const play = () => {
       const now = Date.now()
       if (now - lastPlayTime < RETRIGGER_GUARD) return
@@ -68,7 +56,7 @@ export default function ScrambleText<T extends ElementType = 'span'>({
 
       animation?.kill()
       el.textContent = text
-      lockSize()
+      lockElSize(el)
 
       animation = scrambleText(el, text, {
         chars: charPool,
