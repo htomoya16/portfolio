@@ -1725,6 +1725,20 @@ a { color: inherit; text-decoration: none; }
 .pm-media-el.is-square {
   object-fit: contain;
 }
+/* 画像は黒帯ではなく、同じ画像のぼかしを背景にする（動画は黒のまま）。 */
+.pm-media-screen:has(> .pm-media-open) {
+  background: linear-gradient(180deg, #f8faff, #eef2fb);
+}
+img.pm-media-el {
+  background: transparent;
+}
+.pm-media-backdrop {
+  object-fit: cover;
+  transform: scale(1.2);
+  filter: blur(24px) saturate(1.15);
+  opacity: 0.8;
+  pointer-events: none;
+}
 .pm-media-open:focus-visible {
   outline: 2px solid var(--blue);
   outline-offset: -4px;

@@ -50,15 +50,27 @@ function MediaFrame({ item, videoRef, priority = false }: {
   }
 
   return (
-    <Image
-      className={className}
-      src={item.src}
-      alt={item.alt}
-      fill
-      sizes="(max-width: 760px) 100vw, 48vw"
-      priority={priority}
-      draggable={false}
-    />
+    <>
+      {/* 縦横比が合わない画像の余白を、同じ画像のぼかしで埋めて画像ごとに自然な背景色にする */}
+      <Image
+        className="pm-media-backdrop"
+        src={item.src}
+        alt=""
+        fill
+        sizes="64px"
+        aria-hidden="true"
+        draggable={false}
+      />
+      <Image
+        className={className}
+        src={item.src}
+        alt={item.alt}
+        fill
+        sizes="(max-width: 760px) 100vw, 48vw"
+        priority={priority}
+        draggable={false}
+      />
+    </>
   )
 }
 
