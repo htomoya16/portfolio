@@ -2318,8 +2318,21 @@ img.pm-media-el {
   .pm-left-kicker {
     margin-bottom: 16px;
   }
-  .pm-thumb-strip {
-    grid-auto-columns: minmax(96px, 32vw);
+  /* スマホではサムネイルと左右の矢印を出さない（小さくて中身が見えず、本文を押し下げるため）。
+     切り替えはスワイプで行い、番号表示だけを画像の下に残す */
+  .pm-thumb-strip,
+  .pm-thumb-nav .pm-carousel-btn {
+    display: none;
+  }
+  .pm-thumb-nav {
+    display: block;
+    padding: 10px 0 4px;
+  }
+  .pm-carousel-index {
+    position: static;
+    display: block;
+    transform: none;
+    margin: 0 auto;
   }
   .pm-left-meta {
     margin: 0 18px 18px;
