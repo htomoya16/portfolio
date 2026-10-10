@@ -19,6 +19,9 @@ const nextConfig: NextConfig = {
     BUILD_DATE: buildDate,
   },
   images: {
+    // 文字入りのスクリーンショットがにじまないよう、全画像を品質 95 で配信する。
+    // quality を指定しない画像も、ここで許可した一番近い値（95）になる。
+    qualities: [95],
     remotePatterns: [
       {
         protocol: "https",
