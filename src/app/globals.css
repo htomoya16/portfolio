@@ -2295,6 +2295,10 @@ img.pm-media-el {
   }
   .pm-body {
     grid-template-columns: 1fr;
+    /* 1列で全体をスクロールさせるので、各行は中身の高さのまま並べる。
+       行がモーダルの高さに収まるよう縮むと、カルーセルの表示領域（overflow: hidden）が
+       高さ 0 まで潰れて画像が見えなくなる */
+    grid-auto-rows: max-content;
   }
   .pm-left {
     min-height: 0;
@@ -2302,6 +2306,14 @@ img.pm-media-el {
   .pm-media-carousel {
     max-height: none;
     padding: 24px 18px 18px;
+  }
+  /* 表示領域の高さは JS で表示中の画像に合わせる（ProjectMediaCarousel）。
+     画像を上端にそろえ、高さの変化は滑らかにする */
+  .pm-carousel-shell [data-slot="carousel-content"] {
+    transition: height .25s ease;
+  }
+  .pm-carousel-item {
+    align-items: flex-start;
   }
   .pm-left-kicker {
     margin-bottom: 16px;

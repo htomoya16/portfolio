@@ -180,6 +180,37 @@ function ProjectMediaCarousel({ project }, ref) {
     }
   }, [api, pauseInactiveVideos])
 
+  // スマホでは表示領域の高さを、表示中の画像（キャプション込み）に合わせる。
+  // 縦長と横長の画像が混ざると一番高い画像に合わせて領域が確保され、
+  // 横長の画像の上下に大きな空白ができるため。PC はレイアウトが固定なので変えない
+  useEffect(() => {
+    if (!api) return
+    const viewport = api.rootNode()
+    const mobile = window.matchMedia('(max-width: 760px)')
+
+    const fitHeight = () => {
+      if (!mobile.matches) {
+        viewport.style.height = ''
+        return
+      }
+      const card = api.slideNodes()[api.selectedScrollSnap()]?.firstElementChild
+      if (card instanceof HTMLElement) viewport.style.height = `${card.offsetHeight}px`
+    }
+
+    fitHeight()
+    api.on('select', fitHeight)
+    api.on('reInit', fitHeight)
+    api.on('resize', fitHeight)
+    mobile.addEventListener('change', fitHeight)
+    return () => {
+      api.off('select', fitHeight)
+      api.off('reInit', fitHeight)
+      api.off('resize', fitHeight)
+      mobile.removeEventListener('change', fitHeight)
+      viewport.style.height = ''
+    }
+  }, [api])
+
   useEffect(() => {
     if (expandedIndex === null) return
 
