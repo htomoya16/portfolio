@@ -1,10 +1,16 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import ScrambleText from '@/components/animation/ScrambleText'
 import { projectsCopy, type Project } from '@/content/site/projects'
-import ProjectModal from './ProjectModal'
+import { onLoaderDone } from '@/lib/loaderSignal'
+
+// モーダル（カルーセルを含む）は最初の表示に不要なので、別ファイルに分けて後から読み込む。
+// next/dynamic（React.lazy）だと初回表示で Suspense を通り、React が切り替えを最大 300ms
+// 遅らせるため、読み込んだコンポーネントを state に持って直接描画する。
+type ProjectModalComponent = typeof import('./ProjectModal').default
+const loadProjectModal = () => import('./ProjectModal').then((mod) => mod.default)
 
 const SKILL_ICON_MAP: Record<string, string> = {
   Python: '/assets/icons/skills/python.svg',
@@ -63,8 +69,34 @@ interface Props {
 export default function ProjectsGrid({ projects }: Props) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [ProjectModal, setProjectModal] = useState<ProjectModalComponent | null>(null)
+
+  // import は一度だけ実行されるので、何度呼んでもよい
+  const prefetchProjectModal = useCallback(() => {
+    void loadProjectModal().then((component) => setProjectModal(() => component))
+  }, [])
+
+  // 初回クリックで読み込み待ちが出ないよう、ローディング画面が閉じたあと
+  // ブラウザの手が空いたときに先読みする（カードへのホバーやフォーカスでも読み込む）
+  useEffect(() => {
+    let idleId: number | undefined
+    let timerId: ReturnType<typeof setTimeout> | undefined
+    const offLoaderDone = onLoaderDone(() => {
+      if ('requestIdleCallback' in window) {
+        idleId = window.requestIdleCallback(prefetchProjectModal, { timeout: 3000 })
+      } else {
+        timerId = setTimeout(prefetchProjectModal, 1500)
+      }
+    })
+    return () => {
+      offLoaderDone()
+      if (idleId !== undefined) window.cancelIdleCallback(idleId)
+      clearTimeout(timerId)
+    }
+  }, [prefetchProjectModal])
 
   const openProject = (project: Project) => {
+    prefetchProjectModal()
     setSelectedProject(project)
     setDialogOpen(true)
   }
@@ -82,6 +114,8 @@ export default function ProjectsGrid({ projects }: Props) {
             key={project.num}
             className={`project-card${project.previewImage ? '' : ' is-no-preview'}`}
             onClick={() => openProject(project)}
+            onPointerEnter={prefetchProjectModal}
+            onFocus={prefetchProjectModal}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
@@ -140,7 +174,7 @@ export default function ProjectsGrid({ projects }: Props) {
         ))}
       </div>
 
-      {selectedProject && (
+      {selectedProject && ProjectModal && (
         <ProjectModal
           project={selectedProject}
           open={dialogOpen}
