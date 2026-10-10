@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import Image from 'next/image'
+import Image, { getImageProps } from 'next/image'
 import { createPortal } from 'react-dom'
 import type { CarouselApi } from '@/components/ui/carousel'
 import {
@@ -28,10 +28,29 @@ function getOrientationClass(item: ProjectMedia) {
   return item.orientation ? ` is-${item.orientation}` : ''
 }
 
-function MediaFrame({ item, videoRef, priority = false }: {
+/**
+ * <video poster> は Next.js の画像最適化を通らず、元のファイル（900KB を超える PNG もある）を
+ * そのまま読むため、最適化した画像の URL を作って渡す。
+ * 表示枠の 2 倍程度の幅（横長 1200px / 縦長 750px）になるように指定している。
+ */
+function getOptimizedPoster(item: ProjectMedia) {
+  if (!item.poster) return undefined
+  const portrait = item.orientation === 'portrait'
+  const { props } = getImageProps({
+    src: item.poster,
+    alt: '',
+    width: portrait ? 375 : 600,
+    height: portrait ? 667 : 338,
+  })
+  return props.src
+}
+
+function MediaFrame({ item, videoRef, priority = false, active = false }: {
   item: ProjectMedia
   videoRef?: (node: HTMLVideoElement | null) => void
   priority?: boolean
+  /** カルーセルで表示中か。表示中の動画だけ再生に必要な情報を先読みする */
+  active?: boolean
 }) {
   const className = `pm-media-el${getOrientationClass(item)}`
 
@@ -41,9 +60,9 @@ function MediaFrame({ item, videoRef, priority = false }: {
         ref={videoRef}
         className={className}
         src={item.src}
-        poster={item.poster}
+        poster={getOptimizedPoster(item)}
         controls
-        preload="none"
+        preload={active ? 'metadata' : 'none'}
         aria-label={item.alt}
       />
     )
@@ -307,6 +326,7 @@ function ProjectMediaCarousel({ project }, ref) {
                         item={item}
                         videoRef={(node) => { videoRefs.current[index] = node }}
                         priority={index === 0}
+                        active={index === selectedIndex}
                       />
                     )}
                   </div>
