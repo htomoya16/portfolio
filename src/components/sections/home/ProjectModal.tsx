@@ -169,12 +169,23 @@ function canScrollVertically(element: HTMLElement) {
   return element.scrollHeight > element.clientHeight
 }
 
-function findModalScrollArea(target: EventTarget | null, content: HTMLElement) {
-  if (!(target instanceof Element)) return null
+function isScrollContainer(element: HTMLElement) {
+  const { overflowY } = window.getComputedStyle(element)
+  return (overflowY === 'auto' || overflowY === 'scroll') && canScrollVertically(element)
+}
 
-  const scrollArea = target.closest<HTMLElement>('.pm-media-carousel, .pm-right')
-  if (!scrollArea || !content.contains(scrollArea)) return null
-  return scrollArea
+/**
+ * 操作した位置から外側へたどり、モーダル内で実際に縦スクロールできる要素を返す。
+ * PC では右側の本文（.pm-right）やカルーセル、スマホでは1列にまとめた .pm-body が
+ * スクロールするため、クラス名で決め打ちせずに探す。
+ */
+function findModalScrollArea(target: EventTarget | null, content: HTMLElement) {
+  let element = target instanceof Element ? target : null
+  while (element && content.contains(element)) {
+    if (element instanceof HTMLElement && isScrollContainer(element)) return element
+    element = element.parentElement
+  }
+  return null
 }
 
 function applyWheelScroll(element: HTMLElement, deltaY: number) {
@@ -222,9 +233,12 @@ function useModalScrollGuard(open: boolean, contentRef: React.RefObject<HTMLElem
       if (!content) return
       if (!content.contains(event.target as Node)) return
 
+      // 伝播は止めない。カルーセル（Embla）は touchmove でスワイプを受け取るため。
+      // Lenis は syncTouch: false（既定）なので指の操作を横取りしない。
+      // スクロールできる領域の中ではブラウザ標準のスクロールに任せ、
+      // スクロール先がない場所でだけ止めて背景のページが動かないようにする
+      if (findModalScrollArea(event.target, content)) return
       event.preventDefault()
-      event.stopPropagation()
-      event.stopImmediatePropagation()
     }
 
     window.addEventListener('wheel', handleWheel, { capture: true, passive: false })
