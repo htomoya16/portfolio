@@ -472,7 +472,7 @@ export const projects: Project[] = [
     title: 'Project Preparing',
     desc: '次の開発プロジェクトを準備中です',
     longDesc:
-      '実データ、画像、技術スタックが揃い次第、採用担当者・エンジニア面接官が確認しやすい形で詳細を追加します。',
+      '実データ、画像、技術スタックが揃い次第、詳細を追加します。',
     tags: [],
     role: 'Preparing',
     period: 'TBD',
@@ -497,7 +497,7 @@ export const projects: Project[] = [
     duration: 'TBD',
     status: 'COMING SOON',
     background:
-      '現在、掲載候補のプロジェクト内容を整理しています。採用担当者が短時間で概要を把握でき、エンジニア面接官が実装内容を確認しやすい構成で追加します。',
+      '現在、掲載候補のプロジェクト内容を整理しています。',
     devContent:
       '今後、技術スタック、担当範囲、工夫した点、苦労した点と解決を追記予定です。',
   },
