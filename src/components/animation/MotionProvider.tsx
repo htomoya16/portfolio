@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { type ReactNode, useEffect, useRef, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
+import { onLoaderDone } from '@/lib/loaderSignal'
 import CursorFollower from './CursorFollower'
 import { SCRAMBLE_CHARS, type ScramblePattern } from './ScrambleText'
 
@@ -194,11 +195,14 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       )
 
       // Hero title 3D drop
-      gsap.from('.hero-title .line', {
+      // ローディング画面の裏で終わってしまわないよう、閉じ始めてから再生する
+      const heroDrop = gsap.from('.hero-title .line', {
         autoAlpha: 0, y: -80, rotateX: -75, skewX: 12,
         transformPerspective: 800, transformOrigin: '50% 100%',
         duration: 0.95, ease: 'back.out(1.8)', stagger: 0.1, delay: 0.1,
+        paused: true,
       })
+      const offLoaderDone = onLoaderDone(() => heroDrop.play())
 
       // Hero ticker scroll boost
       gsap.to('.hero-ticker-inner', {
@@ -271,6 +275,8 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
           scrollTrigger: { trigger: grid.closest('section') ?? grid, start: 'top bottom', end: 'bottom top', scrub: 0.9 },
         })
       })
+
+      return () => offLoaderDone()
     },
     { scope: rootRef }
   )

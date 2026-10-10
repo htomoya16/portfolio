@@ -2,7 +2,9 @@
 
 import React from 'react'
 import { createPortal } from 'react-dom'
-import { CH, CW, PetAnim, ROWS, framePos, spriteStyle } from './petSprite'
+import { pickHeroBackground } from '@/lib/heroBackground'
+import { markLoaderDone } from '@/lib/loaderSignal'
+import { CH, CW, PetAnim, ROWS, SHEET_SRC, framePos, spriteStyle } from './petSprite'
 
 /** ネギが歩き回るレイヤー。HeroSection 側がこの id の空 div を描画する。 */
 export const PET_LAYER_ID = 'negi-layer'
@@ -13,6 +15,29 @@ const CMD_SECTIONS = ['about', 'skills', 'projects', 'experience', 'contact']
 export const TERMINAL_TOGGLE_EVENT = 'negi:toggle-terminal'
 /** このセクションを見ている間は、ネギが画面左下から覗く。 */
 const PEEK_LEFT_SECTIONS = ['about', 'projects', 'contact']
+
+/** ローディング画面が読み込みを待つ最大時間。遅い回線でもこれ以上は待たせない。 */
+const LOADER_MAX_WAIT_MS = 3000
+
+/** 画像を読み込んでデコードし終えたら解決する。失敗しても解決する（表示は続ける）。 */
+function preloadImage(src: string): Promise<void> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.src = src
+    img.decode().then(() => resolve(), () => resolve())
+  })
+}
+
+/** フォント、Hero の背景画像、ネギのスプライトの読み込みを、最大 maxWait ミリ秒待つ。 */
+function waitForInitialAssets(maxWait: number): Promise<void> {
+  const assets = Promise.all([
+    document.fonts?.ready,
+    preloadImage(pickHeroBackground()),
+    preloadImage(SHEET_SRC),
+  ]).then(() => undefined)
+  const timeout = new Promise<void>((resolve) => setTimeout(resolve, maxWait))
+  return Promise.race([assets, timeout])
+}
 const KONAMI =
   'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,b,a'
 
@@ -159,7 +184,10 @@ export default class NegiSystem extends React.Component<Props, State> {
 
   runLoader() {
     const el = this.loaderRef.current
-    if (!el) return
+    if (!el) {
+      markLoaderDone()
+      return
+    }
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const D = reduced ? 400 : 1100
     const t0 = performance.now()
@@ -169,24 +197,36 @@ export default class NegiSystem extends React.Component<Props, State> {
     const row = 8
     const n = 6
     let done = false
+    let ready = false
+    let shown = 0
+
+    // 閉じた直後に画面が完成しているよう、Hero の表示に必要なものを先に読み込む
+    waitForInitialAssets(LOADER_MAX_WAIT_MS).then(() => {
+      ready = true
+    })
 
     const step = (t: number) => {
-      const p = Math.min(1, (t - t0) / D)
+      const elapsed = t - t0
+      const p = Math.min(1, elapsed / D)
       const e = 1 - Math.pow(1 - p, 2.2)
+      // 読み込みが終わるまでは 90% 台で待つ（待つ間も少しずつ進めて止まって見えないようにする）
+      const waiting = Math.min(1, Math.max(0, elapsed - D) / (LOADER_MAX_WAIT_MS - D))
+      const target = ready ? e : Math.min(e, 0.9 + 0.06 * waiting)
+      shown = reduced ? target : shown + (target - shown) * 0.25
       const bar = this.loaderBarRef.current
       const pet = this.loaderPetRef.current
       const sp = this.loaderSpriteRef.current
       const pct = this.loaderPctRef.current
       if (!bar || !pet || !sp || !pct) return
-      bar.style.width = `${e * 100}%`
-      pet.style.transform = `translateX(${e * 260}px)`
-      pct.textContent = `${String(Math.round(e * 100)).padStart(3, '0')}%`
+      bar.style.width = `${shown * 100}%`
+      pet.style.transform = `translateX(${shown * 260}px)`
+      pct.textContent = `${String(Math.round(shown * 100)).padStart(3, '0')}%`
       if (t - last > 150) {
         last = t
         fi = (fi + 1) % n
         sp.style.backgroundPosition = framePos(fi, row)
       }
-      if (p >= 1 && !done) {
+      if (p >= 1 && ready && shown > 0.995 && !done) {
         done = true
         if (this.loaderTextRef.current) this.loaderTextRef.current.textContent = 'READY!'
         setTimeout(
@@ -194,6 +234,7 @@ export default class NegiSystem extends React.Component<Props, State> {
             el.style.opacity = '0'
             el.style.transform = 'translateY(-12px)'
             document.documentElement.style.overflow = ''
+            markLoaderDone()
             setTimeout(() => {
               el.style.display = 'none'
               this.loaderDone = true
@@ -551,6 +592,7 @@ export default class NegiSystem extends React.Component<Props, State> {
     // eslint-disable-next-line no-console
     console.log('%cネギ「 / キーを押してみて」', 'color:#4367FF;font-family:monospace;font-size:14px')
     if (this.props.showLoader ?? true) this.runLoader()
+    else markLoaderDone()
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     this.timer = setInterval(this.tick, 130)
     this.place()

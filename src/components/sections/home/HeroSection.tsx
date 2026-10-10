@@ -5,7 +5,8 @@ import { useEffect, useRef } from 'react'
 import ScrambleText from '@/components/animation/ScrambleText'
 import SideRails from '@/components/layout/SideRails'
 import { PET_LAYER_ID } from '@/components/pet/NegiSystem'
-import { HERO_BG_STORAGE_KEY, heroBackgrounds, heroCopy, heroTickerSequence } from '@/content/site/hero'
+import { heroCopy, heroTickerSequence } from '@/content/site/hero'
+import { pickHeroBackground } from '@/lib/heroBackground'
 
 export default function HeroSection() {
   const panelRef = useRef<HTMLDivElement>(null)
@@ -14,22 +15,8 @@ export default function HeroSection() {
   useEffect(() => {
     const el = panelRef.current
     if (!el) return
-    let last = -1
-    try {
-      last = Number.parseInt(localStorage.getItem(HERO_BG_STORAGE_KEY) ?? '-1', 10)
-    } catch {
-      // localStorage が使えない環境ではランダムのみで決める
-    }
-    let i = Math.floor(Math.random() * heroBackgrounds.length)
-    if (i === last) {
-      i = (i + 1 + Math.floor(Math.random() * (heroBackgrounds.length - 1))) % heroBackgrounds.length
-    }
-    try {
-      localStorage.setItem(HERO_BG_STORAGE_KEY, String(i))
-    } catch {
-      // 保存できなくても表示自体には影響しない
-    }
-    el.style.setProperty('--hero-bg-image', `url(${heroBackgrounds[i]})`)
+    // ローディング画面が先読みしているものと同じ画像を使う
+    el.style.setProperty('--hero-bg-image', `url(${pickHeroBackground()})`)
   }, [])
 
   const handleScrollToAbout = () => {

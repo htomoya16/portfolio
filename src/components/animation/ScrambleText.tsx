@@ -1,6 +1,7 @@
 'use client'
 
 import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
+import { onLoaderDone } from '@/lib/loaderSignal'
 import { animate, scrambleText } from 'animejs'
 import { type ComponentPropsWithoutRef, type ElementType, useEffect, useRef } from 'react'
 
@@ -121,7 +122,8 @@ export default function ScrambleText<T extends ElementType = 'span'>({
       { threshold: 0.3 }
     )
 
-    observer.observe(el)
+    // ローディング画面の裏で再生し終わらないよう、閉じてから表示判定を始める
+    const offLoaderDone = onLoaderDone(() => observer.observe(el))
 
     const handlePointerEnter = () => {
       if (replayOnHover && !isPlaying) play()
@@ -130,6 +132,7 @@ export default function ScrambleText<T extends ElementType = 'span'>({
     el.addEventListener('pointerenter', handlePointerEnter)
 
     return () => {
+      offLoaderDone()
       observer.disconnect()
       el.removeEventListener('pointerenter', handlePointerEnter)
       animation?.cancel()
