@@ -4,6 +4,9 @@ import SectionHeading from '@/components/ui/SectionHeading'
 import { projects, projectsCopy } from '@/content/site/projects'
 import ProjectsGrid from './ProjectsGrid'
 
+// 準備中（COMING SOON）のカードは作品数に含めない
+const publishedCount = projects.filter((project) => project.status !== 'COMING SOON').length
+
 export default function ProjectsSection() {
   return (
     <section className="projects" id="projects">
@@ -20,7 +23,7 @@ export default function ProjectsSection() {
               letterSpacing: '0.22em',
             }}
           >
-            {projects.length} {projectsCopy.countSuffix}
+            {publishedCount} {projectsCopy.countSuffix}
           </span>
         </div>
 
