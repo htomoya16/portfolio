@@ -457,7 +457,7 @@ LiteLLMは無料のオープンソースで、研究室のサーバー内で動�
       {
         type: 'video',
         src: '/assets/projects/hapticpiano/hapticpiano1.mp4',
-        poster: '/assets/projects/hapticpiano/hapticpiano3.png',
+        poster: '/assets/projects/hapticpiano/hapticpiano1-poster.jpg',
         orientation: 'portrait',
         alt: 'Haptic Piano demonstration video 1',
         caption: '仮想空間上のピアノ演奏とグローブ型デバイスの動作デモ',
