@@ -1,7 +1,6 @@
 'use client'
 
 import { useGSAP } from '@gsap/react'
-import { animate, scrambleText } from 'animejs'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
@@ -9,7 +8,7 @@ import { type ReactNode, useEffect, useRef, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { onLoaderDone } from '@/lib/loaderSignal'
 import CursorFollower from './CursorFollower'
-import { SCRAMBLE_CHARS, type ScramblePattern } from './ScrambleText'
+import { SCRAMBLE_CHARS, type ScramblePattern, scrambleText } from './scramble'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -18,14 +17,14 @@ const getClientSnapshot = () => true
 const getServerSnapshot = () => false
 
 /** Track in-progress scramble animations per element to allow mid-flight cancellation */
-const activeAnims = new WeakMap<HTMLElement, ReturnType<typeof animate>>()
+const activeAnims = new WeakMap<HTMLElement, ReturnType<typeof scrambleText>>()
 
 /** Cancel an active scramble and immediately restore the original text */
 function cancelScramble(el: HTMLElement | null | undefined, text: string) {
   if (!el) return
   const prev = activeAnims.get(el)
   if (prev) {
-    prev.pause()
+    prev.kill()
     el.textContent = text
     activeAnims.delete(el)
   }
@@ -54,7 +53,7 @@ function lockElSize(el: HTMLElement) {
   }
 }
 
-/** Scramble one element via animejs (used for hover effects) */
+/** Scramble one element via GSAP ScrambleTextPlugin (used for hover effects) */
 function scrambleEl(
   el: HTMLElement,
   text: string,
@@ -65,18 +64,11 @@ function scrambleEl(
   // Lock size to prevent layout shift during scramble
   lockElSize(el)
   el.textContent = text
-  const anim = animate(el, {
-    innerHTML: scrambleText({
-      text,
-      chars: opts?.chars ?? SCRAMBLE_CHARS[opts?.pattern ?? 'label'],
-      revealRate: opts?.revealRate ?? 44,
-      settleDuration: opts?.settleDuration ?? 360,
-      from: 'left',
-      override: '',
-      perturbation: 0.45,
-    }),
+  const anim = scrambleText(el, text, {
+    chars: opts?.chars ?? SCRAMBLE_CHARS[opts?.pattern ?? 'label'],
+    revealRate: opts?.revealRate ?? 44,
+    settleDuration: opts?.settleDuration ?? 360,
     onComplete: () => {
-      el.textContent = text
       activeAnims.delete(el)
     },
   })
@@ -480,7 +472,9 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     if (logoEl) {
       const logoText = logoEl.textContent?.trim() || ''
       let logoLastEnter = 0
-      const LOGO_COOLDOWN = 700 // scramble 中の DOM 変化で pointerenter が再発火するのを防ぐ
+      // scramble 中の DOM 変化で pointerenter が誤って再発火するのを防ぐだけの短い間隔。
+      // 再生中でもマウスを乗せ直せば最初からやり直す
+      const LOGO_COOLDOWN = 150
       const onEnter = () => {
         const now = Date.now()
         if (now - logoLastEnter < LOGO_COOLDOWN) return
@@ -495,8 +489,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
         })
       }
       const onLeave = () => {
-        // cancelScramble しない — 自然完走させる
-        // cancelScramble すると即停止→クールダウン中に再 enter しても弾かれて動かなくなる
+        // cancelScramble しない — 自然完走させる（再 enter したら最初からやり直す）
         gsap.to(logoEl, {
           color: 'var(--ink)',
           textShadow: 'none',
@@ -527,7 +520,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
       )
       const wordTexts = wordSpans.map((s) => s.textContent?.trim() || '')
       let heroLastEnter = 0
-      const HERO_COOLDOWN = 800
+      const HERO_COOLDOWN = 150 // 誤った再発火を防ぐだけの短い間隔
 
       const timers: ReturnType<typeof setTimeout>[] = []
       const onEnter = () => {
@@ -552,7 +545,7 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     return () => cleaners.forEach((fn) => fn())
   }, [])
 
-  // ── AnimeJS micro-bounce on tile/card enter ───────────────────────────
+  // ── Micro-bounce on tile/card enter ────────────────────────────────────
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
@@ -563,11 +556,11 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     const cleaners: Array<() => void> = []
 
     const handleEnter = (event: Event) => {
-      animate(event.currentTarget as HTMLElement, {
-        translateY: [-2, -6, -3],
-        scale: [1, 1.02, 1.005],
-        duration: 380,
-        ease: 'out(3)',
+      gsap.to(event.currentTarget as HTMLElement, {
+        keyframes: { y: [-2, -6, -3], scale: [1, 1.02, 1.005] },
+        duration: 0.38,
+        ease: 'power2.out',
+        overwrite: 'auto',
       })
     }
     targets.forEach((t) => {

@@ -2,18 +2,8 @@
 
 import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import { onLoaderDone } from '@/lib/loaderSignal'
-import { animate, scrambleText } from 'animejs'
 import { type ComponentPropsWithoutRef, type ElementType, useEffect, useRef } from 'react'
-
-export const SCRAMBLE_CHARS = {
-  title: '._:+*#01XYZ',
-  label: '01<>[]{}',
-  code: 'abcdef0123456789',
-  soft: '.:-+*',
-  braille: '⠂⠆⠒⠲⠶⠿',
-} as const
-
-export type ScramblePattern = keyof typeof SCRAMBLE_CHARS
+import { SCRAMBLE_CHARS, type ScramblePattern, scrambleText } from './scramble'
 
 type ScrambleTextProps<T extends ElementType> = {
   as?: T
@@ -21,13 +11,8 @@ type ScrambleTextProps<T extends ElementType> = {
   pattern?: ScramblePattern
   chars?: string
   delay?: number
-  duration?: number
   revealRate?: number
-  revealDelay?: number
-  settleRate?: number
   settleDuration?: number
-  from?: 'left' | 'center' | 'right' | 'random' | 'auto' | number
-  cursor?: boolean | string
   replayOnHover?: boolean
   className?: string
 } & Omit<ComponentPropsWithoutRef<T>, 'children' | 'className'>
@@ -38,13 +23,8 @@ export default function ScrambleText<T extends ElementType = 'span'>({
   pattern = 'title',
   chars,
   delay = 0,
-  duration,
   revealRate = 52,
-  revealDelay = 0,
-  settleRate = 32,
   settleDuration = 420,
-  from = 'left',
-  cursor = false,
   replayOnHover = true,
   className,
   ...props
@@ -63,10 +43,11 @@ export default function ScrambleText<T extends ElementType = 'span'>({
     }
 
     let hasPlayed = false
-    let animation: ReturnType<typeof animate> | undefined
-    let isPlaying = false
+    let animation: ReturnType<typeof scrambleText> | undefined
     let lastPlayTime = 0
-    const COOLDOWN = 600 // ms — prevent retriggering mid-animation
+    // 文字の書き換えで pointerenter が誤って連続発火するのを防ぐだけの短い間隔。
+    // 再生中でもマウスを乗せ直せば最初からやり直す
+    const RETRIGGER_GUARD = 150
 
     // Lock element size BEFORE animation to prevent layout shift
     const lockSize = () => {
@@ -82,32 +63,19 @@ export default function ScrambleText<T extends ElementType = 'span'>({
 
     const play = () => {
       const now = Date.now()
-      if (now - lastPlayTime < COOLDOWN) return
+      if (now - lastPlayTime < RETRIGGER_GUARD) return
       lastPlayTime = now
 
-      animation?.cancel()
-      lockSize()
+      animation?.kill()
       el.textContent = text
-      isPlaying = true
+      lockSize()
 
-      animation = animate(el, {
-        innerHTML: scrambleText({
-          text,
-          chars: charPool,
-          delay,
-          duration,
-          revealRate,
-          revealDelay,
-          settleRate,
-          settleDuration,
-          from,
-          cursor,
-          override: '',
-          perturbation: 0.45,
-        }),
-        onComplete: () => {
-          isPlaying = false
-        },
+      animation = scrambleText(el, text, {
+        chars: charPool,
+        // 開始の待ち時間は最初の登場時だけ。ホバー時はすぐ反応させる
+        delay: hasPlayed ? 0 : delay,
+        revealRate,
+        settleDuration,
       })
       hasPlayed = true
     }
@@ -126,7 +94,7 @@ export default function ScrambleText<T extends ElementType = 'span'>({
     const offLoaderDone = onLoaderDone(() => observer.observe(el))
 
     const handlePointerEnter = () => {
-      if (replayOnHover && !isPlaying) play()
+      if (replayOnHover) play()
     }
 
     el.addEventListener('pointerenter', handlePointerEnter)
@@ -135,21 +103,9 @@ export default function ScrambleText<T extends ElementType = 'span'>({
       offLoaderDone()
       observer.disconnect()
       el.removeEventListener('pointerenter', handlePointerEnter)
-      animation?.cancel()
+      animation?.kill()
     }
-  }, [
-    charPool,
-    cursor,
-    delay,
-    duration,
-    from,
-    revealDelay,
-    revealRate,
-    replayOnHover,
-    settleDuration,
-    settleRate,
-    text,
-  ])
+  }, [charPool, delay, revealRate, replayOnHover, settleDuration, text])
 
   return (
     <Component ref={ref} className={className} {...props}>
