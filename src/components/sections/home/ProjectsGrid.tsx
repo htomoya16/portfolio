@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useCallback, useEffect, useState } from 'react'
 import ScrambleText from '@/components/animation/ScrambleText'
-import { projectsCopy, type Project } from '@/content/site/projects'
+import { isComingSoon, projectsCopy, type Project } from '@/content/site/projects'
 import { onLoaderDone } from '@/lib/loaderSignal'
 
 // モーダル（カルーセルを含む）は最初の表示に不要なので、別ファイルに分けて後から読み込む。
@@ -101,6 +101,25 @@ export default function ProjectsGrid({ projects }: Props) {
     setDialogOpen(true)
   }
 
+  // 準備中のカードは中身がないので、クリックやキーボードで詳細を開けないようにする
+  const getCardProps = (project: Project): React.HTMLAttributes<HTMLElement> => {
+    if (isComingSoon(project)) return {}
+    return {
+      onClick: () => openProject(project),
+      onPointerEnter: prefetchProjectModal,
+      onFocus: prefetchProjectModal,
+      role: 'button',
+      tabIndex: 0,
+      onKeyDown: (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          openProject(project)
+        }
+      },
+      'aria-label': `${projectsCopy.viewDetailsAriaPrefix} ${project.title}`,
+    }
+  }
+
   const handleOpenChange = (open: boolean) => {
     setDialogOpen(open)
     if (!open) setTimeout(() => setSelectedProject(null), 300)
@@ -112,19 +131,8 @@ export default function ProjectsGrid({ projects }: Props) {
         {projects.map((project) => (
           <article
             key={project.num}
-            className={`project-card${project.previewImage ? '' : ' is-no-preview'}`}
-            onClick={() => openProject(project)}
-            onPointerEnter={prefetchProjectModal}
-            onFocus={prefetchProjectModal}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                openProject(project)
-              }
-            }}
-            aria-label={`${projectsCopy.viewDetailsAriaPrefix} ${project.title}`}
+            className={`project-card${project.previewImage ? '' : ' is-no-preview'}${isComingSoon(project) ? ' is-coming-soon' : ''}`}
+            {...getCardProps(project)}
           >
             <span className="project-card-sheen" aria-hidden="true" />
             {project.previewImage && (

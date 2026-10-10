@@ -92,6 +92,11 @@ export const projectModalCopy = {
   },
 } as const
 
+/** 準備中のプレースホルダーか。作品数に数えず、詳細モーダルも開かない */
+export function isComingSoon(project: Project) {
+  return project.status === 'COMING SOON'
+}
+
 export const projects: Project[] = [
   {
     num: '01',

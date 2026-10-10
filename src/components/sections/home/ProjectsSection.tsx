@@ -1,11 +1,11 @@
 // Server component
 import { Atmo } from '@/components/ui/Decor'
 import SectionHeading from '@/components/ui/SectionHeading'
-import { projects, projectsCopy } from '@/content/site/projects'
+import { isComingSoon, projects, projectsCopy } from '@/content/site/projects'
 import ProjectsGrid from './ProjectsGrid'
 
 // 準備中（COMING SOON）のカードは作品数に含めない
-const publishedCount = projects.filter((project) => project.status !== 'COMING SOON').length
+const publishedCount = projects.filter((project) => !isComingSoon(project)).length
 
 export default function ProjectsSection() {
   return (
