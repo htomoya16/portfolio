@@ -199,18 +199,43 @@ function ProjectMediaCarousel({ project }, ref) {
     const node = rootRef.current
     if (!node || !api) return
 
+    // トラックパッドは1回のスワイプで大量の wheel イベントを送るため、
+    // 一定量たまったら1枚だけ進め、操作が止まるまで（または一定時間）次を受け付けない
+    const STEP_THRESHOLD = 40
+    const IDLE_MS = 160
+    const MAX_LOCK_MS = 700
+    let accumulated = 0
+    let lockedAt: number | null = null
+    let idleTimer: ReturnType<typeof setTimeout> | undefined
+
     const handleWheel = (event: Event) => {
       const detail = (event as CustomEvent<{ deltaY: number; deltaX: number }>).detail
       const delta = Math.abs(detail.deltaX) > Math.abs(detail.deltaY) ? detail.deltaX : detail.deltaY
-      if (delta > 0) {
+
+      clearTimeout(idleTimer)
+      idleTimer = setTimeout(() => {
+        accumulated = 0
+        lockedAt = null
+      }, IDLE_MS)
+
+      const now = performance.now()
+      if (lockedAt !== null && now - lockedAt < MAX_LOCK_MS) return
+
+      accumulated += delta
+      if (Math.abs(accumulated) < STEP_THRESHOLD) return
+
+      if (accumulated > 0) {
         api.scrollNext()
-      } else if (delta < 0) {
+      } else {
         api.scrollPrev()
       }
+      accumulated = 0
+      lockedAt = now
     }
 
     node.addEventListener('pm-carousel-wheel', handleWheel)
     return () => {
+      clearTimeout(idleTimer)
       node.removeEventListener('pm-carousel-wheel', handleWheel)
     }
   }, [api])

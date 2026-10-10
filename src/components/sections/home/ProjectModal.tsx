@@ -199,7 +199,9 @@ function useModalScrollGuard(open: boolean, contentRef: React.RefObject<HTMLElem
         event.preventDefault()
         event.stopPropagation()
         event.stopImmediatePropagation()
+        // リスナーはカルーセルの外側の要素にあるため、bubbles で届ける
         carousel.dispatchEvent(new CustomEvent('pm-carousel-wheel', {
+          bubbles: true,
           detail: { deltaY: event.deltaY, deltaX: event.deltaX },
         }))
         return
