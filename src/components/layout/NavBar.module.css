@@ -19,8 +19,9 @@
   transform: scaleX(0);
   z-index: 51;
 }
+/* ロゴも項目と同じく、ナビの高さいっぱいで反応する */
 .logo {
-  align-self: center;
+  display: flex; align-items: center;
   font-family: var(--font-pixel);
   font-size: 14px; color: var(--ink); letter-spacing: 0.04em;
   white-space: nowrap;
