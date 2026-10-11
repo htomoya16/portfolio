@@ -1,7 +1,8 @@
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 22px 96px;
+  display: flex; align-items: stretch; justify-content: space-between;
+  height: 70px;
+  padding: 0 96px;
   background: rgba(249,250,255,0.82);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(67,103,255,0.08);
@@ -16,25 +17,34 @@
   z-index: 51;
 }
 .logo {
+  align-self: center;
   font-family: var(--font-pixel);
   font-size: 14px; color: var(--ink); letter-spacing: 0.04em;
   white-space: nowrap;
 }
-.links { display: flex; gap: 34px; list-style: none; }
+/* 各項目はナビの高さいっぱいと左右の余白（項目の間の半分ずつ）まで反応する。
+   右端の余白の分だけ外へ出して、文字の右端をパディングの位置にそろえる */
+.links {
+  --link-pad-x: 17px;
+  display: flex; list-style: none;
+  margin-right: calc(-1 * var(--link-pad-x));
+}
+.links li { display: flex; }
 .links a {
-  /* かき混ぜ中に表示形式が変わってナビの高さがずれないよう、最初から inline-block にしておく */
-  display: inline-block;
+  display: flex; align-items: center;
+  padding: 0 var(--link-pad-x);
+  position: relative;
   font-family: var(--font-pixel);
   font-size: 12px; letter-spacing: 0.16em; line-height: 1;
   color: var(--ink-2); font-weight: 400;
-  padding: 6px 0; position: relative;
 }
 .links a:hover { color: var(--blue); }
+/* 下線は文字の 4px 下に引く */
 .links a::after {
-  content: ''; position: absolute; left: 0; bottom: 0;
+  content: ''; position: absolute; left: var(--link-pad-x); top: calc(50% + 0.5em + 4px);
   width: 0; height: 2px; background: var(--blue); transition: width .2s;
 }
-.links a:hover::after { width: 100%; }
+.links a:hover::after { width: calc(100% - 2 * var(--link-pad-x)); }
 
 @media (max-width: 1280px) {
   .nav { padding-left: 64px; padding-right: 64px; }
@@ -47,5 +57,5 @@
   .links { display: none; }
 }
 @media (max-width: 720px) {
-  .nav { padding: 16px 24px; }
+  .nav { height: 55px; padding: 0 24px; }
 }
