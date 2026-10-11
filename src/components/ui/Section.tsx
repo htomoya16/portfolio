@@ -14,7 +14,7 @@ type Props = {
 
 /**
  * About 以降のセクションの枠。スクロールで見出しと中身を順に表示し、下端の区切り線を引く。
- * 見出しは SectionHeading（data-section-heading）、背景は Atmo（data-atmo）を目印に探す。
+ * 見出しは SectionHeading の data-section-heading を目印に探し、背景の層（data-section-bg を付けた Atmo など）は演出の対象から外す。
  */
 export default function Section({ id, className, children }: Props) {
   const ref = useRef<HTMLElement>(null)
@@ -26,7 +26,7 @@ export default function Section({ id, className, children }: Props) {
 
       const heading = section.querySelector('[data-section-heading]')
       const content = Array.from(section.children).filter(
-        (child) => !child.hasAttribute('data-atmo') && child !== heading,
+        (child) => !child.hasAttribute('data-section-bg') && child !== heading,
       )
 
       gsap.fromTo(

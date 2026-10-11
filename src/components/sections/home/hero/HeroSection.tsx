@@ -102,7 +102,7 @@ export default function HeroSection() {
     <section ref={heroRef} className={styles.hero} id="hero">
       <SideRail />
 
-      <div className={styles.rightBg} aria-hidden="true" ref={panelRef}>
+      <div className={styles.rightBg} aria-hidden="true" ref={panelRef} data-hero-panel>
         <div className={styles.veil} />
       </div>
 

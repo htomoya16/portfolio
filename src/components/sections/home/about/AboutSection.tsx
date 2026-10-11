@@ -7,6 +7,7 @@ import { useHover } from '@/components/animation/useHover'
 import Atmo from '@/components/decor/Atmo'
 import CornerBrackets from '@/components/ui/CornerBrackets'
 import Section from '@/components/ui/Section'
+import HeroPanelExtension from '../hero/HeroPanelExtension'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { aboutCopy, aboutMilestones } from '@/content/site/about'
 import { gsap } from '@/lib/gsap'
@@ -63,6 +64,7 @@ export default function AboutSection() {
 
   return (
     <Section id="about" className={styles.about}>
+      <HeroPanelExtension />
       <Atmo variant="a" />
 
       <SectionHeading number={aboutCopy.sectionNumber} title={aboutCopy.sectionTitle} blink className={styles.heading} />

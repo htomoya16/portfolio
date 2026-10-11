@@ -9,8 +9,8 @@
   padding: var(--section-pad-top, 88px) var(--section-pad-x) var(--section-pad-bottom, 96px);
   overflow-x: clip;
 }
-/* 背景（Atmo）より手前に中身を重ねる */
-.section > :not([data-atmo]) { position: relative; z-index: 2; }
+/* 背景の層より手前に中身を重ねる */
+.section > :not([data-section-bg]) { position: relative; z-index: 2; }
 /* 下端の区切り線。スクロールに合わせて --divider-scale で左から引く */
 .section::after {
   content: '';

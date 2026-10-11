@@ -7,15 +7,16 @@
 }
 .content { flex: 1 1 50%; min-width: 0; position: relative; z-index: 3; }
 
-/* 右側の画像パネル。左辺を斜めに切る */
+/* 右側の画像パネル。左辺を斜めに切る（上端で幅の --panel-slant だけ右へずらす） */
 .rightBg {
+  --panel-slant: 12%;
   position: absolute; top: 0; right: 0; bottom: 0; width: 50%;
   background-color: #F3F6FD;
   background-image: var(--hero-bg-image, none);
   background-position: right bottom;
   background-size: cover;
   background-repeat: no-repeat;
-  clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(var(--panel-slant) 0, 100% 0, 100% 100%, 0 100%);
   z-index: 0;
 }
 /* パネル画像を白側に寄せて本文の可読性を確保する（デザイン準拠の 50% ベール）。 */
@@ -23,6 +24,16 @@
   position: absolute; inset: 0;
   background: rgba(243,246,253,0.5);
   z-index: 1;
+}
+/* パネルの斜めの辺を下のセクションまで延長した白い面（HeroPanelExtension）。
+   辺の位置は JS が測って --edge-top / --edge-bottom に入れる。測るまでは幅 0 で見えない */
+.panelExtension {
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  background: #fff;
+  clip-path: polygon(0 0, var(--edge-top, 0px) 0, var(--edge-bottom, 0px) 100%, 0 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 70%, transparent 100%);
 }
 /* ネギが歩き回るレイヤー。パネルと同じ矩形に重ねる */
 .negiLayer {
@@ -169,6 +180,8 @@
     clip-path: polygon(0 14%, 100% 0, 100% 100%, 0 100%);
   }
   .negiLayer { top: auto; height: 46vh; width: 100%; }
+  /* パネルが画面下に回ると斜めの辺が横向きになるので、延長しない */
+  .panelExtension { display: none; }
 }
 @media (max-width: 720px) {
   .hero { padding-left: 24px; padding-right: 24px; }

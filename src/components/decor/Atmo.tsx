@@ -17,7 +17,7 @@ type Props = {
   tone?: 'cool' | 'warm'
 }
 
-/** セクションの背景。Section が data-atmo を目印に、登場演出の対象から外す */
+/** セクションの背景。data-section-bg を付け、Section の登場演出の対象から外す */
 export default function Atmo({ variant, tone = 'cool' }: Props) {
   const rootRef = useRef<HTMLDivElement>(null)
   const blobRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -60,7 +60,7 @@ export default function Atmo({ variant, tone = 'cool' }: Props) {
   )
 
   return (
-    <div ref={rootRef} className={clsx(styles.atmo, styles[variant], tone === 'warm' && styles.warm)} aria-hidden="true" data-atmo>
+    <div ref={rootRef} className={clsx(styles.atmo, styles[variant], tone === 'warm' && styles.warm)} aria-hidden="true" data-section-bg>
       <div ref={gridRef} className={styles.grid} />
       {(['b1', 'b2', 'b3'] as const).map((name, i) => (
         <div key={name} ref={(el) => { blobRefs.current[i] = el }} className={clsx(styles.blob, styles[name])} />
