@@ -1,7 +1,7 @@
 export const contactCopy = {
   sectionNumber: '# 05',
   sectionTitle: '## CONTACT',
-  statusLabel: 'Status: open to internship',
+  statusLabel: 'Status: open to contact',
   statusText: 'OPEN',
   prompt: '> SEND MESSAGE',
 } as const

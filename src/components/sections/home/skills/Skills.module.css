@@ -1,0 +1,324 @@
+.skills {
+  background: linear-gradient(180deg, rgba(244,248,255,0.86) 0%, rgba(232,239,255,0.86) 48%, rgba(248,251,255,0.94) 100%);
+}
+.wrap { position: relative; z-index: 2; max-width: 1280px; width: 100%; margin: 0 auto; }
+
+/* 紹介文とレベルの目安 */
+.introGrid {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.82fr) minmax(520px, 1.18fr);
+  gap: 34px;
+  align-items: stretch;
+  margin: -12px 0 42px;
+}
+/* 紹介文はカードに入れず、地の文として置く（デザイン準拠）。 */
+.overview { display: flex; flex-direction: column; justify-content: center; padding: 0; }
+.lead {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.92;
+  letter-spacing: 0.035em;
+  margin: 0;
+}
+.lead + .lead { margin-top: 1.92em; }
+.levelColumn {
+  position: relative;
+  display: flex; flex-direction: column;
+  border: 1px solid rgba(67,103,255,0.16);
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 40px rgba(31,42,68,0.06);
+}
+.levelGuide {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+  padding: 18px 20px 20px;
+  align-self: stretch;
+  flex: 1;
+}
+.guideItem {
+  display: flex;
+  flex-direction: column;
+  min-height: 116px;
+  gap: 9px;
+  padding: 0 17px;
+  border-left: 1px solid rgba(181,189,205,0.42);
+}
+.guideItem:first-child { border-left: 0; }
+.guideLevel {
+  width: fit-content;
+  padding: 4px 8px;
+  border: 1px solid rgba(67,103,255,0.12);
+  background: rgba(238,244,255,0.84);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--muted-2);
+}
+.guideLabel {
+  flex: 1;
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.65;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.guideLine {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: var(--line-2);
+  box-shadow: 0 0 12px rgba(67,103,255,0.1);
+}
+.guideLv1 .guideLine { background: #AEB8C8; }
+.guideLv2 .guideLine { background: #438BFF; }
+.guideLv3 .guideLine { background: #31B978; }
+.guideLv4 .guideLine { background: #8C5CFF; }
+.guideLv5 .guideLine { background: #FF5A1F; }
+.guideLv2 .guideLevel { color: #2B74D8; }
+.guideLv3 .guideLevel { color: #11995C; }
+.guideLv4 .guideLevel { color: #7D4BE8; }
+.guideLv5 .guideLevel { color: #E64A16; }
+.note {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: start;
+  gap: 9px;
+  margin: 0;
+  padding: 15px 22px 17px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted-2);
+  letter-spacing: 0.04em;
+}
+.note::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 22px;
+  right: 22px;
+  height: 1px;
+  background-image: linear-gradient(90deg, rgba(122,134,154,0.44) 50%, transparent 50%);
+  background-size: 7px 1px;
+}
+.noteIcon {
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  opacity: 0.78;
+}
+
+/* カテゴリごとのスキル一覧 */
+.list { display: flex; flex-direction: column; gap: 34px; }
+.category { margin: 0; }
+.categoryHead { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.categoryMarker {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.38), rgba(255,255,255,0.08) 42%, rgba(67,103,255,0.22)),
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,0.9), transparent 34%),
+    linear-gradient(135deg, var(--blue), var(--blue-deep));
+  border: 1px solid rgba(255,255,255,0.76);
+  box-shadow:
+    0 14px 24px rgba(67,103,255,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.64),
+    inset 0 -10px 18px rgba(10,15,28,0.16);
+}
+.categoryMarker::before,
+.categoryMarker::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.categoryMarker::before {
+  inset: 6px;
+  border: 1px solid rgba(255,255,255,0.34);
+  border-right-color: rgba(255,255,255,0.12);
+  border-bottom-color: rgba(255,255,255,0.12);
+}
+.categoryMarker::after {
+  top: -18px;
+  left: -20px;
+  width: 58px;
+  height: 18px;
+  background: rgba(255,255,255,0.54);
+  transform: rotate(-28deg);
+  filter: blur(0.2px);
+}
+.categoryMarkerImg {
+  position: relative;
+  z-index: 1;
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  filter: brightness(0) invert(1) drop-shadow(0 3px 7px rgba(10,15,28,0.26));
+}
+.categoryTitle {
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+.categoryRule { flex: 1; height: 1px; background-image: linear-gradient(90deg, var(--line-3) 50%, transparent 50%); background-size: 6px 1px; }
+.categoryCount {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted-2);
+  letter-spacing: 0.22em;
+  flex-shrink: 0;
+}
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+
+.tile {
+  --skill-color: #438BFF;
+  --skill-color2: #7FAFFF;
+  --skill-glow: rgba(67,139,255,0.18);
+  position: relative;
+  min-height: 96px;
+  padding: 16px 18px;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(215,220,234,0.94);
+  box-shadow: 0 12px 26px rgba(31,42,68,0.06);
+  display: flex;
+  align-items: stretch;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.tile::before,
+.tile::after {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  pointer-events: none;
+  opacity: 0.64;
+}
+.tile::before { top: 7px; left: 7px; border-top: 1px solid var(--skill-color); border-left: 1px solid var(--skill-color); }
+.tile::after { right: 7px; bottom: 7px; border-right: 1px solid var(--skill-color); border-bottom: 1px solid var(--skill-color); }
+.tile:hover { transform: translateY(-3px); border-color: var(--skill-color); box-shadow: 0 16px 34px var(--skill-glow); background: rgba(255,255,255,0.94); }
+/* レベル帯ごとの配色。--skill-color2 はバー右端のグラデ終端色。 */
+.low  { --skill-color: #AEB8C8; --skill-color2: #C8CFDA; --skill-glow: rgba(122,134,154,0.14); }
+.base { --skill-color: #438BFF; --skill-color2: #7FAFFF; --skill-glow: rgba(67,139,255,0.18); }
+.mid  { --skill-color: #31B978; --skill-color2: #7ACFA6; --skill-glow: rgba(49,185,120,0.18); }
+.high { --skill-color: #31B978; --skill-color2: #7ACFA6; --skill-glow: rgba(49,185,120,0.22); }
+.pro  { --skill-color: #8C5CFF; --skill-color2: #B39BFF; --skill-glow: rgba(140,92,255,0.2); }
+.max  { --skill-color: #FF5A1F; --skill-color2: #FF9A6B; --skill-glow: rgba(255,90,31,0.2); }
+.tileMain {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+.tileIcon {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(244,246,251,0.78);
+  border: 1px solid rgba(215,220,234,0.92);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.72), 0 8px 16px rgba(31,42,68,0.05);
+}
+.tileIconImg {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 5px rgba(31,42,68,0.12));
+}
+.tileIconFallback {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--skill-color);
+  letter-spacing: 0.04em;
+}
+.tileBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.tileTop { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+.tileName {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.tileScore {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 800;
+  line-height: 1;
+  padding-top: 2px;
+  flex-shrink: 0;
+}
+.levelTrack {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  background: rgba(215,220,234,0.9);
+  box-shadow: inset 0 1px 2px rgba(31,42,68,0.08);
+}
+.levelFill {
+  display: block;
+  width: calc(var(--skill-level) * 20%);
+  height: 100%;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--skill-color), var(--skill-color2, var(--skill-color)));
+  box-shadow: 0 0 16px var(--skill-glow);
+}
+/* ホバーのたびにバーを伸ばし直す */
+.tile.levelAnimating .levelFill {
+  animation: levelFill 0.62s cubic-bezier(0.2, 0.85, 0.2, 1) both;
+}
+@keyframes levelFill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (max-width: 1100px) {
+  .introGrid { grid-template-columns: 1fr; }
+  .levelGuide { grid-template-columns: repeat(5, minmax(120px, 1fr)); overflow-x: auto; }
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .introGrid { margin-top: 0; gap: 18px; }
+  .levelGuide { grid-template-columns: 1fr; padding: 16px; }
+  .guideItem { min-height: auto; padding: 12px 0; border-left: 0; border-top: 1px solid rgba(181,189,205,0.42); }
+  .guideItem:first-child { border-top: 0; }
+  .categoryHead { gap: 12px; align-items: flex-start; }
+  .categoryMarker { width: 40px; height: 40px; }
+  .categoryMarkerImg { width: 22px; height: 22px; }
+  .categoryTitle { font-size: 11px; }
+  .categoryCount { font-size: 10px; }
+}
+@media (max-width: 520px) {
+  .grid { grid-template-columns: 1fr; }
+  .lead { font-size: 13px; }
+  .tile { min-height: 88px; padding: 15px 16px; }
+  .tileMain { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
+  .tileIcon { width: 34px; height: 34px; }
+  .tileIconImg { width: 27px; height: 27px; }
+}

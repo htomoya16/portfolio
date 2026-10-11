@@ -1,0 +1,26 @@
+.head { display: inline-flex; flex-direction: column; gap: 12px; margin-bottom: 36px; }
+.head.compact { margin-bottom: 0; }
+.num {
+  font-family: var(--font-mono);
+  font-size: 15px; color: var(--blue); letter-spacing: 0.18em; font-weight: 400;
+}
+.title {
+  font-family: var(--font-pixel);
+  font-size: 34px; font-weight: 400; letter-spacing: 0.04em; color: var(--ink);
+  display: inline-flex; align-items: center; gap: 14px;
+}
+/* 入力待ちのカーソルに見立てた縦棒 */
+.accent {
+  display: inline-block;
+  width: 8px; height: 0.85em;
+  background: var(--blue);
+  margin-left: 2px;
+  vertical-align: -0.12em;
+  flex-shrink: 0;
+}
+.accent.blink { animation: blink 1s steps(2) infinite; }
+@keyframes blink { 0%,50%{opacity:1} 51%,100%{opacity:0} }
+
+@media (max-width: 720px) {
+  .title { font-size: 22px; }
+}

@@ -13,9 +13,9 @@ export const heroCopy = {
  * Hero 右パネルの背景画像。訪問ごとにランダムで 1 枚選ぶ（直前と同じものは避ける）。
  */
 export const heroBackgrounds = [
-  '/assets/hero/hero-right.png',
-  '/assets/hero/hero-right2.png',
-  '/assets/hero/hero-right3.png',
+  '/assets/hero/hero-right.webp',
+  '/assets/hero/hero-right2.webp',
+  '/assets/hero/hero-right3.webp',
 ] as const
 
 /** 直前に表示した背景を覚えておく localStorage キー。 */

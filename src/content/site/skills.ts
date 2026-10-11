@@ -10,10 +10,10 @@ export const skillsCopy = {
   countSuffix: 'SKILLS',
 } as const
 
+/** アイコンは techIcons.ts から名前で引く */
 export interface SkillTile {
   name: string
   level: number
-  iconSrc?: string
 }
 
 export interface SkillCategory {
@@ -35,49 +35,49 @@ export const skillCategories: SkillCategory[] = [
     title: 'Languages',
     iconSrc: '/assets/icons/skills/languages.svg',
     tiles: [
-      { name: 'Python', level: 3.5, iconSrc: '/assets/icons/skills/python.svg' },
-      { name: 'Go', level: 3, iconSrc: '/assets/icons/skills/go.svg' },
-      { name: 'Java', level: 4, iconSrc: '/assets/icons/skills/java.svg' },
-      { name: 'Kotlin', level: 4, iconSrc: '/assets/icons/skills/kotlin.svg' },
-      { name: 'PHP', level: 4, iconSrc: '/assets/icons/skills/php.svg' },
-      { name: 'Ruby', level: 1.3, iconSrc: '/assets/icons/skills/ruby.svg' },
-      { name: 'HTML', level: 2.6, iconSrc: '/assets/icons/skills/html5.svg' },
-      { name: 'CSS', level: 2.6, iconSrc: '/assets/icons/skills/css3.svg' },
+      { name: 'Python', level: 3.5 },
+      { name: 'Go', level: 3 },
+      { name: 'Java', level: 4 },
+      { name: 'Kotlin', level: 4 },
+      { name: 'PHP', level: 4 },
+      { name: 'Ruby', level: 1.3 },
+      { name: 'HTML', level: 2.6 },
+      { name: 'CSS', level: 2.6 },
     ],
   },
   {
     title: 'Framework / Library',
     iconSrc: '/assets/icons/skills/framework-library.svg',
     tiles: [
-      { name: 'Echo', level: 3.6, iconSrc: '/assets/icons/skills/echo.png' },
-      { name: 'Spring Boot', level: 4, iconSrc: '/assets/icons/skills/spring-boot.svg' },
-      { name: 'FastAPI', level: 3.4, iconSrc: '/assets/icons/skills/fast-api.svg' },
-      { name: 'Ruby on Rails', level: 1.3, iconSrc: '/assets/icons/skills/rails.svg' },
+      { name: 'Echo', level: 3.6 },
+      { name: 'Spring Boot', level: 4 },
+      { name: 'FastAPI', level: 3.4 },
+      { name: 'Ruby on Rails', level: 1.3 },
     ],
   },
   {
     title: 'Database',
     iconSrc: '/assets/icons/skills/database.svg',
     tiles: [
-      { name: 'PostgreSQL', level: 3.4, iconSrc: '/assets/icons/skills/postgresql.svg' },
-      { name: 'MySQL', level: 3.3, iconSrc: '/assets/icons/skills/mysql.svg' },
-      { name: 'SQLite', level: 3.1, iconSrc: '/assets/icons/skills/SQLite.svg' },
+      { name: 'PostgreSQL', level: 3.4 },
+      { name: 'MySQL', level: 3.3 },
+      { name: 'SQLite', level: 3.1 },
     ],
   },
   {
     title: 'Tools / DevOps / Others',
     iconSrc: '/assets/icons/skills/tools-devops-others.svg',
     tiles: [
-      { name: 'Git', level: 4.1, iconSrc: '/assets/icons/skills/git.svg' },
-      { name: 'GitHub', level: 4.1, iconSrc: '/assets/icons/skills/github-dark.svg' },
-      { name: 'GitHub Actions', level: 3.4, iconSrc: '/assets/icons/skills/GitHub%20Actions.svg' },
-      { name: 'Docker', level: 3.4, iconSrc: '/assets/icons/skills/docker.svg' },
-      { name: 'nginx', level: 3, iconSrc: '/assets/icons/skills/nginx.svg' },
-      { name: 'Heroku', level: 3.4, iconSrc: '/assets/icons/skills/heroku.svg' },
-      { name: 'Unity', level: 3.5, iconSrc: '/assets/icons/skills/unity-svgrepo-com.svg' },
-      { name: 'Raspberry Pi', level: 3.6, iconSrc: '/assets/icons/skills/raspberry-pi.svg' },
-      { name: 'Codex', level: 4.1, iconSrc: '/assets/icons/skills/codex.svg' },
-      { name: 'Claude Code', level: 4, iconSrc: '/assets/icons/skills/claude-code.svg' },
+      { name: 'Git', level: 4.1 },
+      { name: 'GitHub', level: 4.1 },
+      { name: 'GitHub Actions', level: 3.4 },
+      { name: 'Docker', level: 3.4 },
+      { name: 'nginx', level: 3 },
+      { name: 'Heroku', level: 3.4 },
+      { name: 'Unity', level: 3.5 },
+      { name: 'Raspberry Pi', level: 3.6 },
+      { name: 'Codex', level: 4.1 },
+      { name: 'Claude Code', level: 4 },
     ],
   },
 ]

@@ -1,0 +1,190 @@
+.hero {
+  position: relative; min-height: 100vh; z-index: 1;
+  padding: 140px 120px 180px;
+  display: flex; flex-direction: row;
+  gap: 20px; align-items: center; justify-content: space-between;
+  background: #fff; overflow: hidden;
+}
+.content { flex: 1 1 50%; min-width: 0; position: relative; z-index: 3; }
+
+/* 右側の画像パネル。左辺を斜めに切る（上端で幅の --panel-slant だけ右へずらす） */
+.rightBg {
+  --panel-slant: 12%;
+  position: absolute; top: 0; right: 0; bottom: 0; width: 50%;
+  background-color: #F3F6FD;
+  background-image: var(--hero-bg-image, none);
+  background-position: right bottom;
+  background-size: cover;
+  background-repeat: no-repeat;
+  clip-path: polygon(var(--panel-slant) 0, 100% 0, 100% 100%, 0 100%);
+  z-index: 0;
+}
+/* パネル画像を白側に寄せて本文の可読性を確保する（デザイン準拠の 50% ベール）。 */
+.veil {
+  position: absolute; inset: 0;
+  background: rgba(243,246,253,0.5);
+  z-index: 1;
+}
+/* パネルの斜めの辺を下のセクションまで延長した白い面（HeroPanelExtension）。
+   辺の位置は JS が測って --edge-top / --edge-bottom に入れる。測るまでは幅 0 で見えない */
+.panelExtension {
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  background: #fff;
+  clip-path: polygon(0 0, var(--edge-top, 0px) 0, var(--edge-bottom, 0px) 100%, 0 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 70%, transparent 100%);
+}
+/* ネギが歩き回るレイヤー。パネルと同じ矩形に重ねる */
+.negiLayer {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 50%;
+  pointer-events: none;
+  z-index: 4;
+}
+.decor { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px; color: var(--blue);
+  letter-spacing: 0.28em; margin-bottom: 32px; font-weight: 500;
+  display: flex; align-items: center; gap: 14px;
+}
+.eyebrow::before {
+  content: ''; width: 32px; height: 2px; background: var(--blue); display: inline-block;
+}
+.title {
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  font-size: clamp(40px, 5.8vw, 64px);
+  line-height: 1.18;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin-bottom: 38px;
+  word-break: keep-all;
+}
+.line { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.accent { color: var(--blue); }
+.caret {
+  display: inline-block; width: 0.35em; height: 0.82em;
+  background: var(--ink); margin-left: 0.02em;
+  vertical-align: -0.14em;
+  animation: blink 1s steps(2) infinite;
+  align-self: center;
+}
+@keyframes blink { 0%,50%{opacity:1} 51%,100%{opacity:0} }
+
+.cta {
+  display: inline-flex; align-items: center; gap: 24px;
+  padding: 14px 0;
+  font-family: var(--font-pixel);
+  font-size: 11px; letter-spacing: 0.18em;
+  font-weight: 400; color: var(--ink);
+  border: none; background: transparent; cursor: pointer; position: relative;
+}
+.cta::after {
+  content: ''; position: absolute; left: 0; right: 24px; bottom: 4px;
+  height: 1.5px; background: var(--ink);
+}
+.cta:hover { color: var(--blue); }
+.cta:hover::after { background: var(--blue); }
+
+.play {
+  position: absolute; bottom: 70px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  background: transparent; border: none; cursor: pointer; z-index: 6; padding: 0;
+}
+.playCircle {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 10px 28px rgba(67,103,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.play:hover .playCircle { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(67,103,255,0.5); }
+.playCircle::after {
+  content: ''; position: absolute; inset: -8px;
+  border: 1px solid var(--blue); border-radius: 50%;
+  opacity: 0.55; animation: pingRing 2s ease-out infinite;
+}
+@keyframes pingRing {
+  0% { transform: scale(0.95); opacity: 0.55; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+.playTri {
+  width: 0; height: 0;
+  border-left: 16px solid #fff;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  margin-left: 5px;
+}
+.playLabel {
+  font-family: var(--font-pixel); font-size: 10px; letter-spacing: 0.32em; color: var(--ink-2);
+}
+
+.ticker {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 44px;
+  background: rgba(255,255,255,0.9);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden; display: flex; align-items: center; z-index: 5;
+}
+.tickerInner {
+  display: flex; gap: 48px;
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.25em; color: var(--muted);
+  white-space: nowrap;
+  animation: tickerScroll 40s linear infinite;
+  padding-left: 48px;
+}
+.tickerAccent { color: var(--blue); }
+.tickerBullet { color: var(--blue); margin-right: 6px; }
+/* 同じ並びを 2 回繰り返しているので、半分（-50%）流したところで継ぎ目なくループする */
+@keyframes tickerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* 左端の縦書き「SCROLL」 */
+.sideRail {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 48px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 40; pointer-events: none;
+}
+.sideRailLabel {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.3em; color: var(--ink-2); font-weight: 500;
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  margin-bottom: 16px;
+}
+.sideRailLine { width: 1px; height: 120px; background: var(--line-3); margin-bottom: 16px; }
+.sideRailDiamond {
+  width: 7px; height: 7px; background: var(--ink);
+  transform: rotate(45deg); margin-bottom: 14px;
+}
+
+@media (max-width: 1280px) {
+  .hero { padding-left: 64px; padding-right: 64px; }
+  .rightBg, .negiLayer { width: 44%; }
+}
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 110px;
+    padding-bottom: calc(46vh + 24px);
+  }
+  /* パネルとネギを画面下に敷き、斜めの境目を上辺に付け替える。 */
+  .rightBg {
+    top: auto; height: 46vh; width: 100%;
+    clip-path: polygon(0 14%, 100% 0, 100% 100%, 0 100%);
+  }
+  .negiLayer { top: auto; height: 46vh; width: 100%; }
+  /* パネルが画面下に回ると斜めの辺が横向きになるので、延長しない */
+  .panelExtension { display: none; }
+}
+@media (max-width: 720px) {
+  .hero { padding-left: 24px; padding-right: 24px; }
+  .title { font-size: clamp(28px, 9vw, 44px); }
+  .sideRail { display: none; }
+}

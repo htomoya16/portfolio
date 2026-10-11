@@ -2,21 +2,18 @@
 
 import React from 'react'
 import { createPortal } from 'react-dom'
-import { CH, CW, PetAnim, ROWS, framePos, spriteStyle } from './petSprite'
-
-/** ネギが歩き回るレイヤー。HeroSection 側がこの id の空 div を描画する。 */
-export const PET_LAYER_ID = 'negi-layer'
+import { scrollToSection } from '@/lib/scrollToSection'
+import { resetScreenFx, setNesFx } from '@/lib/screenFx'
+import CommandPalette from './CommandPalette'
+import styles from './Negi.module.css'
+import { PET_LAYER_ID } from './petLayer'
+import { CH, CW, framePos, type PetAnim, ROWS, spriteStyle } from './petSprite'
 
 const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const
-const CMD_SECTIONS = ['about', 'skills', 'projects', 'experience', 'contact']
-/** NavBar のロゴ連打から届く、ターミナルテーマ切り替えの合図。 */
-export const TERMINAL_TOGGLE_EVENT = 'negi:toggle-terminal'
 /** このセクションを見ている間は、ネギが画面左下から覗く。 */
 const PEEK_LEFT_SECTIONS = ['about', 'projects', 'contact']
 const KONAMI =
   'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,b,a'
-
-type CmdLine = { t: string; prompt?: boolean }
 
 type Props = {
   /** スプライトの拡大率（0.5〜1.2）。 */
@@ -25,17 +22,12 @@ type Props = {
   wander?: boolean
   /** 歩き回る距離の目安（px）。 */
   wanderRange?: number
-  /** 初回ローディング画面を出すか。 */
-  showLoader?: boolean
 }
 
 type State = {
   mounted: boolean
   active: string
   negiAway: boolean
-  cmdOpen: boolean
-  cmdValue: string
-  cmdLines: CmdLine[]
   w: number
 }
 
@@ -54,14 +46,15 @@ type Drag = {
   shaken?: number
 }
 
+/**
+ * ピクセルペット「ネギ」。Hero の右パネルを歩き回り、ドラッグや連打に反応する。
+ * 画面外へ放り出すと、ほかのセクションの隅から覗き込む。コナミコマンドとコマンドパレットの隠し要素も持つ。
+ */
 export default class NegiSystem extends React.Component<Props, State> {
   state: State = {
     mounted: false,
     active: 'hero',
     negiAway: false,
-    cmdOpen: false,
-    cmdValue: '',
-    cmdLines: [],
     w: 0,
   }
 
@@ -71,15 +64,6 @@ export default class NegiSystem extends React.Component<Props, State> {
   peekRef = React.createRef<HTMLDivElement>()
   konamiRef = React.createRef<HTMLDivElement>()
   konamiSpriteRef = React.createRef<HTMLDivElement>()
-  cmdInputRef = React.createRef<HTMLInputElement>()
-  cmdLogRef = React.createRef<HTMLDivElement>()
-
-  loaderRef = React.createRef<HTMLDivElement>()
-  loaderPetRef = React.createRef<HTMLDivElement>()
-  loaderSpriteRef = React.createRef<HTMLDivElement>()
-  loaderBarRef = React.createRef<HTMLDivElement>()
-  loaderTextRef = React.createRef<HTMLSpanElement>()
-  loaderPctRef = React.createRef<HTMLSpanElement>()
 
   anim: PetAnim = 'idle'
   frame = 0
@@ -95,16 +79,11 @@ export default class NegiSystem extends React.Component<Props, State> {
   clicks = 0
 
   private timer?: ReturnType<typeof setInterval>
-  private loaderDone = false
   private konamiRunning = false
   private keyQueue: string[] = []
   private lastClickAt = 0
   private peekFrame = 0
-  private wasCmdOpen = false
-  private scrollBound = false
   private smallScreen?: boolean
-  private visited = new Set<string>()
-  private fx = { term: false, nes: false }
 
   // ---------------------------------------------------------------- geometry
 
@@ -155,82 +134,14 @@ export default class NegiSystem extends React.Component<Props, State> {
     this.draw()
   }
 
-  // ----------------------------------------------------------------- loading
-
-  runLoader() {
-    const el = this.loaderRef.current
-    if (!el) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const D = reduced ? 400 : 1100
-    const t0 = performance.now()
-    document.documentElement.style.overflow = 'hidden'
-    let fi = 0
-    let last = 0
-    const row = 8
-    const n = 6
-    let done = false
-
-    const step = (t: number) => {
-      const p = Math.min(1, (t - t0) / D)
-      const e = 1 - Math.pow(1 - p, 2.2)
-      const bar = this.loaderBarRef.current
-      const pet = this.loaderPetRef.current
-      const sp = this.loaderSpriteRef.current
-      const pct = this.loaderPctRef.current
-      if (!bar || !pet || !sp || !pct) return
-      bar.style.width = `${e * 100}%`
-      pet.style.transform = `translateX(${e * 260}px)`
-      pct.textContent = `${String(Math.round(e * 100)).padStart(3, '0')}%`
-      if (t - last > 150) {
-        last = t
-        fi = (fi + 1) % n
-        sp.style.backgroundPosition = framePos(fi, row)
-      }
-      if (p >= 1 && !done) {
-        done = true
-        if (this.loaderTextRef.current) this.loaderTextRef.current.textContent = 'READY!'
-        setTimeout(
-          () => {
-            el.style.opacity = '0'
-            el.style.transform = 'translateY(-12px)'
-            document.documentElement.style.overflow = ''
-            setTimeout(() => {
-              el.style.display = 'none'
-              this.loaderDone = true
-            }, 460)
-          },
-          reduced ? 100 : 380,
-        )
-      }
-      if (!this.loaderDone) requestAnimationFrame(step)
-    }
-    requestAnimationFrame(step)
-  }
-
   // ------------------------------------------------------------- easter eggs
-
-  applyFx() {
-    const f: string[] = []
-    if (this.fx.term)
-      f.push(
-        'invert(1) hue-rotate(180deg) grayscale(1) sepia(1) hue-rotate(60deg) saturate(4) brightness(0.9)',
-      )
-    if (this.fx.nes) f.push('saturate(2.4) contrast(1.35)')
-    document.documentElement.style.filter = f.join(' ')
-  }
-
-  toggleTerm = () => {
-    this.fx.term = !this.fx.term
-    this.applyFx()
-  }
 
   konami() {
     const el = this.konamiRef.current
     const sp = this.konamiSpriteRef.current
     if (!el || !sp || this.konamiRunning) return
     this.konamiRunning = true
-    this.fx.nes = true
-    this.applyFx()
+    setNesFx(true)
     el.style.display = 'block'
     const W = window.innerWidth
     const H = window.innerHeight
@@ -243,8 +154,7 @@ export default class NegiSystem extends React.Component<Props, State> {
       const p = (t - t0) / D
       if (p >= 1) {
         el.style.display = 'none'
-        this.fx.nes = false
-        this.applyFx()
+        setNesFx(false)
         this.konamiRunning = false
         return
       }
@@ -261,61 +171,6 @@ export default class NegiSystem extends React.Component<Props, State> {
       requestAnimationFrame(step)
     }
     requestAnimationFrame(step)
-  }
-
-  // --------------------------------------------------------- command palette
-
-  go(id: string) {
-    const el = document.getElementById(id)
-    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' })
-  }
-
-  runCmd(raw: string) {
-    const c = raw.trim()
-    if (!c) return
-    const out: string[] = []
-    const parts = c.split(/\s+/)
-    const cmd = parts[0]
-    const low = c.toLowerCase()
-
-    if (low === 'help') out.push('help / whoami / ls / cd <section> / negi / theme / clear / exit')
-    else if (low === 'whoami')
-      out.push(
-        'HOTTA TOMOYA — Backend-focused Web Engineer',
-        '東京電機大学大学院 理工学研究科 情報学専攻',
-      )
-    else if (low === 'ls') out.push(CMD_SECTIONS.map((s) => `${s}/`).join('  '))
-    else if (cmd === 'cd') {
-      const t = (parts[1] || '').replace(/\/$/, '').toLowerCase()
-      if (!t || t === '~' || t === 'hero') {
-        this.go('hero')
-        out.push('→ ~/')
-      } else if (CMD_SECTIONS.includes(t)) {
-        this.go(t)
-        out.push(`→ ~/${t}`)
-      } else out.push(`cd: no such section: ${t}`)
-    } else if (low === 'negi') {
-      out.push('ネギ「呼んだ？」')
-      if (!this.state.negiAway && !this.drag) this.set('wave', 2)
-    } else if (low === 'theme' || low === 'theme terminal') {
-      this.toggleTerm()
-      out.push(`terminal mode: ${this.fx.term ? 'ON' : 'OFF'}`)
-    } else if (low === 'konami') out.push('hint: ↑ ↑ ↓ ↓ ← → ← → B A')
-    else if (low === 'clear') {
-      this.setState({ cmdLines: [], cmdValue: '' })
-      return
-    } else if (low === 'exit') {
-      this.setState({ cmdOpen: false, cmdValue: '' })
-      return
-    } else if (cmd === 'sudo') out.push('Nice try.')
-    else out.push(`command not found: ${cmd} — try 'help'`)
-
-    this.setState((s) => ({
-      cmdValue: '',
-      cmdLines: s.cmdLines
-        .concat([{ t: `❯ ${c}`, prompt: true }], out.map((t) => ({ t })))
-        .slice(-16),
-    }))
   }
 
   // ------------------------------------------------------------- pet control
@@ -408,7 +263,7 @@ export default class NegiSystem extends React.Component<Props, State> {
 
   negiReturn = () => {
     this.setState({ negiAway: false })
-    this.go('hero')
+    scrollToSection('hero')
     setTimeout(() => {
       const w = this.walkerRef.current
       const b = this.bounds(this.y)
@@ -505,20 +360,17 @@ export default class NegiSystem extends React.Component<Props, State> {
     if (!this.drag && (this.anim === 'idle' || this.anim === 'wait')) this.set('wave', 2)
   }
 
+  callNegi = () => {
+    if (!this.state.negiAway && !this.drag) this.set('wave', 2)
+  }
+
   // ------------------------------------------------------------ global input
 
   onKey = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      if (this.state.cmdOpen) this.setState({ cmdOpen: false })
-      return
-    }
+    // Escape と / はコマンドパレットが使う
+    if (e.key === 'Escape' || e.key === '/') return
     const tag = (e.target as HTMLElement | null)?.tagName || ''
     if (tag === 'INPUT' || tag === 'TEXTAREA') return
-    if (e.key === '/') {
-      e.preventDefault()
-      this.setState({ cmdOpen: true })
-      return
-    }
     const k = e.key.length === 1 ? e.key.toLowerCase() : e.key
     this.keyQueue = this.keyQueue.concat(k).slice(-10)
     if (this.keyQueue.join() === KONAMI) {
@@ -533,7 +385,6 @@ export default class NegiSystem extends React.Component<Props, State> {
       const el = document.getElementById(id)
       if (el && el.getBoundingClientRect().top < window.innerHeight * 0.45) cur = id
     }
-    this.visited.add(cur)
     if (cur !== this.state.active) this.setState({ active: cur })
   }
 
@@ -544,25 +395,16 @@ export default class NegiSystem extends React.Component<Props, State> {
   componentDidMount() {
     this.setState({ mounted: true, w: window.innerWidth })
     window.addEventListener('keydown', this.onKey)
-    window.addEventListener(TERMINAL_TOGGLE_EVENT, this.toggleTerm)
     window.addEventListener('scroll', this.onScroll, { passive: true })
     window.addEventListener('resize', this.onResize)
-    this.scrollBound = true
     // eslint-disable-next-line no-console
     console.log('%cネギ「 / キーを押してみて」', 'color:#4367FF;font-family:monospace;font-size:14px')
-    if (this.props.showLoader ?? true) this.runLoader()
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     this.timer = setInterval(this.tick, 130)
     this.place()
   }
 
   componentDidUpdate() {
-    if (this.state.cmdOpen && !this.wasCmdOpen && this.cmdInputRef.current) {
-      this.cmdInputRef.current.focus()
-    }
-    this.wasCmdOpen = this.state.cmdOpen
-    const lg = this.cmdLogRef.current
-    if (lg) lg.scrollTop = lg.scrollHeight
     if (this.walkOff || this.state.negiAway) return
     const st = window.innerWidth <= 900
     if (this.smallScreen !== st) {
@@ -578,14 +420,10 @@ export default class NegiSystem extends React.Component<Props, State> {
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.onKey)
-    window.removeEventListener(TERMINAL_TOGGLE_EVENT, this.toggleTerm)
-    if (this.scrollBound) {
-      window.removeEventListener('scroll', this.onScroll)
-      window.removeEventListener('resize', this.onResize)
-    }
+    window.removeEventListener('scroll', this.onScroll)
+    window.removeEventListener('resize', this.onResize)
     if (this.timer) clearInterval(this.timer)
-    document.documentElement.style.overflow = ''
-    document.documentElement.style.filter = ''
+    resetScreenFx()
   }
 
   // ---------------------------------------------------------------- render
@@ -593,10 +431,10 @@ export default class NegiSystem extends React.Component<Props, State> {
   renderWalker() {
     const [pw, ph] = this.size()
     return (
-      <div className="negi-layer-inner" ref={this.layerRef}>
+      <div className={styles.layer} ref={this.layerRef}>
         <div
           ref={this.walkerRef}
-          className="negi-walker"
+          className={styles.walker}
           onPointerDown={this.onPetDown}
           onPointerMove={this.onPetMove}
           onPointerUp={this.onPetUp}
@@ -605,10 +443,10 @@ export default class NegiSystem extends React.Component<Props, State> {
           title="ネギ（ドラッグで移動）"
           style={{ width: pw, height: ph }}
         >
-          <div className="negi-shadow" aria-hidden="true" />
+          <div className={styles.shadow} aria-hidden="true" />
           <div
             ref={this.spriteRef}
-            className="negi-sprite"
+            className={styles.sprite}
             style={{ ...spriteStyle, backgroundPosition: '0 0', transform: `scale(${this.scale()})` }}
           />
         </div>
@@ -617,7 +455,6 @@ export default class NegiSystem extends React.Component<Props, State> {
   }
 
   render() {
-    const showLoader = this.props.showLoader ?? true
     const showPeek = this.state.negiAway && this.state.active !== 'hero'
     // 覗き込む側は表示中のセクションで決まる（本文と重ならない方に出す）。
     const peekLeftSide = PEEK_LEFT_SECTIONS.includes(this.state.active)
@@ -627,48 +464,12 @@ export default class NegiSystem extends React.Component<Props, State> {
       <>
         {layerHost ? createPortal(this.renderWalker(), layerHost) : null}
 
-        {showLoader && (
-          <div
-            ref={this.loaderRef}
-            className="negi-loader"
-            role="status"
-            aria-label="Loading"
-          >
-            <div className="negi-loader-grid" aria-hidden="true" />
-            <div className="negi-loader-stack">
-              <div className="negi-loader-track">
-                <div ref={this.loaderPetRef} className="negi-loader-pet">
-                  <div
-                    ref={this.loaderSpriteRef}
-                    style={{
-                      ...spriteStyle,
-                      backgroundPosition: framePos(0, 8),
-                      transform: 'scale(0.5)',
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="negi-loader-bar">
-                <div ref={this.loaderBarRef} className="negi-loader-fill" />
-              </div>
-              <div className="negi-loader-meta">
-                <span ref={this.loaderTextRef} className="negi-loader-label">
-                  LOADING
-                </span>
-                <span ref={this.loaderPctRef} className="negi-loader-pct">
-                  000%
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
-
         {showPeek && (
           <button
             type="button"
             onClick={this.negiReturn}
             title="ネギ？（クリックで帰ってくる）"
-            className="negi-peek"
+            className={styles.peek}
             style={peekLeftSide ? { left: 32, right: 'auto' } : { left: 'auto', right: 72 }}
           >
             <div
@@ -678,42 +479,14 @@ export default class NegiSystem extends React.Component<Props, State> {
           </button>
         )}
 
-        <div ref={this.konamiRef} className="negi-konami" aria-hidden="true">
+        <div ref={this.konamiRef} className={styles.konami} aria-hidden="true">
           <div
             ref={this.konamiSpriteRef}
             style={{ ...spriteStyle, backgroundPosition: '0 0', transform: 'scale(0.75)' }}
           />
         </div>
 
-        {this.state.cmdOpen && (
-          <div className="negi-cmd" role="dialog" aria-label="Command palette">
-            <div className="negi-cmd-head">
-              <span>htomoya16@portfolio: ~</span>
-              <span>ESC で閉じる</span>
-            </div>
-            <div ref={this.cmdLogRef} className="negi-cmd-log">
-              {this.state.cmdLines.map((l, i) => (
-                <div key={i} className={l.prompt ? 'negi-cmd-line prompt' : 'negi-cmd-line'}>
-                  {l.t}
-                </div>
-              ))}
-            </div>
-            <div className="negi-cmd-input">
-              <span className="negi-cmd-caret">❯</span>
-              <input
-                ref={this.cmdInputRef}
-                value={this.state.cmdValue}
-                onChange={(e) => this.setState({ cmdValue: e.target.value })}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') this.runCmd(e.currentTarget.value)
-                }}
-                placeholder="type 'help'"
-                spellCheck={false}
-                autoComplete="off"
-              />
-            </div>
-          </div>
-        )}
+        <CommandPalette onCallNegi={this.callNegi} />
       </>
     )
   }

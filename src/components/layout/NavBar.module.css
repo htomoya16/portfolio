@@ -1,0 +1,68 @@
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: stretch; justify-content: space-between;
+  height: 70px;
+  padding: 0 96px;
+  background: rgba(249,250,255,0.82);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(67,103,255,0.08);
+  overflow: hidden;
+  transition: transform .3s cubic-bezier(.2,.8,.2,1);
+}
+/* 下へスクロールしている間は上へ隠す（useHideOnScroll）。キーボードで項目を選んでいるときは出しておく */
+.nav[data-hidden]:not(:focus-within) { transform: translateY(-100%); }
+/* スクロール量に合わせて伸びるバー */
+.progress {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--blue);
+  transform-origin: left center;
+  transform: scaleX(0);
+  z-index: 51;
+}
+/* ロゴも項目と同じく、ナビの高さいっぱいで反応する */
+.logo {
+  display: flex; align-items: center;
+  font-family: var(--font-pixel);
+  font-size: 14px; color: var(--ink); letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+/* 各項目はナビの高さいっぱいと左右の余白（項目の間の半分ずつ）まで反応する。
+   右端の余白の分だけ外へ出して、文字の右端をパディングの位置にそろえる */
+.links {
+  --link-pad-x: 17px;
+  display: flex; list-style: none;
+  margin-right: calc(-1 * var(--link-pad-x));
+}
+.links li { display: flex; }
+.links a {
+  display: flex; align-items: center;
+  padding: 0 var(--link-pad-x);
+  position: relative;
+  font-family: var(--font-pixel);
+  font-size: 12px; letter-spacing: 0.16em; line-height: 1;
+  color: var(--ink-2); font-weight: 400;
+}
+.links a:hover { color: var(--blue); }
+/* 下線は文字の 4px 下に引く */
+.links a::after {
+  content: ''; position: absolute; left: var(--link-pad-x); top: calc(50% + 0.5em + 4px);
+  width: 0; height: 2px; background: var(--blue); transition: width .2s;
+}
+.links a:hover::after { width: calc(100% - 2 * var(--link-pad-x)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav { transition: none; }
+}
+@media (max-width: 1280px) {
+  .nav { padding-left: 64px; padding-right: 64px; }
+}
+/* 幅が足りないと項目が収まらずロゴが折り返すので、文字を小さくし、さらに狭い幅ではロゴだけにする */
+@media (max-width: 1100px) {
+  .links a { font-size: 10px; }
+}
+@media (max-width: 900px) {
+  .links { display: none; }
+}
+@media (max-width: 720px) {
+  .nav { height: 55px; padding: 0 24px; }
+}

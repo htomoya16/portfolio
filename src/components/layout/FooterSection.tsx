@@ -1,5 +1,7 @@
 'use client'
 
+import styles from './FooterSection.module.css'
+
 /** next.config.ts がビルド時に埋め込む日付（日本時間, YYYY.MM.DD）。 */
 const BUILD_DATE = process.env.BUILD_DATE
 
@@ -11,15 +13,15 @@ export default function FooterSection() {
   }
 
   return (
-    <footer className="footer">
-      <span className="footer-left">© {currentYear} htomoya16</span>
-      <div className="footer-mid">
-        <span className="bullet">■</span>
+    <footer className={styles.footer}>
+      <span className={styles.copyright}>© {currentYear} htomoya16</span>
+      <div className={styles.version}>
+        <span className={styles.bullet}>■</span>
         ver. {BUILD_DATE}
       </div>
-      <button className="back-top" onClick={handleBackToTop} type="button" aria-label="Scroll back to top">
+      <button className={styles.backTop} onClick={handleBackToTop} type="button" aria-label="Scroll back to top">
         BACK TO TOP
-        <span className="arrow" aria-hidden="true">↑</span>
+        <span className={styles.arrow} aria-hidden="true">↑</span>
       </button>
     </footer>
   )

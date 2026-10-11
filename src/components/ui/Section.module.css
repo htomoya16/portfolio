@@ -1,0 +1,33 @@
+/* About 以降のセクションに共通する枠（余白・区切り線） */
+.section {
+  --section-pad-x: 96px;
+  --divider-scale: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--section-pad-top, 88px) var(--section-pad-x) var(--section-pad-bottom, 96px);
+  overflow-x: clip;
+}
+/* 背景の層より手前に中身を重ねる */
+.section > :not([data-section-bg]) { position: relative; z-index: 2; }
+/* 下端の区切り線。スクロールに合わせて --divider-scale で左から引く */
+.section::after {
+  content: '';
+  position: absolute;
+  left: var(--section-pad-x);
+  right: var(--section-pad-x);
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(67,103,255,0.12) 14%, rgba(67,103,255,0.45) 50%, rgba(67,103,255,0.12) 86%, transparent 100%);
+  transform: scaleX(var(--divider-scale, 1));
+  transform-origin: left center;
+  z-index: 3;
+}
+
+@media (max-width: 1280px) {
+  .section { --section-pad-x: 64px; }
+}
+@media (max-width: 720px) {
+  .section { --section-pad-x: 24px; }
+}

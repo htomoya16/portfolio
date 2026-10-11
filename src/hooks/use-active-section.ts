@@ -6,7 +6,9 @@ export function useActiveSection<T extends string>(sectionIds: readonly T[], fal
   const [active, setActive] = useState<T>(fallbackId)
 
   useEffect(() => {
-    const update = () => {
+    let frame = 0
+
+    const measure = () => {
       const mid = window.scrollY + window.innerHeight * 0.5
       let best = fallbackId
       let minDist = Infinity
@@ -26,9 +28,20 @@ export function useActiveSection<T extends string>(sectionIds: readonly T[], fal
       setActive(best)
     }
 
+    // 位置の計測はレイアウト計算を伴うため、スクロールイベントごとではなく1フレームに1回にまとめる
+    const update = () => {
+      window.cancelAnimationFrame(frame)
+      frame = window.requestAnimationFrame(measure)
+    }
+
     update()
     window.addEventListener('scroll', update, { passive: true })
-    return () => window.removeEventListener('scroll', update)
+    window.addEventListener('resize', update)
+    return () => {
+      window.cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
   }, [fallbackId, sectionIds])
 
   return active
