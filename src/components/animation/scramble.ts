@@ -64,6 +64,12 @@ export function lockElSize(el: HTMLElement) {
   el.dataset.sizeLocked = '1'
 }
 
+/**
+ * 文字がまだ 1 つも出ていないときに入れる幅 0 の空白。完全に空にすると inline-block の要素は
+ * ベースラインが下端に移って高さが変わり、ナビなどの行がその瞬間だけずれるため。
+ */
+const EMPTY_TEXT = '\u200B'
+
 /** 1秒あたりに記号を入れ替える回数（文字ごとに独立して入れ替える） */
 const REFRESH_PER_SECOND = 32
 /** 文字ごとの確定タイミングのばらつき（settleDuration に対する割合） */
@@ -71,7 +77,7 @@ const PERTURBATION = 0.45
 
 type ScrambleOptions = {
   chars: string
-  /** 開始までの待ち時間（ms）。この間は空にしておく */
+  /** 開始までの待ち時間（ms）。この間は文字を出さない */
   delay?: number
   /** 1秒あたりに現れる文字数。左から順に記号が増えていく */
   revealRate?: number
@@ -102,7 +108,7 @@ export function scrambleText(
   const total = Math.max(0, ...settleAt)
   const progress = { t: 0 }
 
-  el.textContent = ''
+  el.textContent = EMPTY_TEXT
 
   return gsap.to(progress, {
     t: total,
@@ -126,6 +132,7 @@ export function scrambleText(
         }
         out += current[i]
       }
+      if (!out) out = EMPTY_TEXT
       if (el.textContent !== out) el.textContent = out
     },
     onComplete: () => {
