@@ -6,7 +6,7 @@ https://htomoya16.dev/
 
 ## Stack
 
-Next.js (App Router) / React / TypeScript / Tailwind CSS v4 / GSAP / Anime.js / Lenis
+Next.js (App Router) / React / TypeScript / CSS Modules / Tailwind CSS v4 / GSAP / Lenis
 
 ## Development
 
@@ -21,5 +21,8 @@ pnpm dev
 
 ## Structure
 
-- `src/content/site/` — 表示する文言とデータ
+- `src/app/` — ページと全体のスタイル（`globals.css` はデザイントークンと土台だけ）
+- `src/components/sections/home/` — ページの各セクション（見た目は同じフォルダの `*.module.css`）
+- `src/components/` — そのほかの部品（`layout/` ナビ・フッター、`ui/` 共通部品、`decor/` 背景、`animation/` 演出、`pet/` ネギ）
+- `src/content/site/` — 表示する文言とデータ（プロジェクトは `projects/` に 1 件 1 ファイル）
 - `public/assets/` — 画像・動画・アイコン
