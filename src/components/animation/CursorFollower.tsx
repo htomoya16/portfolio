@@ -47,11 +47,12 @@ export default function CursorFollower() {
     <div ref={crosshairRef} className={styles.cursor} aria-hidden="true">
       <div ref={visualRef} className={styles.visual}>
         <svg xmlns="http://www.w3.org/2000/svg" width="208" height="208" viewBox="0 0 1280 1280">
+          {/* 4 本の棒の中心を画像の中心（640, 640）にそろえ、実際のカーソルの先端と重ねる */}
           <g fill="#00ff3b">
-            <rect x="630" y="540" width="18" height="45" />
-            <rect x="573" y="594" width="48" height="20" />
-            <rect x="659" y="594" width="48" height="20" />
-            <rect x="630" y="623" width="18" height="45" />
+            <rect x="631" y="576" width="18" height="45" />
+            <rect x="573" y="630" width="48" height="20" />
+            <rect x="659" y="630" width="48" height="20" />
+            <rect x="631" y="659" width="18" height="45" />
           </g>
         </svg>
       </div>
