@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import { cancelScramble, playScramble } from '@/components/animation/scramble'
 import { useHover } from '@/components/animation/useHover'
 import { navLinks } from '@/content/site/navigation'
+import { useHideOnScroll } from '@/hooks/use-hide-on-scroll'
 import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import { gsap } from '@/lib/gsap'
 import { toggleTerminalFx } from '@/lib/screenFx'
@@ -29,6 +30,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
 }
 
 export default function NavBar() {
+  const navRef = useRef<HTMLElement>(null)
   const logoRef = useRef<HTMLAnchorElement>(null)
   const countRef = useRef(0)
   const lastClickRef = useRef(0)
@@ -77,9 +79,10 @@ export default function NavBar() {
   }
 
   useHover(logoRef, handleLogoEnter, handleLogoLeave)
+  useHideOnScroll(navRef)
 
   return (
-    <nav className={styles.nav}>
+    <nav className={styles.nav} ref={navRef}>
       <NavProgressBar />
       <a
         ref={logoRef}
