@@ -13,7 +13,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import type { Project, ProjectMedia } from '@/content/site/projects'
-import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
+import { getPrefersReducedMotion, usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import styles from './ProjectMediaCarousel.module.css'
 import { CAROUSEL_WHEEL_EVENT } from './useModalScroll'
 
@@ -58,6 +58,9 @@ function MediaFrame({ item, videoRef, priority = false, active = false }: {
         src={item.src}
         poster={getOptimizedPoster(item)}
         controls
+        // 表示中の動画は自動で再生する。音はユーザーが出すまで鳴らさない（一度出せば切り替えても保たれる）
+        muted
+        playsInline
         preload={active ? 'metadata' : 'none'}
         aria-label={item.alt}
       />
@@ -147,10 +150,16 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([])
   const expanded = expandedIndex === null ? null : media[expandedIndex]
 
-  const pauseInactiveVideos = useCallback((activeIndex: number) => {
+  // 表示中の動画だけを再生し、ほかは止める。動きを減らす設定のときは自動では再生しない
+  const syncVideos = useCallback((activeIndex: number) => {
     videoRefs.current.forEach((video, index) => {
-      if (!video || index === activeIndex) return
-      video.pause()
+      if (!video) return
+      if (index !== activeIndex) {
+        video.pause()
+      } else if (!getPrefersReducedMotion()) {
+        // 再生できなかったとき（読み込み失敗など）はコントロールから手動で再生してもらう
+        video.play().catch(() => {})
+      }
     })
   }, [])
 
@@ -172,7 +181,7 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
     const handleSelect = () => {
       const current = api.selectedScrollSnap()
       setSelectedIndex(current)
-      pauseInactiveVideos(current)
+      syncVideos(current)
     }
 
     handleSelect()
@@ -183,7 +192,7 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
       api.off('select', handleSelect)
       api.off('reInit', handleSelect)
     }
-  }, [api, pauseInactiveVideos])
+  }, [api, syncVideos])
 
   // スマホでは表示領域の高さを、表示中の画像（キャプション込み）に合わせる。
   // 縦長と横長の画像が混ざると一番高い画像に合わせて領域が確保され、
