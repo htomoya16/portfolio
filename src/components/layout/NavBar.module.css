@@ -18,11 +18,14 @@
 .logo {
   font-family: var(--font-pixel);
   font-size: 14px; color: var(--ink); letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 .links { display: flex; gap: 34px; list-style: none; }
 .links a {
+  /* かき混ぜ中に表示形式が変わってナビの高さがずれないよう、最初から inline-block にしておく */
+  display: inline-block;
   font-family: var(--font-pixel);
-  font-size: 10px; letter-spacing: 0.16em;
+  font-size: 12px; letter-spacing: 0.16em; line-height: 1;
   color: var(--ink-2); font-weight: 400;
   padding: 6px 0; position: relative;
 }
@@ -36,7 +39,13 @@
 @media (max-width: 1280px) {
   .nav { padding-left: 64px; padding-right: 64px; }
 }
+/* 幅が足りないと項目が収まらずロゴが折り返すので、文字を小さくし、さらに狭い幅ではロゴだけにする */
+@media (max-width: 1100px) {
+  .links a { font-size: 10px; }
+}
+@media (max-width: 900px) {
+  .links { display: none; }
+}
 @media (max-width: 720px) {
   .nav { padding: 16px 24px; }
-  .links { display: none; }
 }
