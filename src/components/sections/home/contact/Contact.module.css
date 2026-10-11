@@ -1,0 +1,45 @@
+.contact {
+  --section-pad-top: 72px;
+  --section-pad-bottom: 80px;
+  background: linear-gradient(180deg, rgba(248,251,255,0.96) 0%, #fff 34%, #fff 100%);
+}
+/* 見出しは他セクションと同じくセクション上部の左。グリッドの外に置く。 */
+.head { position: relative; z-index: 2; max-width: 1280px; width: 100%; margin: 0 auto 36px; }
+.grid { display: grid; grid-template-columns: minmax(360px, 0.95fr) 1.15fr; gap: 80px; align-items: center; position: relative; z-index: 2; max-width: 1280px; width: 100%; margin: 0 auto; }
+.left { position: relative; }
+
+.status { display: inline-flex; align-items: center; gap: 8px; position: absolute; right: 0; top: -160px; font-size: 12px; color: var(--ink); letter-spacing: 0.2em; background: rgba(255,255,255,0.7); padding: 8px 12px; border: 1px solid var(--line); }
+.statusDot { width: 8px; height: 8px; background: #00FF3B; display: inline-block; animation: pulse 1.4s ease-in-out infinite; box-shadow: 0 0 6px #00FF3B, 0 0 14px rgba(0,255,59,0.4); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* GitHub の活動量のバー */
+.stats { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; max-width: 460px; }
+.statRow { display: grid; grid-template-columns: 106px 1fr 64px; gap: 14px; align-items: center; }
+/* overflow:hidden + white-space:nowrap でスクランブル中のレイアウトずれを防ぐ */
+.statLabel { font-family: var(--font-mono); font-size: 11px; color: var(--ink); letter-spacing: 0.16em; font-weight: 600; overflow: hidden; white-space: nowrap; }
+.statBar { height: 9px; background: rgba(67,103,255,0.12); position: relative; display: block; }
+.statFill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--blue); display: block; }
+.statNum { font-family: var(--font-mono); font-size: 11px; color: var(--blue); letter-spacing: 0.08em; text-align: right; overflow: hidden; white-space: nowrap; }
+.prompt { font-family: var(--font-mono); font-size: 12px; color: var(--blue); letter-spacing: 0.16em; display: inline-flex; align-items: center; }
+.caret { display: inline-block; width: 7px; height: 12px; background: var(--blue); margin-left: 6px; animation: blink 1s steps(2) infinite; }
+@keyframes blink { 0%,50%{opacity:1} 51%,100%{opacity:0} }
+
+/* 連絡先のカード */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.card { position: relative; background: rgba(255,255,255,0.75); backdrop-filter: blur(6px); border: 1px solid rgba(67,103,255,0.15); padding: 30px 32px 26px; display: grid; grid-template-rows: auto 1fr auto; min-height: 152px; gap: 10px; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; cursor: pointer; will-change: transform; isolation: isolate; }
+.card:hover { transform: translateY(-3px); border-color: var(--blue); box-shadow: 0 10px 26px rgba(67,103,255,0.12); }
+.cardIcon { color: var(--ink); margin-bottom: 12px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+.cardIcon img { width: 28px; height: 28px; object-fit: contain; }
+.cardIcon img.protopedia { width: 36px; height: 36px; }
+.cardDot { position: absolute; top: 26px; right: 26px; width: 11px; height: 11px; border-radius: 50%; background: #00FF3B; box-shadow: 0 0 6px #00FF3B, 0 0 0 4px rgba(0,255,59,0.15); }
+.cardLabel { font-family: var(--font-mono); font-size: 13px; color: var(--ink); letter-spacing: 0.16em; font-weight: 700; overflow: hidden; white-space: nowrap; }
+.cardHandle { font-size: 12px; color: var(--ink-2); letter-spacing: 0.04em; margin-top: 6px; overflow-wrap: anywhere; }
+.cardArrow { position: absolute; right: 28px; bottom: 22px; font-size: 16px; color: var(--ink-2); font-family: var(--font-mono); letter-spacing: 0.18em; transition: transform .2s ease, color .2s ease; }
+.card:hover .cardArrow { color: var(--blue); transform: translateX(4px); }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; gap: 40px; }
+}
+@media (max-width: 720px) {
+  .cards { grid-template-columns: 1fr; }
+}

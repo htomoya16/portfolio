@@ -1,0 +1,161 @@
+.projects {
+  background: linear-gradient(180deg, rgba(248,251,255,0.94) 0%, #fff 26%, #fff 78%, rgba(243,248,255,0.9) 100%);
+}
+.wrap { position: relative; z-index: 2; max-width: 1280px; width: 100%; margin: 0 auto; }
+.head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 42px; }
+.count { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 0.22em; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+
+/* すりガラス風のカード */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 22px;
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.55) 0%,
+    rgba(255,255,255,0.18) 45%,
+    rgba(255,255,255,0.32) 100%);
+  backdrop-filter: blur(22px) saturate(180%);
+  box-shadow:
+    0 20px 50px rgba(31,42,68,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.95),
+    inset 0 -1px 0 rgba(255,255,255,0.35),
+    inset 1px 0 0 rgba(255,255,255,0.5),
+    inset 0 0 24px rgba(255,255,255,0.25);
+  transition:
+    transform .3s cubic-bezier(.2,.8,.2,1),
+    box-shadow .3s ease,
+    background .3s ease;
+}
+.card:hover {
+  transform: translateY(-6px) scale(1.01);
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.68) 0%,
+    rgba(255,255,255,0.26) 45%,
+    rgba(255,255,255,0.4) 100%);
+  box-shadow:
+    0 28px 64px rgba(67,103,255,0.16),
+    inset 0 1px 0 #fff,
+    inset 0 -1px 0 rgba(255,255,255,0.45),
+    inset 1px 0 0 rgba(255,255,255,0.6),
+    inset 0 0 30px rgba(255,255,255,0.35);
+}
+/* 準備中のカードは開けないので、指カーソルにしない（ホバーの演出はほかのカードと同じ） */
+.card.comingSoon { cursor: default; }
+.card.noPreview {
+  display: flex;
+  min-height: 300px;
+  border-style: dashed;
+}
+/* 上部のスペキュラハイライト（ガラスの映り込み）。
+   左右と下端を楕円グラデーションで溶かし、角が立たないようにする。 */
+.sheen {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 45%;
+  border-radius: 22px 22px 0 0;
+  background: radial-gradient(ellipse 70% 100% at 50% 0%,
+    rgba(255,255,255,0.45) 0%,
+    rgba(255,255,255,0.18) 45%,
+    rgba(255,255,255,0) 72%);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: soft-light;
+}
+
+.preview {
+  position: relative;
+  height: 278px;
+  background: #050A14;
+  overflow: hidden;
+  margin-bottom: 0;
+  border-radius: 16px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.6),
+    0 8px 22px rgba(10,15,28,0.12);
+  transition: box-shadow .25s ease;
+}
+.card:hover .preview { box-shadow: 0 1px 0 rgba(255,255,255,0.7), 0 12px 28px rgba(10,15,28,0.16); }
+.previewImageWrap { position: absolute; inset: 0; background: #050A14; }
+.previewImage { object-fit: cover; object-position: center; transition: transform .35s ease, filter .35s ease; }
+.previewImage.contain { object-fit: contain; padding: 12px; background: linear-gradient(135deg, #020617 0%, #0f172a 100%); }
+.card:hover .previewImage { transform: scale(1.035); filter: saturate(1.08) contrast(1.04); }
+.numBadge {
+  position: absolute; top: 10px; right: 10px;
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(14px) saturate(180%);
+  border-radius: 999px;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.6);
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 800; letter-spacing: 0.18em;
+  padding: 6px 9px; z-index: 3;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.12);
+}
+/* カーソルを乗せると下から出てくる「VIEW DETAILS」 */
+.viewHint {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 10px 12px;
+  background: rgba(10,15,28,0.82);
+  font-family: var(--font-pixel);
+  font-size: 7px; color: #fff; letter-spacing: 0.14em; text-align: center;
+  transform: translateY(100%);
+  transition: transform 0.22s ease;
+  z-index: 4;
+}
+.card:hover .viewHint { transform: translateY(0); }
+
+.meta { position: relative; z-index: 1; padding: 18px 18px 20px; display: flex; flex-direction: column; justify-content: center; flex: 1; }
+.card.noPreview .meta {
+  min-height: 100%;
+  padding: 34px 18px 20px;
+}
+.numSmall { font-family: var(--font-mono); font-size: 11px; font-weight: 800; color: var(--blue); letter-spacing: 0.22em; margin-bottom: 8px; }
+.card.noPreview .numSmall::after {
+  content: ' / COMING SOON';
+  color: rgba(67,103,255,0.72);
+}
+.title { font-family: var(--font-pixel); font-size: 16px; font-weight: 400; color: var(--ink); margin-bottom: 10px; letter-spacing: 0.04em; line-height: 1.35; }
+.desc { font-family: var(--font-sans); font-size: 13.5px; color: rgba(24,34,52,0.76); line-height: 1.75; margin-bottom: 14px; letter-spacing: 0.02em; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.8);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 4px 12px rgba(31,42,68,0.06);
+}
+.tagIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+.tagFallback {
+  max-width: 28px;
+  overflow: hidden;
+  color: var(--blue);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}

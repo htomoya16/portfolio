@@ -1,10 +1,12 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
+import clsx from 'clsx'
 import { scrollNavCopy, scrollNavLinks } from '@/content/site/navigation'
 import { useActiveSection } from '@/hooks/use-active-section'
 import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
-import gsap from 'gsap'
-import { useEffect, useRef } from 'react'
+import { gsap } from '@/lib/gsap'
+import styles from './ScrollNav.module.css'
 
 type SectionId = (typeof scrollNavLinks)[number]['id']
 const sectionIds = scrollNavLinks.map(({ id }) => id)
@@ -33,19 +35,19 @@ export default function ScrollNav() {
   }
 
   return (
-    <nav className="scroll-nav" aria-label={scrollNavCopy.ariaLabel}>
-      <div className="scroll-nav-track" aria-hidden="true" />
+    <nav className={styles.scrollNav} aria-label={scrollNavCopy.ariaLabel}>
+      <div className={styles.track} aria-hidden="true" />
       {scrollNavLinks.map(({ id, label }) => (
         <button
           key={id}
-          className={`scroll-nav-item${active === id ? ' active' : ''}`}
+          className={clsx(styles.item, active === id && styles.active)}
           onClick={() => scrollTo(id)}
           aria-label={`${scrollNavCopy.itemAriaPrefix} ${label}`}
           type="button"
         >
-          <span className="scroll-nav-label">{label}</span>
+          <span className={styles.label}>{label}</span>
           <span
-            className="scroll-nav-dot"
+            className={styles.dot}
             aria-hidden="true"
             ref={(el) => {
               dotsRef.current[id] = el

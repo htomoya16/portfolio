@@ -1,0 +1,47 @@
+/* Hero の negi-layer（HeroSection）の中に portal で入れる、ネギが歩き回る範囲 */
+.layer {
+  position: absolute; inset: 0;
+  pointer-events: none;
+}
+.walker {
+  position: absolute; left: 0; top: 0;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  pointer-events: auto;
+  visibility: hidden;
+  will-change: transform;
+}
+.shadow {
+  position: absolute; left: 50%; bottom: -4px;
+  width: 62%; height: 12px; margin-left: -31%;
+  border-radius: 50%;
+  background: rgba(37,71,230,0.14);
+  filter: blur(2px);
+  pointer-events: none;
+}
+.sprite {
+  position: absolute; left: 0; top: 0;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* 画面外へ歩き去った後の「覗き込み」ボタン */
+.peek {
+  position: fixed; bottom: 0; z-index: 60;
+  width: 96px; height: 70px;
+  overflow: hidden;
+  background: none; border: none; padding: 0;
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+/* コナミコマンドで画面を横切る演出 */
+.konami {
+  position: fixed; left: 0; top: 0; z-index: 9000;
+  width: 144px; height: 156px;
+  pointer-events: none;
+  display: none;
+  will-change: transform;
+  image-rendering: pixelated;
+}

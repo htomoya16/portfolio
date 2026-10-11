@@ -1,0 +1,10 @@
+.corner {
+  --inset: 8px;
+  --line: 1.5px solid var(--blue);
+  position: absolute; width: 12px; height: 12px; pointer-events: none;
+}
+.sm { --inset: 6px; --line: 1.6px solid var(--blue); }
+.tl { top: var(--inset); left: var(--inset); border-top: var(--line); border-left: var(--line); }
+.tr { top: var(--inset); right: var(--inset); border-top: var(--line); border-right: var(--line); }
+.bl { bottom: var(--inset); left: var(--inset); border-bottom: var(--line); border-left: var(--line); }
+.br { bottom: var(--inset); right: var(--inset); border-bottom: var(--line); border-right: var(--line); }

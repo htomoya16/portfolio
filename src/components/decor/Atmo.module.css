@@ -1,0 +1,54 @@
+/* セクションの背景（方眼・ぼかした光・ノイズ・装飾画像・粒子） */
+.atmo {
+  position: absolute; inset: 0; pointer-events: none; overflow: visible; z-index: 0;
+}
+.grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(67,103,255,0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(67,103,255,0.09) 1px, transparent 1px);
+  background-size: 28px 28px; background-position: -1px -1px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, #000 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, #000 50%, transparent 100%);
+  opacity: 0.85;
+}
+.blob {
+  position: absolute; border-radius: 50%; filter: blur(72px); opacity: 0.78;
+}
+.b1 { width: 520px; height: 520px; background: radial-gradient(circle, #6B8AFF 0%, transparent 68%); }
+.b2 { width: 400px; height: 400px; background: radial-gradient(circle, #7DC3FF 0%, transparent 68%); }
+.b3 { width: 340px; height: 340px; background: radial-gradient(circle, #A891FF 0%, transparent 68%); opacity: 0.55; }
+.noise {
+  position: absolute; inset: 0;
+  background-image: url('/assets/decor/micro_dots.svg');
+  background-size: 512px 512px; background-repeat: repeat; opacity: 0.5;
+}
+.decor {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+  object-fit: contain;
+  display: block;
+}
+
+/* variant ごとの光の位置（a: About / b: Skills / c: Projects / d: Experience / e: Contact） */
+.a .b1 { top: -120px; left: -100px; }
+.a .b2 { bottom: -80px; right: 10%; }
+.a .b3 { top: 30%; right: -60px; }
+.b .b1 { top: -60px; right: -80px; }
+.b .b2 { bottom: -100px; left: -60px; }
+.b .b3 { top: 40%; left: 35%; opacity: 0.48; }
+.c .b1 { top: -80px; left: 12%; background: radial-gradient(circle, #5B7BFF 0%, transparent 68%); opacity: 0.72; }
+.c .b2 { top: 38%; right: -80px; background: radial-gradient(circle, #5BAAFF 0%, transparent 68%); opacity: 0.65; }
+.c .b3 { bottom: -100px; left: 30%; background: radial-gradient(circle, #8B7BFF 0%, transparent 68%); opacity: 0.55; }
+.d .b1 { top: -100px; right: -100px; }
+.d .b2 { bottom: -80px; left: -60px; opacity: 0.60; }
+.d .b3 { top: 50%; right: 12%; opacity: 0.48; }
+.e .b1 { top: -120px; left: -100px; opacity: 0.60; }
+.e .b2 { top: 40%; right: 20%; opacity: 0.52; }
+.e .b3 { bottom: -60px; left: 40%; opacity: 0.44; }
+
+/* 暖色のトーン（variant の指定より優先する） */
+.atmo.warm .blob.b1 { background: radial-gradient(circle, #FFB347 0%, transparent 68%); opacity: 0.52; }
+.atmo.warm .blob.b3 { background: radial-gradient(circle, #FF85B3 0%, transparent 68%); opacity: 0.44; }

@@ -1,0 +1,42 @@
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 96px;
+  background: rgba(249,250,255,0.82);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(67,103,255,0.08);
+  overflow: hidden;
+}
+/* スクロール量に合わせて伸びるバー */
+.progress {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--blue);
+  transform-origin: left center;
+  transform: scaleX(0);
+  z-index: 51;
+}
+.logo {
+  font-family: var(--font-pixel);
+  font-size: 14px; color: var(--ink); letter-spacing: 0.04em;
+}
+.links { display: flex; gap: 34px; list-style: none; }
+.links a {
+  font-family: var(--font-pixel);
+  font-size: 10px; letter-spacing: 0.16em;
+  color: var(--ink-2); font-weight: 400;
+  padding: 6px 0; position: relative;
+}
+.links a:hover { color: var(--blue); }
+.links a::after {
+  content: ''; position: absolute; left: 0; bottom: 0;
+  width: 0; height: 2px; background: var(--blue); transition: width .2s;
+}
+.links a:hover::after { width: 100%; }
+
+@media (max-width: 1280px) {
+  .nav { padding-left: 64px; padding-right: 64px; }
+}
+@media (max-width: 720px) {
+  .nav { padding: 16px 24px; }
+  .links { display: none; }
+}

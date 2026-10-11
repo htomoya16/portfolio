@@ -1,4 +1,5 @@
-import gsap from 'gsap'
+import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
+import { gsap } from '@/lib/gsap'
 
 export const SCRAMBLE_CHARS = {
   title: '._:+*#01XYZ',
@@ -132,4 +133,36 @@ export function scrambleText(
       onComplete?.()
     },
   })
+}
+
+/** ホバー演出で再生中のかき混ぜ。途中で止めて元の文字に戻せるよう要素ごとに持つ */
+const activeScrambles = new WeakMap<HTMLElement, ReturnType<typeof scrambleText>>()
+
+/** 再生中のかき混ぜを止め、すぐに元の文字へ戻す */
+export function cancelScramble(el: HTMLElement | null | undefined, text: string) {
+  if (!el) return
+  const prev = activeScrambles.get(el)
+  if (!prev) return
+  prev.kill()
+  el.textContent = text
+  activeScrambles.delete(el)
+}
+
+/** ホバーなどで要素の文字をかき混ぜる。再生中なら最初からやり直す */
+export function playScramble(
+  el: HTMLElement | null | undefined,
+  text: string,
+  opts?: { pattern?: ScramblePattern; revealRate?: number; settleDuration?: number },
+) {
+  if (!el || getPrefersReducedMotion()) return
+  cancelScramble(el, text)
+  lockElSize(el)
+  el.textContent = text
+  const animation = scrambleText(el, text, {
+    chars: SCRAMBLE_CHARS[opts?.pattern ?? 'label'],
+    revealRate: opts?.revealRate ?? 44,
+    settleDuration: opts?.settleDuration ?? 360,
+    onComplete: () => activeScrambles.delete(el),
+  })
+  activeScrambles.set(el, animation)
 }

@@ -1,0 +1,72 @@
+.about {
+  background: linear-gradient(180deg, #fff 0%, #fff 78%, rgba(244,248,255,0.86) 100%);
+  min-height: 100vh;
+}
+.about > .heading { display: flex; max-width: 1280px; width: 100%; margin-left: auto; margin-right: auto; }
+.grid {
+  display: grid; grid-template-columns: minmax(420px, 560px) 32px 1fr;
+  /* 左の本文と右のマイルストーンは、背の高い方に対して互いに縦中央で揃える。
+     中央の区切り線だけは align-self: stretch で全高を保つ。 */
+  gap: 48px; position: relative; align-items: center;
+  max-width: 1280px; margin: 0 auto; width: 100%; z-index: 2;
+}
+.tagline {
+  font-family: var(--font-sans);
+  font-size: 28px; font-weight: 700; line-height: 1.75; color: var(--ink);
+  margin-top: 28px; margin-bottom: 32px; letter-spacing: 0.02em;
+}
+.body { font-size: 16px; color: var(--ink-2); line-height: 2; letter-spacing: 0.02em; }
+.body p { margin-bottom: 10px; }
+
+/* 本文とカードの間の点線。カードにカーソルを乗せると矢印がその高さへ動く */
+.divider { position: relative; width: 32px; min-height: 360px; align-self: stretch; }
+.divider::before {
+  content: ''; position: absolute; left: 15px; top: 16px; bottom: 16px; width: 2px;
+  background-image: linear-gradient(180deg, rgba(67,103,255,0.5) 50%, transparent 50%);
+  background-size: 2px 7px;
+}
+.dividerEnd { position: absolute; left: 8px; width: 16px; height: 16px; background: rgba(67,103,255,0.18); border: 1.5px solid var(--blue); }
+.dividerEnd.top { top: 0; }
+.dividerEnd.bottom { bottom: 0; background: var(--blue); }
+.indicator {
+  position: absolute; left: 6px; top: 0;
+  width: 20px; height: 16px;
+  background: var(--blue);
+  opacity: 0;
+  clip-path: polygon(0 0, 60% 0, 100% 50%, 60% 100%, 0 100%);
+  will-change: top;
+}
+
+.cards { display: flex; flex-direction: column; gap: 20px; }
+.card {
+  position: relative; background: rgba(255,255,255,0.78); backdrop-filter: blur(8px);
+  border: 1px solid rgba(67,103,255,0.14); padding: 26px 30px;
+  display: grid; grid-template-columns: 42px 1fr 36px; gap: 24px; align-items: center;
+  min-height: 104px; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.card:hover { transform: translateY(-2px); border-color: var(--blue); box-shadow: 0 8px 24px rgba(67,103,255,0.12); }
+.cardIcon { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; color: var(--blue); }
+.cardIcon img { width: 30px; height: 30px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(67,103,255,0.18)); }
+.cardBody { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
+.cardDate { font-size: 11px; color: var(--blue); letter-spacing: 0.22em; white-space: nowrap; }
+.cardTitle {
+  display: block;
+  width: 100%;
+  min-width: 0 !important;
+  max-width: 100%;
+  font-family: var(--font-sans); font-size: 16px; font-weight: 600; color: var(--ink); letter-spacing: 0.02em;
+  white-space: normal;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+.cardPlus { position: relative; width: 14px; height: 14px; opacity: 0.6; }
+.cardPlus span { position: absolute; background: var(--muted); }
+.cardPlus span:nth-child(1) { left: 0; top: 6px; width: 14px; height: 2px; }
+.cardPlus span:nth-child(2) { left: 6px; top: 0; width: 2px; height: 14px; }
+.card:hover .cardPlus span { background: var(--blue); }
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: 1fr; gap: 40px; }
+  .divider { display: none; }
+}
