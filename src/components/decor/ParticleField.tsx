@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
-import { gsap } from '@/lib/gsap'
+import { gsap, ScrollTrigger } from '@/lib/gsap'
 import styles from './ParticleField.module.css'
 
 const COLORS = ['#4367FF', '#4FD8FF', '#B5C2FF', '#F072B0', '#D7FF00']
@@ -47,6 +47,7 @@ interface ParticleFieldProps {
 }
 
 export default function ParticleField({ count = 12 }: ParticleFieldProps) {
+  const fieldRef = useRef<HTMLDivElement>(null)
   const particleRefs = useRef<(HTMLSpanElement | null)[]>([])
   const [particles, setParticles] = useState<Particle[]>([])
 
@@ -74,14 +75,23 @@ export default function ParticleField({ count = 12 }: ParticleFieldProps) {
       })
       tweens.push(tween)
     })
+    // 画面外にあるあいだは止めておく
+    const visibility = ScrollTrigger.create({
+      trigger: fieldRef.current,
+      start: 'top bottom',
+      end: 'bottom top',
+      onToggle: (self) => tweens.forEach((t) => t.paused(!self.isActive)),
+      onRefresh: (self) => tweens.forEach((t) => t.paused(!self.isActive)),
+    })
 
     return () => {
+      visibility.kill()
       tweens.forEach((t) => t.kill())
     }
   }, [particles])
 
   return (
-    <div className={styles.field} aria-hidden="true">
+    <div ref={fieldRef} className={styles.field} aria-hidden="true">
       {particles.map((p, i) => {
         const baseStyle: React.CSSProperties = {
           position: 'absolute',

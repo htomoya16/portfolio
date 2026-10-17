@@ -12,12 +12,31 @@
   -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, #000 50%, transparent 100%);
   opacity: 0.85;
 }
+/*
+ * ぼかした光。filter: blur は動かすたびに描き直しになり GPU を食い続けるので、
+ * blur(72px) をかけた後の濃淡をグラデーションで直接描く。
+ * ぼけて広がる分（約 150px）だけ四方に大きくし、margin で中心の位置を元のままにする。
+ * --c が色、--p がぼかしで薄まった中心の濃さ（小さい光ほど薄まる）
+ */
 .blob {
-  position: absolute; border-radius: 50%; filter: blur(72px); opacity: 0.78;
+  position: absolute; border-radius: 50%; opacity: 0.78;
+  margin: -150px;
+  background: radial-gradient(closest-side,
+    color-mix(in srgb, var(--c) var(--p), transparent),
+    color-mix(in srgb, var(--c) calc(var(--p) * 0.96), transparent) 10%,
+    color-mix(in srgb, var(--c) calc(var(--p) * 0.83), transparent) 20%,
+    color-mix(in srgb, var(--c) calc(var(--p) * 0.66), transparent) 30%,
+    color-mix(in srgb, var(--c) calc(var(--p) * 0.47), transparent) 40%,
+    color-mix(in srgb, var(--c) calc(var(--p) * 0.29), transparent) 50%,
+    color-mix(in srgb, var(--c) calc(var(--p) * 0.16), transparent) 60%,
+    color-mix(in srgb, var(--c) calc(var(--p) * 0.07), transparent) 70%,
+    color-mix(in srgb, var(--c) calc(var(--p) * 0.02), transparent) 80%,
+    transparent 90%);
+  will-change: transform, opacity;
 }
-.b1 { width: 520px; height: 520px; background: radial-gradient(circle, #6B8AFF 0%, transparent 68%); }
-.b2 { width: 400px; height: 400px; background: radial-gradient(circle, #7DC3FF 0%, transparent 68%); }
-.b3 { width: 340px; height: 340px; background: radial-gradient(circle, #A891FF 0%, transparent 68%); opacity: 0.55; }
+.b1 { width: calc(520px + 300px); height: calc(520px + 300px); --c: #6B8AFF; --p: 64%; }
+.b2 { width: calc(400px + 300px); height: calc(400px + 300px); --c: #7DC3FF; --p: 53%; }
+.b3 { width: calc(340px + 300px); height: calc(340px + 300px); --c: #A891FF; --p: 46%; opacity: 0.55; }
 .noise {
   position: absolute; inset: 0;
   background-image: url('/assets/decor/micro_dots.svg');
@@ -39,9 +58,9 @@
 .b .b1 { top: -60px; right: -80px; }
 .b .b2 { bottom: -100px; left: -60px; }
 .b .b3 { top: 40%; left: 35%; opacity: 0.48; }
-.c .b1 { top: -80px; left: 12%; background: radial-gradient(circle, #5B7BFF 0%, transparent 68%); opacity: 0.72; }
-.c .b2 { top: 38%; right: -80px; background: radial-gradient(circle, #5BAAFF 0%, transparent 68%); opacity: 0.65; }
-.c .b3 { bottom: -100px; left: 30%; background: radial-gradient(circle, #8B7BFF 0%, transparent 68%); opacity: 0.55; }
+.c .b1 { top: -80px; left: 12%; --c: #5B7BFF; opacity: 0.72; }
+.c .b2 { top: 38%; right: -80px; --c: #5BAAFF; opacity: 0.65; }
+.c .b3 { bottom: -100px; left: 30%; --c: #8B7BFF; opacity: 0.55; }
 .d .b1 { top: -100px; right: -100px; }
 .d .b2 { bottom: -80px; left: -60px; opacity: 0.60; }
 .d .b3 { top: 50%; right: 12%; opacity: 0.48; }
@@ -50,5 +69,5 @@
 .e .b3 { bottom: -60px; left: 40%; opacity: 0.44; }
 
 /* 暖色のトーン（variant の指定より優先する） */
-.atmo.warm .blob.b1 { background: radial-gradient(circle, #FFB347 0%, transparent 68%); opacity: 0.52; }
-.atmo.warm .blob.b3 { background: radial-gradient(circle, #FF85B3 0%, transparent 68%); opacity: 0.44; }
+.atmo.warm .blob.b1 { --c: #FFB347; opacity: 0.52; }
+.atmo.warm .blob.b3 { --c: #FF85B3; opacity: 0.44; }
