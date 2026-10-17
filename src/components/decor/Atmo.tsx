@@ -3,7 +3,7 @@
 import { useRef } from 'react'
 import clsx from 'clsx'
 import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
-import { gsap, useGSAP } from '@/lib/gsap'
+import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap'
 import styles from './Atmo.module.css'
 import DecorImages from './DecorImages'
 import { type AtmoVariant, SECTION_DECORS } from './decors'
@@ -34,7 +34,7 @@ export default function Atmo({ variant, tone = 'cool' }: Props) {
       const blobs = blobRefs.current.filter((blob): blob is HTMLDivElement => blob !== null)
 
       // ゆっくり膨らんだり縮んだりさせる。開始をずらしてページ全体で動きがそろわないようにする
-      blobs.forEach((blob, i) => {
+      const breathes = blobs.map((blob, i) =>
         gsap.to(blob, {
           scale: 1.18,
           opacity: '+=0.08',
@@ -43,7 +43,15 @@ export default function Atmo({ variant, tone = 'cool' }: Props) {
           yoyo: true,
           ease: 'sine.inOut',
           delay: (order * blobs.length + i) * 0.4,
-        })
+        }),
+      )
+      // 画面外のセクションでは止めておき、描き直しを見えている分だけにする
+      ScrollTrigger.create({
+        trigger: root,
+        start: 'top bottom',
+        end: 'bottom top',
+        onToggle: (self) => breathes.forEach((tween) => tween.paused(!self.isActive)),
+        onRefresh: (self) => breathes.forEach((tween) => tween.paused(!self.isActive)),
       })
       // スクロールに合わせて光と方眼を少しずつずらし、奥行きを出す
       gsap.to(blobs, {
