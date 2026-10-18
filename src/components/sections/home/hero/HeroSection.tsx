@@ -13,7 +13,6 @@ import { PET_LAYER_ID } from '@/components/pet/petLayer'
 import { heroCopy, heroTickerSequence } from '@/content/site/hero'
 import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import { gsap, useGSAP } from '@/lib/gsap'
-import { pickHeroBackground } from '@/lib/heroBackground'
 import { onLoaderDone } from '@/lib/loaderSignal'
 import styles from './Hero.module.css'
 import SideRail from './SideRail'
@@ -44,12 +43,6 @@ export default function HeroSection() {
   useMagnetic(playRef)
   useDecorMotion(decorRef, 0)
 
-  // 背景画像はマウント後に決める。SSR 時に確定させるとハイドレーション不一致になるため。
-  useEffect(() => {
-    // ローディング画面が先読みしているものと同じ画像を使う
-    panelRef.current?.style.setProperty('--hero-bg-image', `url(${pickHeroBackground()})`)
-  }, [])
-
   useEffect(() => () => titleTimersRef.current.forEach(clearTimeout), [])
 
   useGSAP(
@@ -58,10 +51,12 @@ export default function HeroSection() {
 
       const bottomItems = [playRef.current, tickerRef.current]
       gsap.set([contentRef.current, ...bottomItems], { autoAlpha: 0, y: 28 })
-      gsap.set(panelRef.current, { autoAlpha: 0, x: 28 })
+      // 右パネルは最初に表示される一番大きな要素（LCP）なので、透明にせず横から滑らせるだけにする。
+      // 透明から始めると、見え始めるまで LCP として数えられない
+      gsap.set(panelRef.current, { x: 28 })
       gsap.timeline({ defaults: { ease: 'power3.out' } })
         .to(contentRef.current, { autoAlpha: 1, y: 0, duration: 0.8 })
-        .to(panelRef.current, { autoAlpha: 1, x: 0, duration: 0.75 }, '-=0.45')
+        .to(panelRef.current, { x: 0, duration: 0.75 }, '-=0.45')
         .to(bottomItems, { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08 }, '-=0.15')
 
       // 見出しを 1 行ずつ奥から落とす。ローディング画面の裏で終わってしまわないよう、閉じ始めてから再生する

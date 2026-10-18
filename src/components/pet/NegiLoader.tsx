@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
-import { pickHeroBackground } from '@/lib/heroBackground'
+import { getHeroBackground } from '@/lib/heroBackground'
 import { markLoaderDone } from '@/lib/loaderSignal'
 import styles from './NegiLoader.module.css'
 import { framePos, SHEET_SRC, spriteStyle } from './petSprite'
@@ -26,7 +26,7 @@ function preloadImage(src: string): Promise<void> {
 function waitForInitialAssets(maxWait: number): Promise<void> {
   const assets = Promise.all([
     document.fonts?.ready,
-    preloadImage(pickHeroBackground()),
+    preloadImage(getHeroBackground()),
     preloadImage(SHEET_SRC),
   ]).then(() => undefined)
   const timeout = new Promise<void>((resolve) => setTimeout(resolve, maxWait))

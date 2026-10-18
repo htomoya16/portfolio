@@ -3,6 +3,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Inter, JetBrains_Mono, Noto_Sans_JP, Press_Start_2P } from 'next/font/google'
 import { siteMetadata } from '@/content/site/meta'
+import { heroBackgroundScript } from '@/lib/heroBackground'
 import './globals.css'
 
 const inter = Inter({
@@ -40,10 +41,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
+    // <head> のスクリプトが <html> に背景画像の指定を書き足すので、その差分は React に無視させる
     <html
       lang="ja"
       className={`${inter.variable} ${notoSansJp.variable} ${jetBrainsMono.variable} ${pressStart2P.variable}`}
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: heroBackgroundScript }} />
+      </head>
       <body>
         {children}
         <Analytics />
