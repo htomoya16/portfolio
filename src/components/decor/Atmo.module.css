@@ -4,13 +4,23 @@
 }
 .grid {
   position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(67,103,255,0.09) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(67,103,255,0.09) 1px, transparent 1px);
-  background-size: 28px 28px; background-position: -1px -1px;
+  overflow: hidden;
   mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, #000 50%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, #000 50%, transparent 100%);
   opacity: 0.85;
+}
+/*
+ * 方眼の線。スクロールに合わせて右下へ 80px ずらすので、その分だけ左上へはみ出させておく。
+ * background-position を動かすと方眼全体を描き直すことになるため、transform で要素ごと動かす。
+ * はみ出させた 80px の分は background-position で打ち消し、線の位置を元のままにする
+ */
+.gridLines {
+  position: absolute; inset: -80px 0 0 -80px;
+  background-image:
+    linear-gradient(rgba(67,103,255,0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(67,103,255,0.09) 1px, transparent 1px);
+  background-size: 28px 28px; background-position: 79px 79px;
+  will-change: transform;
 }
 /*
  * ぼかした光。filter: blur は動かすたびに描き直しになり GPU を食い続けるので、

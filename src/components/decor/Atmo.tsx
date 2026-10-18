@@ -66,7 +66,8 @@ export default function Atmo({ variant, tone = 'cool', still = false }: Props) {
         scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: 1.4 },
       })
       gsap.to(gridRef.current, {
-        backgroundPosition: '+=80px +=80px',
+        x: 80,
+        y: 80,
         ease: 'none',
         scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: 0.9 },
       })
@@ -76,7 +77,9 @@ export default function Atmo({ variant, tone = 'cool', still = false }: Props) {
 
   return (
     <div ref={rootRef} className={clsx(styles.atmo, styles[variant], tone === 'warm' && styles.warm)} aria-hidden="true" data-section-bg>
-      <div ref={gridRef} className={styles.grid} />
+      <div className={styles.grid}>
+        <div ref={gridRef} className={styles.gridLines} />
+      </div>
       {(['b1', 'b2', 'b3'] as const).map((name, i) => (
         <div key={name} ref={(el) => { blobRefs.current[i] = el }} className={clsx(styles.blob, styles[name])} />
       ))}
