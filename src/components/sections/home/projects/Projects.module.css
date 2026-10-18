@@ -128,8 +128,8 @@
   place-items: center;
   width: 34px;
   height: 34px;
+  /* 1 枚に 10 個ほど並び、すりガラスにすると重くなる。後ろはほぼ無地のカードなので、半透明の白だけにする */
   background: rgba(255,255,255,0.4);
-  backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.8);
   border-radius: 10px;
   box-shadow:

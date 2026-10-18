@@ -11,7 +11,7 @@ const publishedCount = projects.filter((project) => !isComingSoon(project)).leng
 export default function ProjectsSection() {
   return (
     <Section id="projects" className={styles.projects}>
-      <Atmo variant="c" />
+      <Atmo variant="c" still />
 
       <div className={styles.wrap}>
         <div className={styles.head}>

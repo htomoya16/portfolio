@@ -44,9 +44,11 @@ function buildParticles(count: number): Particle[] {
 
 interface ParticleFieldProps {
   count?: number
+  /** 漂わせずに置いておく */
+  still?: boolean
 }
 
-export default function ParticleField({ count = 12 }: ParticleFieldProps) {
+export default function ParticleField({ count = 12, still = false }: ParticleFieldProps) {
   const fieldRef = useRef<HTMLDivElement>(null)
   const particleRefs = useRef<(HTMLSpanElement | null)[]>([])
   const [particles, setParticles] = useState<Particle[]>([])
@@ -57,7 +59,7 @@ export default function ParticleField({ count = 12 }: ParticleFieldProps) {
   }, [count])
 
   useEffect(() => {
-    if (particles.length === 0 || getPrefersReducedMotion()) return
+    if (particles.length === 0 || still || getPrefersReducedMotion()) return
 
     const tweens: gsap.core.Tween[] = []
     particles.forEach((p, i) => {
@@ -88,7 +90,7 @@ export default function ParticleField({ count = 12 }: ParticleFieldProps) {
       visibility.kill()
       tweens.forEach((t) => t.kill())
     }
-  }, [particles])
+  }, [particles, still])
 
   return (
     <div ref={fieldRef} className={styles.field} aria-hidden="true">
