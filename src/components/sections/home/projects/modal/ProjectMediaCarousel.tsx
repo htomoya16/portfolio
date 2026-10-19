@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import Image, { getImageProps } from 'next/image'
+import Image from 'next/image'
 import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 import { ChevronLeftIcon, ChevronRightIcon, Maximize2Icon } from 'lucide-react'
@@ -16,6 +16,7 @@ import {
 import type { Project, ProjectMedia } from '@/content/site/projects'
 import { getPrefersReducedMotion, usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import styles from './ProjectMediaCarousel.module.css'
+import { getOptimizedPoster, MEDIA_BACKDROP_SIZES, MEDIA_SIZES, THUMB_SIZES } from './mediaImages'
 import { CAROUSEL_WHEEL_EVENT } from './useModalScroll'
 
 interface ProjectMediaCarouselProps {
@@ -27,29 +28,14 @@ function orientationClass(item: ProjectMedia) {
   return item.orientation ? styles[item.orientation] : undefined
 }
 
-/**
- * <video poster> は Next.js の画像最適化を通らず、元のファイル（900KB を超える PNG もある）を
- * そのまま読むため、最適化した画像の URL を作って渡す。
- * 表示枠の 2 倍程度の幅（横長 1200px / 縦長 750px）になるように指定している。
- */
-function getOptimizedPoster(item: ProjectMedia) {
-  if (!item.poster) return undefined
-  const portrait = item.orientation === 'portrait'
-  const { props } = getImageProps({
-    src: item.poster,
-    alt: '',
-    width: portrait ? 375 : 600,
-    height: portrait ? 667 : 338,
-  })
-  return props.src
-}
-
-function MediaFrame({ item, videoRef, priority = false, active = false }: {
+function MediaFrame({ item, videoRef, priority = false, active = false, backdrop = true }: {
   item: ProjectMedia
   videoRef?: (node: HTMLVideoElement | null) => void
   priority?: boolean
   /** カルーセルで表示中か。表示中の動画だけ再生に必要な情報を先読みする */
   active?: boolean
+  /** 余白を埋める背景のぼかしを描くか */
+  backdrop?: boolean
 }) {
   if (item.type === 'video') {
     return (
@@ -71,21 +57,23 @@ function MediaFrame({ item, videoRef, priority = false, active = false }: {
   return (
     <>
       {/* 縦横比が合わない画像の余白を、同じ画像のぼかしで埋めて画像ごとに自然な背景色にする */}
-      <Image
-        className={styles.backdrop}
-        src={item.src}
-        alt=""
-        fill
-        sizes="64px"
-        aria-hidden="true"
-        draggable={false}
-      />
+      {backdrop && (
+        <Image
+          className={styles.backdrop}
+          src={item.src}
+          alt=""
+          fill
+          sizes={MEDIA_BACKDROP_SIZES}
+          aria-hidden="true"
+          draggable={false}
+        />
+      )}
       <Image
         className={styles.media}
         src={item.src}
         alt={item.alt}
         fill
-        sizes="(max-width: 760px) 100vw, 48vw"
+        sizes={MEDIA_SIZES}
         priority={priority}
         draggable={false}
       />
@@ -102,7 +90,7 @@ function ThumbFrame({ item }: { item: ProjectMedia }) {
           src={item.poster}
           alt=""
           fill
-          sizes="120px"
+          sizes={THUMB_SIZES}
           draggable={false}
           aria-hidden="true"
         />
@@ -132,7 +120,7 @@ function ThumbFrame({ item }: { item: ProjectMedia }) {
       src={item.src}
       alt=""
       fill
-      sizes="120px"
+      sizes={THUMB_SIZES}
       draggable={false}
       aria-hidden="true"
     />
@@ -191,6 +179,11 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
   const thumbRefs = useRef<Array<HTMLButtonElement | null>>([])
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([])
   const expanded = expandedIndex === null ? null : media[expandedIndex]
+  // 背景のぼかし（filter: blur）は重いので、表示中のスライドと、スワイプで次に見える前後 1 枚にだけ描く
+  const nearSelected = (index: number) => {
+    const distance = Math.abs(index - selectedIndex)
+    return Math.min(distance, media.length - distance) <= 1
+  }
   const lightboxRef = useRef<HTMLDivElement | null>(null)
   const lightboxVideoRef = useRef<HTMLVideoElement | null>(null)
   // 拡大表示を開いている間は true。後ろのカルーセルの動画を再生しないようにする
@@ -387,7 +380,7 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
                         onClick={() => setExpandedIndex(index)}
                         aria-label={`Open large preview: ${item.alt}`}
                       >
-                        <MediaFrame item={item} priority={index === 0} />
+                        <MediaFrame item={item} priority={index === 0} backdrop={nearSelected(index)} />
                       </button>
                     ) : (
                       <>
