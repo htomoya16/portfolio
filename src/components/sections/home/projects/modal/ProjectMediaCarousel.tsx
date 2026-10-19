@@ -1,9 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Image, { getImageProps } from 'next/image'
 import { createPortal } from 'react-dom'
 import clsx from 'clsx'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import type { CarouselApi } from '@/components/ui/carousel'
 import {
   Carousel,
@@ -149,6 +150,22 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
   const thumbRefs = useRef<Array<HTMLButtonElement | null>>([])
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([])
   const expanded = expandedIndex === null ? null : media[expandedIndex]
+  // 拡大表示で前後に移れるのは画像だけ（動画はカルーセルの中で再生する）
+  const imageIndices = useMemo(
+    () => media.flatMap((item, index) => (item.type === 'image' ? [index] : [])),
+    [media],
+  )
+  const expandedPosition = expandedIndex === null ? -1 : imageIndices.indexOf(expandedIndex)
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null)
+
+  // 拡大表示で前後の画像へ移る。端まで行ったら反対側へ回る。
+  // 閉じたときに同じ画像が見えているよう、後ろのカルーセルも合わせて動かしておく
+  const stepExpanded = useCallback((direction: 1 | -1) => {
+    if (expandedPosition < 0 || imageIndices.length < 2) return
+    const next = imageIndices[(expandedPosition + direction + imageIndices.length) % imageIndices.length]
+    setExpandedIndex(next)
+    api?.scrollTo(next, true)
+  }, [api, expandedPosition, imageIndices])
 
   // 表示中の動画だけを再生し、ほかは止める。動きを減らす設定のときは自動では再生しない
   const syncVideos = useCallback((activeIndex: number) => {
@@ -228,17 +245,22 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
   useEffect(() => {
     if (expandedIndex === null) return
 
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setExpandedIndex(null)
-      }
+    // Esc で拡大表示だけを閉じ、← → で前後の画像へ移る。
+    // 後ろのモーダルやカルーセルが同じキーで動かないよう、先に受け取って止める
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setExpandedIndex(null)
+      else if (event.key === 'ArrowLeft') stepExpanded(-1)
+      else if (event.key === 'ArrowRight') stepExpanded(1)
+      else return
+      event.preventDefault()
+      event.stopPropagation()
     }
 
-    window.addEventListener('keydown', handleEscape)
+    window.addEventListener('keydown', handleKey, { capture: true })
     return () => {
-      window.removeEventListener('keydown', handleEscape)
+      window.removeEventListener('keydown', handleKey, { capture: true })
     }
-  }, [expandedIndex])
+  }, [expandedIndex, stepExpanded])
 
   useEffect(() => {
     const node = rootRef.current
@@ -374,23 +396,70 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
           aria-label={expanded.alt}
           onClick={() => setExpandedIndex(null)}
         >
-          <div className={styles.lightboxPanel} onClick={(event) => event.stopPropagation()}>
-            <button
-              type="button"
-              className={styles.lightboxClose}
-              onClick={() => setExpandedIndex(null)}
-              aria-label="Close large preview"
-            >
-              CLOSE
-            </button>
-            <Image
-              className={styles.lightboxImg}
-              src={expanded.src}
-              alt={expanded.alt}
-              width={expanded.orientation === 'portrait' ? 720 : 1280}
-              height={expanded.orientation === 'portrait' ? 1280 : 720}
-              draggable={false}
-            />
+          <div
+            className={styles.lightboxPanel}
+            onClick={(event) => event.stopPropagation()}
+            // スマホでは左右のスワイプで前後の画像へ移る
+            onTouchStart={(event) => {
+              const touch = event.touches[0]
+              touchStartRef.current = { x: touch.clientX, y: touch.clientY }
+            }}
+            onTouchEnd={(event) => {
+              const start = touchStartRef.current
+              touchStartRef.current = null
+              if (!start) return
+              const touch = event.changedTouches[0]
+              const dx = touch.clientX - start.x
+              const dy = touch.clientY - start.y
+              if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) stepExpanded(dx < 0 ? 1 : -1)
+            }}
+          >
+            <div className={styles.lightboxHeader}>
+              {imageIndices.length > 1 && (
+                <span className={styles.lightboxCount} aria-live="polite">
+                  {String(expandedPosition + 1).padStart(2, '0')} / {String(imageIndices.length).padStart(2, '0')}
+                </span>
+              )}
+              <button
+                type="button"
+                className={styles.lightboxClose}
+                onClick={() => setExpandedIndex(null)}
+                aria-label="Close large preview"
+              >
+                <span className={styles.lightboxCloseX} aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div className={styles.lightboxStage}>
+              <Image
+                key={expanded.src}
+                className={styles.lightboxImg}
+                src={expanded.src}
+                alt={expanded.alt}
+                width={expanded.orientation === 'portrait' ? 720 : 1280}
+                height={expanded.orientation === 'portrait' ? 1280 : 720}
+                draggable={false}
+              />
+              {imageIndices.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    className={clsx(styles.lightboxNav, styles.lightboxPrev)}
+                    onClick={() => stepExpanded(-1)}
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeftIcon aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    className={clsx(styles.lightboxNav, styles.lightboxNext)}
+                    onClick={() => stepExpanded(1)}
+                    aria-label="Next image"
+                  >
+                    <ChevronRightIcon aria-hidden="true" />
+                  </button>
+                </>
+              )}
+            </div>
             {expanded.caption ? (
               <p className={styles.lightboxCaption}>{expanded.caption}</p>
             ) : (

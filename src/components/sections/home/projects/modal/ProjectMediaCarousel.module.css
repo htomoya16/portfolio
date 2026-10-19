@@ -300,19 +300,73 @@ img.media { background: transparent; }
   box-shadow: 0 24px 64px rgba(67,103,255,0.15), 0 0 0 1px rgba(255,255,255,0.8);
   border-radius: 10px;
 }
-.lightboxClose {
-  align-self: flex-end;
-  border: 1px solid rgba(67,103,255,0.20);
-  background: rgba(67,103,255,0.06);
-  color: var(--muted-2);
-  font-family: var(--font-mono);
-  font-size: 10px; letter-spacing: 0.16em;
-  padding: 7px 12px;
-  cursor: pointer;
-  border-radius: 3px;
-  transition: all 0.15s ease;
+.lightboxHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -6px -6px 0 2px;
 }
-.lightboxClose:hover { background: rgba(67,103,255,0.10); border-color: rgba(67,103,255,0.40); color: var(--ink); }
+.lightboxCount {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: rgba(67,103,255,0.74);
+}
+/* プロジェクトのモーダルの閉じるボタン（ProjectModal の .closeBtn）と同じ見た目 */
+.lightboxClose {
+  margin-left: auto;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #06101f;
+  cursor: pointer;
+  transition: background .18s ease, transform .18s ease, color .18s ease;
+}
+.lightboxClose:hover {
+  background: rgba(67,103,255,0.08);
+  color: var(--blue);
+  transform: rotate(90deg);
+}
+.lightboxCloseX {
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 300;
+}
+/* 画像と、その左右に重ねる前後の移動ボタン */
+.lightboxStage {
+  position: relative;
+  min-height: 0;
+}
+.lightboxNav {
+  position: absolute;
+  top: 50%;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.78);
+  color: var(--blue);
+  box-shadow: 0 10px 22px rgba(15,23,42,0.18);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background .18s ease, color .18s ease;
+}
+.lightboxNav:hover {
+  background: #fff;
+  color: var(--blue-deep);
+}
+.lightboxNav svg { width: 22px; height: 22px; }
+.lightboxPrev { left: 12px; }
+.lightboxNext { right: 12px; }
 .lightboxImg {
   width: 100%;
   max-height: min(76vh, 760px);
@@ -329,7 +383,9 @@ img.media { background: transparent; }
 @media (prefers-reduced-motion: reduce) {
   .navBtn,
   .thumbFrame,
-  .thumbMedia {
+  .thumbMedia,
+  .lightboxClose,
+  .lightboxNav {
     transition: none;
   }
 }
