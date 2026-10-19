@@ -139,6 +139,47 @@ function ThumbFrame({ item }: { item: ProjectMedia }) {
   )
 }
 
+/**
+ * モーダルのスクロールガードが届けるホイール（CAROUSEL_WHEEL_EVENT）で、1 つずつ前後へ移る。
+ * トラックパッドは1回のスワイプで大量の wheel イベントを送るため、
+ * 一定量たまったら1回だけ進め、操作が止まるまで（または一定時間）次を受け付けない
+ */
+function listenWheelSteps(node: HTMLElement, onStep: (direction: 1 | -1) => void) {
+  const STEP_THRESHOLD = 40
+  const IDLE_MS = 160
+  const MAX_LOCK_MS = 700
+  let accumulated = 0
+  let lockedAt: number | null = null
+  let idleTimer: ReturnType<typeof setTimeout> | undefined
+
+  const handleWheel = (event: Event) => {
+    const detail = (event as CustomEvent<{ deltaY: number; deltaX: number }>).detail
+    const delta = Math.abs(detail.deltaX) > Math.abs(detail.deltaY) ? detail.deltaX : detail.deltaY
+
+    clearTimeout(idleTimer)
+    idleTimer = setTimeout(() => {
+      accumulated = 0
+      lockedAt = null
+    }, IDLE_MS)
+
+    const now = performance.now()
+    if (lockedAt !== null && now - lockedAt < MAX_LOCK_MS) return
+
+    accumulated += delta
+    if (Math.abs(accumulated) < STEP_THRESHOLD) return
+
+    onStep(accumulated > 0 ? 1 : -1)
+    accumulated = 0
+    lockedAt = now
+  }
+
+  node.addEventListener(CAROUSEL_WHEEL_EVENT, handleWheel)
+  return () => {
+    clearTimeout(idleTimer)
+    node.removeEventListener(CAROUSEL_WHEEL_EVENT, handleWheel)
+  }
+}
+
 export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselProps) {
   const media = project.media ?? []
   const prefersReducedMotion = usePrefersReducedMotion()
@@ -150,6 +191,7 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
   const thumbRefs = useRef<Array<HTMLButtonElement | null>>([])
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([])
   const expanded = expandedIndex === null ? null : media[expandedIndex]
+  const lightboxRef = useRef<HTMLDivElement | null>(null)
   const lightboxVideoRef = useRef<HTMLVideoElement | null>(null)
   // 拡大表示を開いている間は true。後ろのカルーセルの動画を再生しないようにする
   const lightboxOpenRef = useRef(false)
@@ -296,47 +338,24 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
   useEffect(() => {
     const node = rootRef.current
     if (!node || !api) return
-
-    // トラックパッドは1回のスワイプで大量の wheel イベントを送るため、
-    // 一定量たまったら1枚だけ進め、操作が止まるまで（または一定時間）次を受け付けない
-    const STEP_THRESHOLD = 40
-    const IDLE_MS = 160
-    const MAX_LOCK_MS = 700
-    let accumulated = 0
-    let lockedAt: number | null = null
-    let idleTimer: ReturnType<typeof setTimeout> | undefined
-
-    const handleWheel = (event: Event) => {
-      const detail = (event as CustomEvent<{ deltaY: number; deltaX: number }>).detail
-      const delta = Math.abs(detail.deltaX) > Math.abs(detail.deltaY) ? detail.deltaX : detail.deltaY
-
-      clearTimeout(idleTimer)
-      idleTimer = setTimeout(() => {
-        accumulated = 0
-        lockedAt = null
-      }, IDLE_MS)
-
-      const now = performance.now()
-      if (lockedAt !== null && now - lockedAt < MAX_LOCK_MS) return
-
-      accumulated += delta
-      if (Math.abs(accumulated) < STEP_THRESHOLD) return
-
-      if (accumulated > 0) {
-        api.scrollNext()
-      } else {
-        api.scrollPrev()
-      }
-      accumulated = 0
-      lockedAt = now
-    }
-
-    node.addEventListener(CAROUSEL_WHEEL_EVENT, handleWheel)
-    return () => {
-      clearTimeout(idleTimer)
-      node.removeEventListener(CAROUSEL_WHEEL_EVENT, handleWheel)
-    }
+    return listenWheelSteps(node, (direction) => {
+      if (direction > 0) api.scrollNext()
+      else api.scrollPrev()
+    })
   }, [api])
+
+  // 拡大表示でも、ホイールで前後の画像・動画へ移る。
+  // stepExpanded は移るたびに作り直されるので、最新のものを ref から呼び、ホイールの受け付けは開いている間ずっと続ける
+  const stepExpandedRef = useRef(stepExpanded)
+  useEffect(() => {
+    stepExpandedRef.current = stepExpanded
+  }, [stepExpanded])
+  const lightboxOpen = expandedIndex !== null
+  useEffect(() => {
+    const node = lightboxRef.current
+    if (!lightboxOpen || !node) return
+    return listenWheelSteps(node, (direction) => stepExpandedRef.current(direction))
+  }, [lightboxOpen])
 
   if (media.length === 0) {
     return null
@@ -432,7 +451,10 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
 
       {expanded && createPortal(
         <div
+          ref={lightboxRef}
           className={styles.lightbox}
+          // モーダルのスクロールガードが、ここでのホイールを前後の移動に回す（useModalScroll）
+          data-carousel-wheel
           role="dialog"
           aria-modal="true"
           aria-label={expanded.alt}
