@@ -1,10 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Image, { getImageProps } from 'next/image'
 import { createPortal } from 'react-dom'
 import clsx from 'clsx'
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, Maximize2Icon } from 'lucide-react'
 import type { CarouselApi } from '@/components/ui/carousel'
 import {
   Carousel,
@@ -150,28 +150,25 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
   const thumbRefs = useRef<Array<HTMLButtonElement | null>>([])
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([])
   const expanded = expandedIndex === null ? null : media[expandedIndex]
-  // 拡大表示で前後に移れるのは画像だけ（動画はカルーセルの中で再生する）
-  const imageIndices = useMemo(
-    () => media.flatMap((item, index) => (item.type === 'image' ? [index] : [])),
-    [media],
-  )
-  const expandedPosition = expandedIndex === null ? -1 : imageIndices.indexOf(expandedIndex)
+  const lightboxVideoRef = useRef<HTMLVideoElement | null>(null)
+  // 拡大表示を開いている間は true。後ろのカルーセルの動画を再生しないようにする
+  const lightboxOpenRef = useRef(false)
   const touchStartRef = useRef<{ x: number; y: number } | null>(null)
 
-  // 拡大表示で前後の画像へ移る。端まで行ったら反対側へ回る。
-  // 閉じたときに同じ画像が見えているよう、後ろのカルーセルも合わせて動かしておく
+  // 拡大表示で前後の画像・動画へ移る。端まで行ったら反対側へ回る。
+  // 閉じたときに同じものが見えているよう、後ろのカルーセルも合わせて動かしておく
   const stepExpanded = useCallback((direction: 1 | -1) => {
-    if (expandedPosition < 0 || imageIndices.length < 2) return
-    const next = imageIndices[(expandedPosition + direction + imageIndices.length) % imageIndices.length]
+    if (expandedIndex === null || media.length < 2) return
+    const next = (expandedIndex + direction + media.length) % media.length
     setExpandedIndex(next)
     api?.scrollTo(next, true)
-  }, [api, expandedPosition, imageIndices])
+  }, [api, expandedIndex, media.length])
 
   // 表示中の動画だけを再生し、ほかは止める。動きを減らす設定のときは自動では再生しない
   const syncVideos = useCallback((activeIndex: number) => {
     videoRefs.current.forEach((video, index) => {
       if (!video) return
-      if (index !== activeIndex) {
+      if (lightboxOpenRef.current || index !== activeIndex) {
         video.pause()
       } else if (!getPrefersReducedMotion()) {
         // 再生できなかったとき（読み込み失敗など）はコントロールから手動で再生してもらう
@@ -211,6 +208,38 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
     }
   }, [api, syncVideos])
 
+  // 拡大表示の動画は、カルーセルで見ていた位置と音の設定（ミュート・音量）を引き継いで再生する。
+  // 閉じたり前後へ移ったりしたら、見たところまでの位置と音の設定をカルーセルの動画へ戻す
+  useEffect(() => {
+    if (expandedIndex === null || media[expandedIndex]?.type !== 'video') return
+    const video = lightboxVideoRef.current
+    const source = videoRefs.current[expandedIndex]
+    if (!video) return
+    if (source) {
+      video.muted = source.muted
+      video.volume = source.volume
+      video.currentTime = source.currentTime
+    }
+    if (!getPrefersReducedMotion()) video.play().catch(() => {})
+    return () => {
+      video.pause()
+      if (!source) return
+      source.currentTime = video.currentTime
+      source.muted = video.muted
+      source.volume = video.volume
+    }
+  }, [expandedIndex, media])
+
+  // 拡大表示を開いたら後ろの動画を止め、閉じたらカルーセルで表示中の動画の再生に戻す
+  useEffect(() => {
+    lightboxOpenRef.current = expandedIndex !== null
+    if (expandedIndex !== null) {
+      videoRefs.current.forEach((video) => video?.pause())
+    } else if (api) {
+      syncVideos(api.selectedScrollSnap())
+    }
+  }, [api, expandedIndex, syncVideos])
+
   // スマホでは表示領域の高さを、表示中の画像（キャプション込み）に合わせる。
   // 縦長と横長の画像が混ざると一番高い画像に合わせて領域が確保され、
   // 横長の画像の上下に大きな空白ができるため。PC はレイアウトが固定なので変えない
@@ -249,6 +278,8 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
     // 後ろのモーダルやカルーセルが同じキーで動かないよう、先に受け取って止める
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setExpandedIndex(null)
+      // 動画を操作しているときは、← → を動画の早送り・巻き戻しに使う
+      else if (event.target instanceof HTMLVideoElement) return
       else if (event.key === 'ArrowLeft') stepExpanded(-1)
       else if (event.key === 'ArrowRight') stepExpanded(1)
       else return
@@ -340,12 +371,23 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
                         <MediaFrame item={item} priority={index === 0} />
                       </button>
                     ) : (
-                      <MediaFrame
-                        item={item}
-                        videoRef={(node) => { videoRefs.current[index] = node }}
-                        priority={index === 0}
-                        active={index === selectedIndex}
-                      />
+                      <>
+                        <MediaFrame
+                          item={item}
+                          videoRef={(node) => { videoRefs.current[index] = node }}
+                          priority={index === 0}
+                          active={index === selectedIndex}
+                        />
+                        {/* 動画はクリックが再生・一時停止になるので、拡大は右上のボタンで開く */}
+                        <button
+                          type="button"
+                          className={styles.expand}
+                          onClick={() => setExpandedIndex(index)}
+                          aria-label={`Open large preview: ${item.alt}`}
+                        >
+                          <Maximize2Icon aria-hidden="true" />
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
@@ -388,7 +430,7 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
         )}
       </Carousel>
 
-      {expanded && expanded.type === 'image' && createPortal(
+      {expanded && createPortal(
         <div
           className={styles.lightbox}
           role="dialog"
@@ -401,6 +443,11 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
             onClick={(event) => event.stopPropagation()}
             // スマホでは左右のスワイプで前後の画像へ移る
             onTouchStart={(event) => {
+              // 動画の上のスワイプは、再生位置の操作に使えるよう前後の移動にしない
+              if (event.target instanceof HTMLVideoElement) {
+                touchStartRef.current = null
+                return
+              }
               const touch = event.touches[0]
               touchStartRef.current = { x: touch.clientX, y: touch.clientY }
             }}
@@ -415,9 +462,9 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
             }}
           >
             <div className={styles.lightboxHeader}>
-              {imageIndices.length > 1 && (
+              {media.length > 1 && (
                 <span className={styles.lightboxCount} aria-live="polite">
-                  {String(expandedPosition + 1).padStart(2, '0')} / {String(imageIndices.length).padStart(2, '0')}
+                  {String((expandedIndex ?? 0) + 1).padStart(2, '0')} / {String(media.length).padStart(2, '0')}
                 </span>
               )}
               <button
@@ -430,22 +477,37 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
               </button>
             </div>
             <div className={styles.lightboxStage}>
-              <Image
-                key={expanded.src}
-                className={styles.lightboxImg}
-                src={expanded.src}
-                alt={expanded.alt}
-                width={expanded.orientation === 'portrait' ? 720 : 1280}
-                height={expanded.orientation === 'portrait' ? 1280 : 720}
-                draggable={false}
-              />
-              {imageIndices.length > 1 && (
+              {expanded.type === 'video' ? (
+                <video
+                  key={expanded.src}
+                  ref={lightboxVideoRef}
+                  className={styles.lightboxImg}
+                  src={expanded.src}
+                  poster={getOptimizedPoster(expanded)}
+                  controls
+                  muted
+                  playsInline
+                  preload="auto"
+                  aria-label={expanded.alt}
+                />
+              ) : (
+                <Image
+                  key={expanded.src}
+                  className={styles.lightboxImg}
+                  src={expanded.src}
+                  alt={expanded.alt}
+                  width={expanded.orientation === 'portrait' ? 720 : 1280}
+                  height={expanded.orientation === 'portrait' ? 1280 : 720}
+                  draggable={false}
+                />
+              )}
+              {media.length > 1 && (
                 <>
                   <button
                     type="button"
                     className={clsx(styles.lightboxNav, styles.lightboxPrev)}
                     onClick={() => stepExpanded(-1)}
-                    aria-label="Previous image"
+                    aria-label="Previous preview"
                   >
                     <ChevronLeftIcon aria-hidden="true" />
                   </button>
@@ -453,7 +515,7 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
                     type="button"
                     className={clsx(styles.lightboxNav, styles.lightboxNext)}
                     onClick={() => stepExpanded(1)}
-                    aria-label="Next image"
+                    aria-label="Next preview"
                   >
                     <ChevronRightIcon aria-hidden="true" />
                   </button>

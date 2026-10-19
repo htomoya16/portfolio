@@ -114,6 +114,33 @@
   background: #030712;
 }
 img.media { background: transparent; }
+/* 動画の右上の拡大ボタン */
+.expand {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 999px;
+  background: rgba(3,7,18,0.55);
+  color: #fff;
+  cursor: zoom-in;
+  transition: background .18s ease, transform .18s ease;
+}
+.expand:hover {
+  background: rgba(3,7,18,0.78);
+  transform: scale(1.06);
+}
+.expand:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+.expand svg { width: 16px; height: 16px; }
 .backdrop {
   object-fit: cover;
   transform: scale(1.2);
@@ -381,6 +408,7 @@ img.media { background: transparent; }
   display: block;
   background: rgba(240,244,255,0.5);
 }
+video.lightboxImg { background: #030712; }
 .lightboxCaption {
   font-family: var(--font-sans-jp);
   font-size: 13px; line-height: 1.6;
@@ -392,7 +420,8 @@ img.media { background: transparent; }
   .thumbFrame,
   .thumbMedia,
   .lightboxClose,
-  .lightboxNav {
+  .lightboxNav,
+  .expand {
     transition: none;
   }
 }
