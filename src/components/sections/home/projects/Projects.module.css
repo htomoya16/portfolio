@@ -110,8 +110,11 @@
 }
 .card:hover .viewHint { transform: translateY(0); }
 
-.meta { position: relative; z-index: 1; padding: 18px 18px 20px; display: flex; flex-direction: column; justify-content: center; flex: 1; }
+/* 説明文の長さが違っても見出しの高さがそろうよう、上から詰める */
+.meta { position: relative; z-index: 1; padding: 18px 18px 20px; display: flex; flex-direction: column; justify-content: flex-start; flex: 1; }
+/* 準備中のカードは画像がないので、文字をカードの縦中央に置く */
 .card.noPreview .meta {
+  justify-content: center;
   min-height: 100%;
   padding: 34px 18px 20px;
 }
