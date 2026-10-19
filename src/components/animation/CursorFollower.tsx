@@ -26,6 +26,7 @@ export default function CursorFollower() {
 
     const onMove = (e: MouseEvent) => {
       el.style.transform = `translate3d(${e.clientX - 104}px, ${e.clientY - 104}px, 0)`
+      el.style.visibility = 'visible'
     }
     const onOver = (e: PointerEvent) => {
       const interactive = e.target instanceof Element && e.target.closest(INTERACTIVE_SELECTOR)

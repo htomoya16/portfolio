@@ -1,5 +1,7 @@
+/* マウスを動かすまでは隠しておく。スマホなどマウスのない端末では最後まで出さない */
 .cursor {
   position: fixed; left: 0; top: 0;
+  visibility: hidden;
   width: 208px; height: 208px;
   pointer-events: none;
   z-index: 9999;
