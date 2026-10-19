@@ -16,7 +16,15 @@ import {
 import type { Project, ProjectMedia } from '@/content/site/projects'
 import { getPrefersReducedMotion, usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import styles from './ProjectMediaCarousel.module.css'
-import { getOptimizedPoster, MEDIA_BACKDROP_SIZES, MEDIA_SIZES, THUMB_SIZES } from './mediaImages'
+import {
+  getOptimizedPoster,
+  LIGHTBOX_SIZES,
+  lightboxImageSize,
+  MEDIA_BACKDROP_SIZES,
+  MEDIA_SIZES,
+  THUMB_SIZES,
+  warmLightboxMedia,
+} from './mediaImages'
 import { CAROUSEL_WHEEL_EVENT } from './useModalScroll'
 
 interface ProjectMediaCarouselProps {
@@ -265,6 +273,13 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
     }
   }, [expandedIndex, media])
 
+  // 拡大表示では 1 つずつ前後へ移るので、前後の画像を先に読み込んでおき、移ったときにすぐ表示できるようにする
+  useEffect(() => {
+    if (expandedIndex === null || media.length < 2) return
+    warmLightboxMedia(media[(expandedIndex + 1) % media.length])
+    warmLightboxMedia(media[(expandedIndex - 1 + media.length) % media.length])
+  }, [expandedIndex, media])
+
   // 拡大表示を開いたら後ろの動画を止め、閉じたらカルーセルで表示中の動画の再生に戻す
   useEffect(() => {
     lightboxOpenRef.current = expandedIndex !== null
@@ -506,15 +521,28 @@ export default function ProjectMediaCarousel({ project }: ProjectMediaCarouselPr
                   aria-label={expanded.alt}
                 />
               ) : (
-                <Image
-                  key={expanded.src}
-                  className={styles.lightboxImg}
-                  src={expanded.src}
-                  alt={expanded.alt}
-                  width={expanded.orientation === 'portrait' ? 720 : 1280}
-                  height={expanded.orientation === 'portrait' ? 1280 : 720}
-                  draggable={false}
-                />
+                <>
+                  {/* 大きな画像が届くまでは、カルーセルで読み込み済みの画像を下に敷いて見せておく */}
+                  <Image
+                    key={`${expanded.src}-underlay`}
+                    className={styles.lightboxUnderlay}
+                    src={expanded.src}
+                    alt=""
+                    fill
+                    sizes={MEDIA_SIZES}
+                    aria-hidden="true"
+                    draggable={false}
+                  />
+                  <Image
+                    key={expanded.src}
+                    className={styles.lightboxImg}
+                    src={expanded.src}
+                    alt={expanded.alt}
+                    {...lightboxImageSize(expanded)}
+                    sizes={LIGHTBOX_SIZES}
+                    draggable={false}
+                  />
+                </>
               )}
               {media.length > 1 && (
                 <>

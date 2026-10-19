@@ -9,6 +9,16 @@ import type { Project, ProjectMedia } from '@/content/site/projects'
 export const MEDIA_SIZES = '(max-width: 760px) 100vw, 48vw'
 export const MEDIA_BACKDROP_SIZES = '64px'
 export const THUMB_SIZES = '120px'
+/**
+ * 拡大表示の画像の表示幅。パネルの幅は min(1120px, 100vw - 40px) で、内側に左右 14px の余白がある。
+ * 指定しないと next/image が 1920px（高解像度の画面では 3840px）の画像を選び、表示より大きな画像を読み込む
+ */
+export const LIGHTBOX_SIZES = '(max-width: 1160px) calc(100vw - 68px), 1092px'
+
+/** 拡大表示の画像の縦横の大きさ（縦横比を決める目安。実際の表示は object-fit: contain で合わせる） */
+export function lightboxImageSize(item: ProjectMedia) {
+  return item.orientation === 'portrait' ? { width: 720, height: 1280 } : { width: 1280, height: 720 }
+}
 
 /**
  * <video poster> は Next.js の画像最適化を通らず、元のファイル（900KB を超える PNG もある）を
@@ -28,13 +38,22 @@ export function getOptimizedPoster(item: ProjectMedia) {
 }
 
 /** next/image と同じ URL（srcset・sizes 込み）で画像を読み込み、デコードまで済ませておく */
-function warmImage(src: string, sizes: string) {
-  const { props } = getImageProps({ src, alt: '', fill: true, sizes })
+function warmImageProps(props: { src: string; srcSet?: string; sizes?: string }) {
   const img = new Image()
   if (props.sizes) img.sizes = props.sizes
   if (props.srcSet) img.srcset = props.srcSet
   img.src = props.src
   img.decode().catch(() => {})
+}
+
+function warmImage(src: string, sizes: string) {
+  warmImageProps(getImageProps({ src, alt: '', fill: true, sizes }).props)
+}
+
+/** 拡大表示で次に見る画像を、拡大表示と同じ URL で先に読み込んでおく（動画は開いたときに読み込む） */
+export function warmLightboxMedia(item: ProjectMedia | undefined) {
+  if (item?.type !== 'image') return
+  warmImageProps(getImageProps({ src: item.src, alt: '', ...lightboxImageSize(item), sizes: LIGHTBOX_SIZES }).props)
 }
 
 const warmed = new Set<string>()
