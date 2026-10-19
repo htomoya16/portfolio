@@ -1,6 +1,7 @@
 'use client'
 
 import { type RefObject, useEffect } from 'react'
+import { syncSmoothScroll } from '@/lib/smoothScroll'
 
 /** ホイールを受け取るカルーセルの目印。ここでのホイールはスクロールせず、画像の切り替えに使う */
 export const CAROUSEL_WHEEL_SELECTOR = '[data-carousel-wheel]'
@@ -124,6 +125,7 @@ export function useBodyScrollLock(open: boolean) {
       body.style.top = previousBodyTop
       body.style.width = previousBodyWidth
       window.scrollTo({ top: scrollY, left: 0, behavior: 'auto' })
+      syncSmoothScroll()
 
       window.requestAnimationFrame(() => {
         html.style.scrollBehavior = previousHtmlScrollBehavior
