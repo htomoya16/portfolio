@@ -376,6 +376,12 @@ img.media { background: transparent; }
 .lightboxStage {
   position: relative;
   min-height: 0;
+  background: rgba(240,244,255,0.5);
+}
+/* 大きな画像が届くまで見せておく、カルーセルと同じ大きさの画像 */
+.lightboxUnderlay {
+  object-fit: contain;
+  pointer-events: none;
 }
 .lightboxNav {
   position: absolute;
@@ -401,12 +407,13 @@ img.media { background: transparent; }
 .lightboxNav svg { width: 22px; height: 22px; }
 .lightboxPrev { left: 12px; }
 .lightboxNext { right: 12px; }
+/* 下に敷いた画像（position: absolute）より手前に重ねるため、position を付ける */
 .lightboxImg {
+  position: relative;
   width: 100%;
   max-height: min(76vh, 760px);
   object-fit: contain;
   display: block;
-  background: rgba(240,244,255,0.5);
 }
 video.lightboxImg { background: #030712; }
 .lightboxCaption {
