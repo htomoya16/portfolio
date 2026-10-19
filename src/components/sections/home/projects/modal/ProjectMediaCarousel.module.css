@@ -154,12 +154,18 @@ img.media { background: transparent; }
   gap: 8px;
   padding-bottom: 18px;
 }
+/*
+ * shadcn の矢印は Tailwind の translate で上下中央へずらし、押している間は 1px 下げる。
+ * ここではずらしを打ち消すので、押した瞬間にボタンが 18px 下へ跳ね、上半分を押すと
+ * カーソルがボタンから外れてクリックにならなかった。translate ごと打ち消し、押したときの沈みだけ残す
+ */
 .navBtn {
   position: static;
   width: 34px;
   height: 34px;
   margin-top: 0;
-  transform: none;
+  /* transform と並べて書くと、圧縮のときに transform へまとめられて translate が消えるため、translate だけ書く */
+  translate: none;
   border: 1px solid rgba(255,255,255,0.62);
   background: rgba(255,255,255,0.66);
   color: var(--blue);
@@ -169,6 +175,7 @@ img.media { background: transparent; }
   background: rgba(255,255,255,0.92);
   color: var(--blue-deep);
 }
+.navBtn:active { translate: 0 1px; }
 .navBtn:disabled { opacity: 0.38; }
 .index {
   position: absolute;
