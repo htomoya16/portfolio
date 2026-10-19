@@ -27,8 +27,11 @@
     linear-gradient(90deg, rgba(244,247,255,0.20) 0%, rgba(244,247,255,0.08) 48%, rgba(255,255,255,0.98) 48.2%, rgba(255,255,255,0.98) 100%),
     radial-gradient(circle at 18% 4%, rgba(255,255,255,0.34), transparent 34%);
 }
-/* 背景のぼかしは左のガラス面に任せ、オーバーレイは色だけにする */
-.overlay { background: rgba(8,16,48,0.46); }
+/*
+ * 背景のぼかしは左のガラス面に任せ、オーバーレイは色だけにする。
+ * shadcn のオーバーレイが持つ弱いぼかし（backdrop-blur-xs）も、画面全体を描き直すたびに重いので外す
+ */
+.overlay { background: rgba(8,16,48,0.46); backdrop-filter: none; }
 
 .closeBtn {
   position: absolute;

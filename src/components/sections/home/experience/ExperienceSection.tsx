@@ -47,8 +47,17 @@ function ExperienceRow({ exp }: { exp: ExperienceItem }) {
           {exp.links && exp.links.length > 0 && (
             <div className={styles.links} aria-label={`${exp.title} related links`}>
               {exp.links.map((link) => (
-                <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={styles.link}>
-                  {link.label}
+                // スマホでは文字を隠してアイコンだけのボタンにするので、リンク先の名前は aria-label と title で伝える
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.link}
+                  aria-label={link.label}
+                  title={link.label}
+                >
+                  <span className={styles.linkLabel}>{link.label}</span>
                   <Image src="/assets/icons/projects/link-external.svg" alt="" width={13} height={13} aria-hidden="true" className={styles.linkIcon} />
                 </a>
               ))}

@@ -1,8 +1,12 @@
 'use client'
 
 import { type RefObject, useEffect } from 'react'
+import { syncSmoothScroll } from '@/lib/smoothScroll'
 
-/** ホイールを受け取るカルーセルの目印。ここでのホイールはスクロールせず、画像の切り替えに使う */
+/**
+ * ホイールを受け取るカルーセルの目印。ここでのホイールはスクロールせず、画像の切り替えに使う。
+ * モーダルの中のカルーセルと、body の直下に出す画像の拡大表示に付ける
+ */
 export const CAROUSEL_WHEEL_SELECTOR = '[data-carousel-wheel]'
 /** カルーセルへホイールの量を届けるイベント */
 export const CAROUSEL_WHEEL_EVENT = 'pm-carousel-wheel'
@@ -49,7 +53,8 @@ export function useModalScrollGuard(open: boolean, contentRef: RefObject<HTMLEle
       const carousel = event.target instanceof Element
         ? event.target.closest<HTMLElement>(CAROUSEL_WHEEL_SELECTOR)
         : null
-      if (carousel && content.contains(carousel)) {
+      // 拡大表示はモーダルの外（body の直下）に出すので、モーダルの中かどうかは問わない
+      if (carousel) {
         event.preventDefault()
         event.stopPropagation()
         event.stopImmediatePropagation()
@@ -124,6 +129,7 @@ export function useBodyScrollLock(open: boolean) {
       body.style.top = previousBodyTop
       body.style.width = previousBodyWidth
       window.scrollTo({ top: scrollY, left: 0, behavior: 'auto' })
+      syncSmoothScroll()
 
       window.requestAnimationFrame(() => {
         html.style.scrollBehavior = previousHtmlScrollBehavior

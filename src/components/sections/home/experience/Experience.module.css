@@ -67,3 +67,29 @@
   object-fit: contain;
   opacity: 0.78;
 }
+
+@media (max-width: 720px) {
+  .card { padding: 20px; }
+  /*
+   * 1 段目にバッジとリンク、2 段目に時期を置く。
+   * 1 行に並べると時期が切れたり、リンクがカードの外へ押し出されたりするため。
+   * バッジの横にリンクが入り切らないときは、リンクのまとまりごと次の行（右寄せ）へ回す
+   */
+  .cardHead {
+    flex-wrap: wrap;
+    gap: 10px 8px;
+  }
+  .badge { order: 1; }
+  .links { order: 2; flex-wrap: nowrap; }
+  .date { order: 3; flex-basis: 100%; }
+  /* リンクは文字を出さず、アイコンだけのボタンにする */
+  .link {
+    width: 34px;
+    height: 34px;
+    min-height: 0;
+    padding: 0;
+    justify-content: center;
+  }
+  .linkLabel { display: none; }
+  .linkIcon { width: 15px; height: 15px; opacity: 0.9; }
+}

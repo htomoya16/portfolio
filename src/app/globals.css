@@ -49,5 +49,11 @@ html, body {
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
 }
-body { overflow-x: hidden; background: transparent; }
+/*
+ * セクション背景の光は上下左右へはみ出すので、body で切り取り、フッターの下に余白が増えないようにする。
+ * html が visible のままだと body の overflow が画面全体に移ってスクロールできなくなるため、
+ * 横方向のはみ出しを隠す指定は html に置く
+ */
+html { overflow-x: hidden; }
+body { overflow: clip; background: transparent; }
 a { color: inherit; text-decoration: none; }

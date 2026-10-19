@@ -5,6 +5,7 @@ import type { Project } from '@/content/site/projects'
 import { getPrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 import { gsap, useGSAP } from '@/lib/gsap'
 import { onLoaderDone } from '@/lib/loaderSignal'
+import { warmProjectMedia } from './modal/mediaImages'
 import ProjectCard from './ProjectCard'
 import styles from './Projects.module.css'
 
@@ -82,7 +83,16 @@ export default function ProjectsGrid({ projects }: Props) {
     <>
       <div className={styles.grid} ref={gridRef}>
         {projects.map((project) => (
-          <ProjectCard key={project.num} project={project} onOpen={openProject} onPrefetch={prefetchProjectModal} />
+          <ProjectCard
+            key={project.num}
+            project={project}
+            onOpen={openProject}
+            onPrefetch={() => {
+              prefetchProjectModal()
+              // 開いたときに最初に見える画像も、カーソルを乗せた時点で読み込みとデコードを始めておく
+              warmProjectMedia(project)
+            }}
+          />
         ))}
       </div>
 
